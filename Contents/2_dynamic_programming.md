@@ -119,7 +119,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
         <img src="../img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 500px;">        
         </div>
 
-## 4.3 Policy Iteration (= Policy Evaluation + Policy Improvement)
+## 4.3 Policy Iteration (Control)
 
 - $\textit{Policy iteration}$: the process of performing policy evaluation and policy improvement iteratively to find the optimal policy. 
 
