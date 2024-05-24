@@ -10,7 +10,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 - Overview:
 
 <div style="display: flex; justify-content: center;">
-    <img src="img/chapter3/agent_env_interaction.png" alt="Agent Environment Interaction">
+    <img src="../img/chapter3/agent_env_interaction.png" alt="Agent Environment Interaction">
 </div>
 
 
@@ -90,7 +90,7 @@ In practice, it turns out that when we discuss episodic tasks we almost never ha
 The two types of tasks can be unified by considering episode termination to be the entering of a special $\textit{absorbing state}$ that transitions only to itself and that generates only rewards of zero.
 
 <div style="display: flex; justify-content: center;">
-    <img src="img/chapter3/absorbing_state.png" alt="Absorbing State">
+    <img src="../img/chapter3/absorbing_state.png" alt="Absorbing State">
 </div>
 
 So the expected return of both episodic and continuing tasks can now be written as $G_t=\sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$
@@ -126,7 +126,7 @@ So the expected return of both episodic and continuing tasks can now be written 
     - The last equation above is called $\textit{Bellman Equation}$ for $v_{\pi}$, which expresses a relationship between the value of a state and the values of its successor states. The bellman equation can be understood with help of the following backup diagram for $v_{\pi}$:
 
         <div style="display: flex; justify-content: center;">
-            <img src="img/chapter3/backup_diagram_v.png" alt="Backup diagram for v">
+        <img src="../img/chapter3/backup_diagram_v.png" alt="Backup diagram for v">
         </div>
 
         The backup operations (from bottom to top) transfer value information back to a state from its successor states.
@@ -147,7 +147,7 @@ So the expected return of both episodic and continuing tasks can now be written 
 
     - The bellman equation for $q_{\pi}(s,a)$ can be understood with help of the following backup diagram:
         <div style="display: flex; justify-content: center;">
-            <img src="img/chapter3/backup_diagram_q.png" alt="Backup diagram for 1">
+        <img src="../img/chapter3/backup_diagram_q.png" alt="Backup diagram for 1">
         </div>
 
 
@@ -196,7 +196,7 @@ So the expected return of both episodic and continuing tasks can now be written 
 
     - Similarly, the bellman optimality equation can be easily memorized with help of these two backup diagrams:
         <div style="display: flex; justify-content: center;">
-        <img src="img/chapter3/backup_diagam_optimality.png" alt="Backup diagram for $v_{\star}$ and $q_{\star}$" style="width: 70%;">
+        <img src="../img/chapter3/backup_diagam_optimality.png" alt="Backup diagram for $v_{\star}$ and $q_{\star}$" style="width: 70%;">
         </div>
 
     - **$v_{\star}(s) =  \underset{a \in A(s)}{\max} q_{\star}(s,a)$ is the key of deriving both bellmann optimality equations.**
