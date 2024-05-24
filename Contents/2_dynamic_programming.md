@@ -244,3 +244,9 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
         </div>
 
         Both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function (when $\pi$ itself is the greedy policy of $v_{\pi}$). This implies that the Bellman optimality equation (4.1) holds, and thus that the policy and the value function are optimal.
+
+## 4.6 Summary
+
+Classical DP methods operate in sweeps through the state set, performing an $\textit{expected update}$ operation on each state. The update of states based on estimates of the values of successor states. That is, estimates are updated on the basis of other estimates. We call this general idea $\textit{bootstrapping}$ and requires a perfect model of the environment.
+
+In the next chapter we explore Monte Carlo method - a reinforcement learning method that do not require a model and do not bootstrap.
