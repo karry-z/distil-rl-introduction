@@ -244,6 +244,3 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
         </div>
 
         Both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function (when $\pi$ itself is the greedy policy of $v_{\pi}$). This implies that the Bellman optimality equation (4.1) holds, and thus that the policy and the value function are optimal.
-
-
-## 4.6 Efficiency of Dynamic Programming 
