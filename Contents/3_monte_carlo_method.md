@@ -8,12 +8,14 @@ We adapt the idea of general policy iteration (GPI) and learn value functions fr
 
 ## 5.1 Monte Carlo Prediction (Evaluation)
 
-- MC methods:
-    - define a $\textit{visit}$ to state s: an occurrence of state s in an episode. Of course, $s$ may be visited multiple times in the same episode
+MC methods:
+- define a $\textit{visit}$ to state s: an occurrence of state s in an episode. Of course, $s$ may be visited multiple times in the same episode
 
-    - evaluation methods: 
-        - **first-visit MC method** estimates $v_{\pi}(s)$ as the average of the returns following first visits to $s$.
-        - **every-visit MC method** averages the returns following all visits to $s$.
+- evaluation methods: 
+    - **first-visit MC method** estimates $v_{\pi}(s)$ as the average of the returns following first visits to $s$.
+    - **every-visit MC method** averages the returns following all visits to $s$.
+
+### 5.1.1 MC Prediction for state-value function
 
 - First-visit MC prediction, for estimating $V \approx v_{\pi}$
     - Algorithm: 
@@ -37,26 +39,41 @@ We adapt the idea of general policy iteration (GPI) and learn value functions fr
 
 - <span style="color:red;">Example:</span>
 
-- <span style="color:red;"> First-visit MC prediction, for estimating $Q \approx q_{\pi}$ </span>
-    - Reason: state values $v_{\pi}$ are only usable when we have the model of the environment. Since MC methods assume there is no model available, one of our primary goals in this case is to actually estimate $q_\star$.
-    - Algorithm:
+### 5.1.2 MC Prediction for action-value function
+
+- Motivation: state values $v_{\pi}$ are only usable when we have the model of the environment. Since MC methods assume there is **no model available**, one of our primary goals in this case is to actually estimate $q_\star$.
+
+- First-visit MC prediction, for estimating $Q \approx q_{\pi}$
+    - Algorithm: 
+        - Input: a policy $\pi$ to be evaluated
+        - Initialize:
+            - $Q(s, a) \in \mathbb{R}$ arbitrarily, for all $s \in S, a \in A(s)$.
+            - $Return(s, a) \leftarrow$ an empty list for all $s \in S, a \in A(s)$.
+        - Loop forever (for each episode):
+            - Generate an episode following $\pi: S_0, A_0, R_1, S_1, A_1, ..., S_{T-1}, A_{T-1}, R_T$
+            - $G_T \leftarrow 0$
+            - $ \text{for } t \text{ in } \{T-1, T-2, ..., 0\}$:
+                - $G_{t} \leftarrow \gamma G_{t+1} + R_{t+1}$ 
+                - Append $G_{t}$ to $Returns(S_t, A_t)$
+                - $q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))$
+    - Intuition: same as in section [5.1.1](#511-mc-prediction-for-state-value-function), remember that $q(s,a) = E_\pi[G_t | S_t, A_t]$
+
 
 ## 5.2 Monte Carlo Control
 
-- General problems and two basic assumptions we rely on:
-    - Problem of $\textit{maintaining exploration}$: in estimating $q_{\pi}$, many state–action pairs may never be visited. E.g., if the policy is deterministic, many actions at a state may not be taken.
+General problems and two basic assumptions we rely on in section [5.1](#51-monte-carlo-prediction-evaluation):
 
-        - **Assumption (1)** of $\textit{exploring starts}$: episodes start in a state-action pair, and every pair has a nonzero probability of being selected as the start. (So every state-action pair will be visited an infinite number of times in the limit of an infinite number of episodes.)
+- Problem of $\textit{maintaining exploration}$: in estimating $q_{\pi}$, many state–action pairs may never be visited. E.g., if the policy is deterministic, many actions at a state may not be taken.
+    - **Assumption (1)** of $\textit{exploring starts}$: episodes start in a state-action pair, and every pair has a nonzero probability of being selected as the start. (So every state-action pair will be visited an infinite number of times in the limit of an infinite number of episodes.)
 
-    - Problem of estimating $\hat{q}_{\pi}(S_t, A_t)$: by default, we used the law of large number and rely on the following assumption:
-
-        - **Assumption (2)** of infinite number of episodes: policy evaluation can be done with infinite number of episodes (complete policy evaluation).
+- Problem of estimating $\hat{q}_{\pi}(S_t, A_t)$: by default, we used the law of large number and rely on the following assumption:
+    - **Assumption (2)** of infinite number of episodes: policy evaluation can be done with infinite number of episodes (complete policy evaluation).
 
 ### 5.2.1 Monte Carlo Control removing Assumption (2)
 
 - How to **remove Assumption (2)**:
 
-    - To avoid infinite number of episodes nominally required for policy evaluation, we could give up trying to complete policy evaluation before returning to policy improvement. Value iteration can be seen as an extrem example of this idea.
+    - To avoid infinite number of episodes nominally required for policy evaluation, we could **give up trying to complete policy evaluation** before returning to policy improvement. Value iteration can be seen as an extrem example of this idea.
 
     - For Monte Carlo policy iteration it is natural to alternate between evaluation and improvement on an **episode-by-episode** basis. After each episode, the observed returns are used for policy evaluation, and then the policy is improved at all the states visited in the episode.
 
@@ -64,10 +81,10 @@ We adapt the idea of general policy iteration (GPI) and learn value functions fr
     - Algorithm:
         - Initialize:
             - $\pi(s) \in A(s)$ (arbitrarily), for all $s \in S$
-            - $Q(s,a) \in R$ (arbitrarily), for all $s \in S$
+            - $Q(s,a) \in \mathbb{R}$ (arbitrarily), for all $s \in S$
             - $Returns(s, a) \leftarrow$ empty list, for all $s \in S, a \in A(s)$
         - Loop forever (for each episode):
-            - Choose $S_0 \in S, A_0 \in A(S_0)$ randomly so that all state-action pairs have probability $> 0$
+            - **Choose $S_0 \in S, A_0 \in A(S_0)$ randomly so that all state-action pairs have probability $> 0$ (Exploring Start).**
             - Generate an episode from the chosen start following $\pi(s)$, as $S_0, A_0, R_1, S_1, ..., S_{T-1}, A_{T-1}, R_T$
             - $G_T \leftarrow 0$
             - Loop for each step of episode: $t=T-1, T-2, ..., 0$:
@@ -75,38 +92,223 @@ We adapt the idea of general policy iteration (GPI) and learn value functions fr
                 - $ \text{for } t \text{ in } \{T-1, T-2, ..., 0\}$: 
                     - Append $G_t$ to $Returns(S_t, A_t)$
                     - $Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))$
-                    - $\pi(S_t) \leftarrow \arg \underset{a}{\max}(Q(S_t, A_t))$
+                    - **$\pi(S_t) \leftarrow \arg \underset{a}{\max}(Q(S_t, A_t))$ (removing the second assumption)**
 
     - Notes:
         - The essential technique of above algorithm is that after each update of $Q(S_t,A_t)$, the improvement (greedification) will be made directly.
 
 - <span style="color:red;">Example of Blackjack:</span>
 
-### 5.2.1 Monte Carlo Control removing both assumptions
+### 5.2.2 Monte Carlo Control removing both assumptions
 
-- Some definitions:
+- On / Off-policy methods:
 
     - On policy methods: attempt to evaluate or improve the policy that is used to make decisions. (e.g., MC with ES, dynamic programming etc.)
     - Off policy methods: evaluate or improve a policy different from that used to generate the data.
 
+- $\epsilon$-soft policies:
+    - $\epsilon$-greedy policy: all non-greedy action are given the minimal probability of selection $\frac{\epsilon}{|A(s)|}$ (**uniform distribution**), the greedy action has the probability of $1 - \epsilon + \frac{\epsilon}{|A(s)|}$. 
+        - $\epsilon$-greedy policy is a type of $\epsilon$-soft policies. Among $\epsilon$-soft policies, $\epsilon$-greedy policies are in some sense those that are closest to greedy.
+    - $\epsilon$-soft policy: all actions have probability of $\pi(a|s)>\frac{\epsilon}{|A(s)|}$ for all states. This means that the agent explores all possible actions with non-zero probability $\frac{\epsilon}{|A(s)|}$, but **not necessarily uniformly**.
 
-    - $\epsilon$-greedy policy: all non-greedy action are given the minimal probability of selection $\frac{\epsilon}{|A(s)|}$, the greedy action has the probability of $1 - \epsilon + \frac{\epsilon}{|A(s)|}$. Among $\epsilon$-soft policies, $\epsilon$-greedy policies are in some sense those that are closest to greedy.
-    - $\epsilon$-soft policy: all actions have probability of $\pi(a|s)>\frac{\epsilon}{|A(s)|}$ for all states.
+- On-Policy first-visit Monte Carlo Control (with $\epsilon$-soft policy), for estimating $\pi \approx \pi_{\star}$
+    - Algorithm:
+        - Algorithm parameter: small $\epsilon > 0$
+        - Initialize:
+            - **$\pi(s) \leftarrow$ an arbitrary $\epsilon$-soft policy (removing the first assumption)**
+            - $Q(s,a) \in \mathbb{R}$ (arbitrarily), for all $s \in S, a \in A(s)$
+            - $Returns(s, a) \leftarrow$ empty list, for all $s \in S, a \in A(s)$
+        - Loop forever (for each episode):
+            - Generate an episode following $\pi: S_0, A_0, R_1, ... S_{T-1}, A_{T-1}, R_T$ 
+            - $G \leftarrow 0$
+            - Loop for each step of episode: $t=T-1, T-2, ..., 0$:
+                - $G \leftarrow \gamma G + R_{t+1}$ 
+                - Unless the pair $S_t, A_t$ appears in $S_0, A_0, S_1, ..., S_{T-1}, A_{T-1}$
+                    - Append G to $Returns(S_t, A_t)$
+                    - $Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))$
+                    - $A^* \leftarrow \arg \underset{a}{\max} \ Q(S_t, A_t)$ (with ties broken arbitrarily)
+                    - For all $a \in A(S_t)$:
+                    $$
+                    \colorbox{lightyellow}{$
+                    \pi(S_t) = 
+                    \left \{
+                        \begin{array}{ll}
+                            1 - \epsilon + \frac{\epsilon}{|A(s_t)|} & \text{if } a = A^* \\
+                            \frac{\epsilon}{|A(s_t)|} & \text{if } a \neq A^*
+                        \end{array}
+                    \right.
+                    $}
+                    $$
+    - Intuition: With the assumption of exploring starts removed, we cannot simply improve the policy by making it greedy with respect to the current value function, because that would prevent further exploration of nongreedy actions. So on the basis of Monte Carlo ES (Exploring Starts) in section [5.2.1](#521-monte-carlo-control-removing-assumption-2), this algorithm removes the assumptions of exploring start by 
+        1) defining the initial policy to be $\epsilon$-soft and, 
+        2) updating the old policy to be $\epsilon$-greedy policy during policy improvement. 
+    
+    - Notes
+        - The algorithm above also removes the second assumption (infinite episode) because the $\epsilon$-greedification happens immediately after the calculation of the $Q(S_t, A_t)$.
+        
+        - policy improvement theorem assures that any $\epsilon$-greedy policy with respect to $q_\pi$ is an improvement over any $\epsilon$-soft policy. Math proof is omitted here, interested readers can refer to the Chapter 5.4 Monte Carlo Control without Exploring Starts.
 
-On-Policy first-visit Monte Carlo Control (with $\epsilon$-soft policy), for estimating $\pi \approx \pi_{\star}$
+        - note that we now only achieve the best policy among the $\epsilon$-soft policies, i.e, a near-optimal policy which still explores, not really the optimal policy.
 
-- Algorithm parameter: small $\epsilon > 0$
-- Initialize:
-    - $\pi(s)$: (arbitrarily) a $\epsilon$-soft policy
-    - $Q(s,a) \in R$ (arbitrarily), for all $s \in S$
-    - $Returns(s, a) \leftarrow$ empty list, for all $s \in S, a \in A(s)$
-- Loop forever (for each episode):
-    - Generate an episode following $\pi: S_0, A_0, R_1, ... S_{T-1}, A_{T-1}, R_T$ 
-    - $G \leftarrow 0$
-    - Loop for each step of episode: $t=T-1, T-2, ..., 0$:
-        - $G \leftarrow \gamma G + R_{t+1}$ 
-        - Unless the pair $S_t, A_t$ appears in $S_0, A_0, S_1, ..., S_{T-1}, A_{T-1}$
-            - Append G to $Returns(S_t, A_t)$
 
-- Notes:
-    - Without the assumption of exploring starts, however, we cannot simply improve the policy by making it greedy with respect to the current value function, because that would prevent further exploration of nongreedy actions
+## 5.3 Off-policy Monte Carlo Methods
+
+All learning control methods face a dilemma: They seek to learn action values conditional on subsequent optimal behavior, but they need to behave non-optimally in order to explore all actions (to find the optimal actions). How can they learn about the optimal policy while behaving according to an exploratory policy? A more straightforward approach is to use two policies
+
+Let's recap On / Off-policy learning:
+
+- On-policy learning: learns the value or policy function for the current $\textit{target policy}$ $\pi$ that the agent is following. This means that the agent learns by interacting with the environment using the same policy that it is improving. On-policy methods are generally simpler and are considered first.
+
+- Off-policy learning: the learning is from data generated by $\textit{behavior policy}$ $b$ and is "off" the $\textit{target policy}$ $\pi$. Off-policy methods require additional concepts and notation, and because the data is due to a different policy, off-policy methods are often of greater variance and are slower to converge. \
+On the other hand, off-policy methods are more powerful and general. They include on-policy methods as the special case in which the target and behavior policies are the same.
+    - In order to use episodes from $b$ to estimate values for $\pi$, we procede based on the **assumption of coverage**: wherever $\pi(a|s) \ge 0$, $b(a|s) \ge 0$ must also hold. <--> behavior policy b must be stohastic in states where it is not identical to the target policy.
+
+### 5.3.1 Off-policy Monte Carlo Prediction via Importance Sampling
+
+- Importance Sampling Implementation: 
+
+	- given existing samples from $X \sim b$, we want to estimate $E_{\pi}[X]$ (of a different distribution)
+	- derivation:
+        $$
+        \begin{align*}
+        E_{\pi}[X] &= \sum_{x \in X} x \pi(x) \\
+        &= \sum_{x \in X} x \pi(x) \frac{b(x)}{b(x)} \\
+        &= \sum_{x \in X} x b(x) \frac{\pi(x)}{b(x)} \\
+        &= \sum_{x \in X} x b(x) \rho(x) \\
+        &= E_{b}[X \rho(X)] \\
+        &\approx \frac{1}{n} \sum_{i=1}^n x_i \rho(x_i)
+        \end{align*}
+        $$
+    - the ratio $\rho(x)=\frac{\pi(x)}{b(x)}$ is called the **importance sampling ratio**.
+
+- Importance Sampling for evaluating the target policy $\pi$ in theory:
+
+	1. Calculating the importance sampling ratio $\frac{\pi}{b}$ **for one given state-action trajectory**
+        - Given a trajectory $A_t, S_{t+1}, A_{t+1}, S_{t+2}..., A_{T-1}, S_T$, starting from $S_t$, the probability of this trajectory is
+            $$
+            \begin{align*}
+            Pr (&A_t, S_{t+1}, A_{t+1}, S_{t+2}, ..., A_{T-1}, S_T | S_t, A_{t:T-1} \sim \pi) \\
+            &= \pi(A_t|S_t)p(S_{t+1}|A_t, S_t) ... \pi(A_{T-1}|S_{T-1})p(S_T|A_{T-1},S_{T-1}) \\
+            &= \Pi_{k=1}^{k={T-1}} \pi(A_k|S_k)p(S_{k+1}|A_k, S_k)
+            \end{align*}
+            $$  
+	        Therefore the **importance sampling ratio**:
+            $$
+            \begin{align*}
+            \rho_{t: T-1} &= \frac{\Pi_{k=t}^{k={T-1}} \pi(A_k|S_k)p(S_{k+1}|A_k, S_k)}{\Pi_{k=t}^{k={T-1}} b(A_k|S_k)p(S_{k+1}|A_k, S_k)} \\
+            &= \frac{\Pi_{k=t}^{k={T-1}} \pi(A_k|S_k)}{\Pi_{k=t}^{k={T-1}} b(A_k|S_k)}
+            \end{align*}
+            $$
+		- Notes
+            - the subscript of $\rho_{t: T-1}$ corresponds to the sequence of actions in the trajectory, i.e., {$A_t, ..., A_{T-1}$}, then the trajectory stops at the terminal state $S_T$
+            - $\rho_{t: T-1}$ only depends on the two policies, not the dynamics of the environment 
+
+    2. Estimating $v_{\pi}(s)$ given $v_b(s) = E_b[G_t|S_t = s]$ as:
+        $$v_{\pi}(s)= E_b[\rho_{t:T-1} \ G_t|S_t = s]$$
+        - Intuition: note that the value function for s: $E[G_t|S_t = s]$ is caculating an expection based on all given trajectories, so every $G_t$ is a single realisation, which can be seen as the variable $x$ in the derivation of importance sampling equation. \
+        The importance sampling ratio $\rho_{t:T-1}$ is caculated on a trajectory basis to correspond to this trajectory-based charactor of $G_t$ (and is used for multiplication with $G_t$ directly).
+
+- Importance sampling for evaluating the target policy $\pi$ in practice
+
+	- Settings: 
+
+        - About time steps: the time steps will be numbered in a way that increases across episode boundaries for convenience. That is, if the first episode of the batch ends in a terminal state at $t=100$, then the next episode begins at $t = 101$.
+
+        - About notations:
+            - $J(s)$: **the set of time steps** in which state s is visited (This is for an every-visit method; for a first-visit method, $J(s)$ would only include time steps that were first visits to $s$ within their episodes).
+            - $T(t)$: **the time step** of the first terminal state from time step $t$.
+            - $\{G_t\}_{t \in J(s)}$: the set of returns that pertain to state $s$ from all episodes.
+            - $\{\rho_{t:T(t)-1}\}_{t \in J(s)}$: the importance sampling ratio for the trajectory $\{A_t, S_{t+1},..., A_{T(t)-1}, S_{T(t)} \}$.
+
+    - Approaches:
+        - Ordinary importance sampling for evaluating target policy:
+        $$
+        V(s) \dot= \frac{\sum_{t \in J(s)} \ \rho_{t:T(t)-1} \times G_t}{|J(s)|}
+        $$
+        
+        - Weighted importance sampling for evaluating target policy:
+        $$
+        V(s) \dot= \frac{\sum_{t \in J(s)} \ \rho_{t:T(t)-1} \times G_t}{\sum_{t \in J(s)} \ \rho_{t:T(t)-1}}
+        $$
+        
+        <span style="color:red;"> What is the equation analogous to (5.6) for action values Q(s, a) instead of state values V (s)</span>
+
+        - Notes:
+            - for first-visit methods:
+
+                Consider the estimates of their first-visit methods after observing a single return $G_t$ from state $s$, in the weighted-average estimate, the estimate is equal to the observed return $G_t$ independent of the ratio, its estimate in this case is $v_b(s)$ rather than $v_\pi(s)$. In contrast, the estimate from ordinary method is always $v_\pi(s)$, but it could be highly volatile depending on the value of $\rho_{t:T(t)-1}$. 
+
+                In summary, ordinary importance sampling is unbiased whereas weighted importance sampling is biased (though the bias converges asymptotically to zero). On the other hand, the variance of ordinary importance sampling is in general unbounded because the variance of the ratios can be unbounded, whereas in the weighted estimator the largest weight on any single return is one. In fact, assuming bounded returns, the variance of the weighted importance-sampling estimator converges to zero even if the variance of the ratios themselves is infinite.
+
+                **In practice, the weighted estimator usually has dramatically lower variance and is strongly preferred.** Nevertheless, we will not totally abandon ordinary importance sampling as it is easier to extend to the approximate methods using function approximation that we explore later.
+
+            - for every-visit methods:
+
+                The every-visit methods for ordinary and weighed importance sampling are both biased, though, again, the bias falls asymptotically to zero as the number of samples increases. **In practice, every-visit methods are often preferred because they remove the need to keep track of which states have been visited and because they are much easier to extend to approximations.**
+
+- <span style="color:red;">Example 5.4: Off-policy Estimation of a Blackjack State Value</span>
+
+- Incremental Implementation:
+    - Ordinary importance sampling 
+    - Weighted importance sampling 
+
+- Off-policy MC prediction (policy evaluation) for estimating $Q \approx q_\pi$
+    - Algorithm: 
+        - Input: an arbitrary target policy $\pi$  
+        - Initialize, for all $s \in S$, $a \in A(s)$:  
+            - $Q(s, a) \in \mathbb{R}$ (arbitrarily)  
+            - $C(s, a) \leftarrow 0$  
+
+        - Loop forever (for each episode): 
+            - $b \leftarrow$ any policy with coverage of $\pi$  
+            - Generate an episode following $b$: $S_0, A_0, R_1, \ldots, S_{T-1}, A_{T-1}, R_T$  
+            - $G \leftarrow 0$  
+            - $W \leftarrow 1$  
+            - Loop for each step of episode, $t = T-1, T-2, \ldots, 0,$ while $W \neq 0$:  
+                - $G \leftarrow \gamma G + R_{t+1}$  
+                - $C(S_t, A_t) \leftarrow C(S_t, A_t) + W$  
+                - $Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{W}{C(S_t, A_t)} [G - Q(S_t, A_t)]$  
+                - $W \leftarrow W \frac{\pi(A_t|S_t)}{b(A_t|S_t)}$
+
+
+
+- Off policy every-visit MC prediction, for estimating $V \approx v_{\pi}$
+
+	- Input: a policy $\pi$ to be evaluated
+	- Initialize:
+		- $V(s) \in R$ arbitrarily, for all $s \in S$
+		- $Return(s) \leftarrow$ an empty list for all $s \in S$
+	
+	- Loop forever (for each episode)
+		- Generate an episode following $b$: $S_0, A_0, R_1, S_1, A_1, ..., S_{T-1}, A_{T-1}, R_T$
+		- $G \leftarrow 0, W \leftarrow 1$
+		- Loop for each step of episode, t=T-1, T-2, ..., 0:
+			- $G \leftarrow \gamma W G + R_{t+1}$ (Recall that $G_t = R_{t+1} + \gamma G_{t+1}$)
+			- Unless $S_t$ appears in $S_0, S_1, ..., S_{T-1}$:
+				- Append G to $Returns(S_t)$
+				- $V(s_t) \leftarrow average(Returns(S_t))$
+				- $W \leftarrow W \ \frac{\pi(A_t|S_t)}{b(A_t|S_t)}$
+	 
+- In Control, the target policy is typically the deterministic greedy policy with respect to the current estimate of the action-value function. This policy becomes as deterministic optimal policy while the behavior policy remains stochastic and more exploratory, for example, an $\epsilon$-greedy policy.  
+
+### 5.3.2 Off-policy Monte Carlo Control
+
+- Off-policy MC prediction (policy evaluation) for estimating $\pi \approx \pi_\star$
+    - Algorithm: 
+        - Initialize, for all $s \in S$, $a \in A(s)$:  
+            - $Q(s, a) \in \mathbb{R}$ (arbitrarily)  
+            - $C(s, a) \leftarrow 0$  
+            - $\pi(s) \leftarrow \arg \max_a Q(s,a)$ (with ties broken consistently)
+
+        - Loop forever (for each episode): 
+            - $b \leftarrow$ any soft policy  
+            - Generate an episode following $b$: $S_0, A_0, R_1, \ldots, S_{T-1}, A_{T-1}, R_T$  
+            - $G \leftarrow 0$  
+            - $W \leftarrow 1$  
+            - Loop for each step of episode, $t = T-1, T-2, \ldots, 0,$:  
+                - $G \leftarrow \gamma G + R_{t+1}$  
+                - $C(S_t, A_t) \leftarrow C(S_t, A_t) + W$  
+                - $Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{W}{C(S_t, A_t)} [G - Q(S_t, A_t)]$  
+                - $\pi(S_t) \leftarrow \arg \max_a Q(S_t,a)$ (with ties broken consistently)
+                - If $A_t \neq \pi(S_t)$ then exit inner loop (proceed to next episode)
+                - $W \leftarrow W \frac{1}{b(A_t|S_t)}$
