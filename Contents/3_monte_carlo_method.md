@@ -284,36 +284,20 @@ The importance sampling described in this section is used to estimate action-val
 
         - Loop forever (for each episode): 
             - $b \leftarrow$ any policy with coverage of $\pi$  
-            - Generate an episode following $b$: $S_0, A_0, R_1, \ldots, S_{T-1}, A_{T-1}, R_T$  
-            - $G \leftarrow 0$  
-            - $W \leftarrow 1$  
+            - Generate an episode following $b$: $S_0, A_0, R_1, \ldots, S_{T-1}, A_{T-1}, R_T, S_T$  
+            - $G_T \leftarrow 0$  
+            - $W_T \leftarrow 1$  
             - Loop for each step of episode, $t = T-1, T-2, \ldots, 0,$ while $W \neq 0$:  
-                - $G \leftarrow \gamma G + R_{t+1}$  
-                - $C(S_t, A_t) \leftarrow C(S_t, A_t) + W$  
-                - $Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{W}{C(S_t, A_t)} [G - Q(S_t, A_t)]$  
-                - $W \leftarrow W \frac{\pi(A_t|S_t)}{b(A_t|S_t)}$
-
-
-- Off policy every-visit MC prediction, for estimating $V \approx v_{\pi}$
-
-	- Input: a policy $\pi$ to be evaluated
-	- Initialize:
-		- $V(s) \in R$ arbitrarily, for all $s \in S$
-		- $Return(s) \leftarrow$ an empty list for all $s \in S$
-	
-	- Loop forever (for each episode)
-		- Generate an episode following $b$: $S_0, A_0, R_1, S_1, A_1, ..., S_{T-1}, A_{T-1}, R_T$
-		- $G \leftarrow 0, W \leftarrow 1$
-		- Loop for each step of episode, t=T-1, T-2, ..., 0:
-			- $G \leftarrow \gamma W G + R_{t+1}$ (Recall that $G_t = R_{t+1} + \gamma G_{t+1}$)
-			- Unless $S_t$ appears in $S_0, S_1, ..., S_{T-1}$:
-				- Append G to $Returns(S_t)$
-				- $V(s_t) \leftarrow average(Returns(S_t))$
-				- $W \leftarrow W \ \frac{\pi(A_t|S_t)}{b(A_t|S_t)}$
-	 
-- In Control, the target policy is typically the deterministic greedy policy with respect to the current estimate of the action-value function. This policy becomes as deterministic optimal policy while the behavior policy remains stochastic and more exploratory, for example, an $\epsilon$-greedy policy.  
+                - $G_t \leftarrow \gamma G_{t+1} + R_{t+1}$  
+                - $C(S_t, A_t) \leftarrow C(S_t, A_t) + W_{t+1}$  
+                - $Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{W_{t+1}}{C(S_t, A_t)} [G_t - Q(S_t, A_t)]$  
+                - $W_t \leftarrow W_{t+1} \frac{\pi(A_t|S_t)}{b(A_t|S_t)}$
+	- Intuition:
+        - $W_{t+1} = \rho_{t+1:T(i)-1}$
 
 ### 5.3.2 Off-policy Monte Carlo Control
+
+- In Control, the target policy is typically the deterministic greedy policy with respect to the current estimate of the action-value function. This policy becomes as deterministic optimal policy while the behavior policy remains stochastic and more exploratory, for example, an $\epsilon$-greedy policy.  
 
 - Off-policy MC prediction (policy evaluation) for estimating $\pi \approx \pi_\star$
     - Algorithm: 
@@ -333,4 +317,26 @@ The importance sampling described in this section is used to estimate action-val
                 - $Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{W}{C(S_t, A_t)} [G - Q(S_t, A_t)]$  
                 - $\pi(S_t) \leftarrow \arg \max_a Q(S_t,a)$ (with ties broken consistently)
                 - If $A_t \neq \pi(S_t)$ then exit inner loop (proceed to next episode)
-                - $W \leftarrow W \frac{1}{b(A_t|S_t)}$
+                - $W \leftarrow W \frac{1}{b(A_t|S_t)}$ <span style="color:red;">why is this correct?</span>
+
+    - Notes:
+        - The policy $\pi$ converges to optimal at all encountered states even though actions are selected according to a different soft policy $b$,which may change between or even within episodes.
+
+        - A potential problem is that this method learns only from the tails of episodes, when all of the remaining actions in the episode are greedy. If nongreedy actions are common, then learning will be slow, particularly for states appearing in the early portions of long episodes. Potentially, this could greatly slow learning.
+    
+## 5.4 Summary
+
+Currently, Monte Carlo methods for both prediction and control remain unsettled and are a subject of ongoing research.
+
+- Advantages of MC over DP methods:
+    1) Monte Carlo methods require no model of the environment’s dynamics. 
+
+    2) Monte Carlo methods can be used with simulation or sample models. For surprisingly many applications it is easy to simulate sample episodes even though it is diffcult to construct the kind of explicit model of transition probabilities. 
+
+    3) It is easy and effcient to use Monte Carlo methods to focus on a small subset of the states. A region of special interest can be accurately evaluated without going to the expense of accurately evaluating the rest of the state set.
+
+    4) MC methods may be less harmed by violations of the Markov property. Because they do not update their value estimates on the basis of the value estimates of successor states, i.e., they do not bootstrap.
+
+- Maintaining sufficient exploration:
+    - For on-policy methods: use assumption (1) of exploring start or initialize $\pi$ to be a $\epsilon$-soft policy
+    - For off-policy methods: we learn the value function of a target policy from data generated by a different behavior policy, which satisfies the assumption of coverage. At the same time, we need importance sampling to transform the expected returns from the behavior policy to the target policy. 
