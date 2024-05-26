@@ -61,11 +61,11 @@ $$
     - set $k=10$
     - the reward distribution of each action follows a standard normal distribution ($\mu=0 \text{ and } \sigma=1$) 
 
-    ![reward distribution](img/reward_distribution.png)
+    ![reward distribution](../img/reward_distribution.png)
 
     - the performance of each action selection method is measured by averaging the results from 2000 independent $\textit{runs}$, with each $\textit{run}$ containing 1000 time steps 
 
-    ![result](img/running_results.png)
+    ![result](../img/running_results.png)
 
 - Conclusions:
     - The greedy method performed significantly worse in the long run because it often got stuck performing suboptimal actions.
@@ -102,7 +102,7 @@ $$
 
 - We now can write a pseudocode for solving **stationary** bandit problem using the incremental implementation
 
-![bandit algorithm](img/bandit_algorithm.png)
+![bandit algorithm](../img/bandit_algorithm.png)
 
 
 ### 2.4.2 For nonstationary problems
@@ -139,7 +139,7 @@ Simple tricks to encourage exploration except $\epsilon$-greedy (or as its exten
 
 - In 10-armed bandit testbed introduced in section [2.3](#23-the-10-armed-testbed) setting $Q_1(a)=+5$ for all $a$, perform again, 2000 runs with each run up to 1000 time steps
 
-![optimistic_initial_value](img/optimistic_initial_value.png)
+![optimistic_initial_value](../img/optimistic_initial_value.png)
 
 - Difficulties that made optimistic initial values not practical for nonstationary problems:
     - its drive for exploration is inherently temporary, i.e., only in the beginning of a run. 
@@ -165,7 +165,7 @@ Simple tricks to encourage exploration except $\epsilon$-greedy (or as its exten
 
 - Experimentation:
 
-![UCB](img/ucb.png)
+![UCB](../img/ucb.png)
 
 - Difficulties that made UCB not practical for nonstationary problems:
     - One difficulty is that it tends to exploit more aggressively once it has identified a seemingly optimal action, compared to $\epsilon$-greedy method
