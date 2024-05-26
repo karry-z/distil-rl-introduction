@@ -1,4 +1,10 @@
-## TD prediction
+# Chapter 6. Temporal-Difference Learning
+
+Temporal-Difference (TD) Learning is a combination of Monte Carlo ideas and dynamic programming (DP). Like MC methods, TD methods can learn directly from raw experience without a model of the environment’s dynamics. Like DP, TD methods update estimates based in part on other learned estimates, without waiting for a final outcome (they bootstrap).
+
+As usual, we start by focusing on the policy evaluation or prediction problem, the problem of estimating the value function $v_\pi$ for a given policy $\pi$. For the control problem (finding an optimal policy), DP, TD, and MC methods all use some variation of generalized policy iteration (GPI). The differences in the methods are primarily differences in their approaches to the prediction problem.
+
+## 6.1 TD prediction
 
 - Two difference representation of prediction form: 
 	$v_{\pi}(s) \dot= E[G_t | S_t = s] = E[R_{t+1} + \gamma G_{t+1}| S_t = s] = E[R_{t+1} + \gamma v_{\pi}(S_{t+1})| S_t = s]$
@@ -60,8 +66,42 @@
 ## Q-learning: Off-policy TD Control
 
 - update rule: 
-	$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$
+	$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$
 
 - Q-learning (off-policy TD control) for estimating $\pi \approx \pi_{\star}$
 	- Algorithm parameter: step size $\alpha \in (0,1], \epsilon > 0$
 	- Initialize Q(s,a), for all $s \in S^+, a \in A(s)$
+	- Loop for each episode:
+		- Initialize S
+		- Loop for each step of episode:
+			- Choose A from S using policy derived from Q (e.g., $\epsilon$-greedy)
+			- Take action A, observe $R, S\prime$
+			- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S\prime, a) - Q(S, A)]$
+			- $S \leftarrow S\prime$
+		- until S is terminal
+
+- differ from Sarsa, at target state $S\prime$, Q-learning choose the action that could maximize the $Q(S\prime, a)$ directly, but not according to a policy derived from Q (although, the derived policy from Q can also be the greedy policy, in this case Sarsa and Q-learning are identical)
+
+- why is Q-learning off-policy? 
+
+	- consider the derived policy from current Q as the *behaviour policy*, which can be e.g., $\epsilon$-greedy. but the *target policy* for Q-learning is actually the greedy policy according to the *max* term in the update rule from above (actions are chosen according to epsilon-greedy, updates are made according to greedy policy).  
+
+## Expected Sarsa
+
+- update rule: 
+
+	$$
+		Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma E_{\pi}[Q(S_{t+1}, A_{t+1})|S_{t+1})] - Q(S_t, A_t)] \\
+		\leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \sum_{a}\pi(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)]
+	$$
+
+- the fun part about Expected Sarsa is that it can be both on- and off-policy:
+	- when the target policy (in the target part in the update rule) is a greedy policy (means it distributes 0% to all other actions than the greedy one) and the behaviour policy is not, it becomes Q-learning, meaning Q-learning is actually a special case of Expected Sarsa.
+	- the target policy can also be an exploratory policy that is totally different than the behaciour policy (which does not make sense. but it is allowed)
+
+
+## NOTES
+
+- imagine a environment in which rewards except for reaching the terminal state are all zero, and discount factor is 1. If every state (at the beginning usually) has the same state value, then for the fisrt episode, TD methods only update the single one and only state one step before the termination. While MC updates all states. (See lecture video week 2, 2.2)
+
+
