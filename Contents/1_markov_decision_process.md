@@ -74,6 +74,7 @@ Note that the reward signal is your way of communicating to the robot what you w
     
         - The next episode begins independently of how the previous one ended
         - The episodes can all be considered to end in the same $\textit{terminal state}$
+        - Notation $S^+$ is used to denote the set of all non-terminal states plus the terminal state.
 
     - Continuing tasks: in contrast, continuing tasks are those tasks in which the agent–environment interaction does not break naturally into identifiable episodes, but goes on continually without limit.
         - $\gamma \in (0,1)$ is called the $\textit{discout rate}$, and is used to represent the agent's preference between immediate and future reward. The more $\gamma$ approaches 1, the more "farsighted" the agent becomes.
@@ -82,6 +83,7 @@ Note that the reward signal is your way of communicating to the robot what you w
         $$
         G_t = \sum_{k=0}^{\infty} \gamma^k = \frac{1}{1 - \gamma}
         $$
+        - Notation $S$ is used to denote the set of all non-terminal states (when it is a continuing task).
 
 ### 2.3 Unified Notation for Episodic and Continuing Tasks
 
