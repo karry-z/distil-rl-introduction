@@ -275,7 +275,7 @@ The importance sampling described in this section is used to estimate action-val
 
                 with $\alpha = \frac{W_n}{C_n}$ and $C_n \dot= C_{n-1} + W_n = \sum_{i=1}^{i=n} W_i$, where $C_0 \dot= 0$           
 
-- Off-policy MC prediction (policy evaluation) for estimating $Q \approx q_\pi$
+- Off-policy MC prediction (policy evaluation) for estimating $Q \approx q_\pi$ <span style="color:red;">I am planning to make some changes (about the subscipts) to this algo so it could be more easier to understand, not finished yet</span>
     - Algorithm: 
         - Input: an arbitrary target policy $\pi$  
         - Initialize, for all $s \in S$, $a \in A(s)$:  
