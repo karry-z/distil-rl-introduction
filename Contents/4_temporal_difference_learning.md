@@ -42,19 +42,23 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 		- Input: 
 			- the policy $\pi$ to be evaluated
 			- Algorithm parameter: step size $\alpha \in (0,1]$
-			- Initialize V(s), for all $s \in S^+$ arbitrarily except that V($terminal$) = 0
+			- Initialize $V(s)$, for all $s \in S^+$ arbitrarily except that V($terminal$) = 0
 		- Loop for each episode:
 			- Initialize $S$
 			- Loop for each step of episode:
 				- $A \leftarrow$ action given by $\pi$ for S
-				- Take action A, observe $R, S\prime$
+				- Take action $A$, observe $R, S\prime$
 				- $V(S) \leftarrow V(S) + \alpha (R + \gamma V(S\prime) - V(S))$
 				- $S \leftarrow S\prime$
 			- until $S$ is the terminal state
 	- Notes:
 		- notice the difference between MC algorithms, there is now no need to generate the whole episode. Instead, $V(s)$ will be updated right after an action is taken and a new state is observed, i.e., TD methods work in a fashion of “走一步，算一步” (don't know how to best desribe this in English)
 
-- <span style="color:red;">Example of Driving Home</span>
+- Example: Driving Home
+
+	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/9Dxlq/the-advantages-of-temporal-difference-learning">
+	<img src="../img/chapter6/driving_home.png" alt="Video: TD prediction on Driving Home Example" style="width:70%;">
+	</a>
 
 - Advantages of TD prediction:
 
@@ -62,9 +66,11 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 	- For any fixed policy $\pi$, TD(0) has been proved to converge to $v_\pi$. For details, refer to the book chapter 6.2.
 
-	- In practice, TD methods have usually been found to  converge faster than constant-alpha MC methods on stochastic tasks, demonstrated by the following example:
+	- In practice, TD methods have usually been found to  converge faster than constant-$\alpha$ MC methods on stochastic tasks. A demonstrative example is given in the following video:
 
-		<span style="color:red;">Example of Random Walk</span>
+		<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/CEzFc/comparing-td-and-monte-carlo">
+		<img src="../img/chapter6/random_walk.png" alt="Video: Comparing TD and MC" style="width:70%;">
+		</a>			
 
 ## 6.2 TD Control
 
@@ -104,7 +110,14 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 		- Sarsa converges with probability 1 to an optimal policy and action-value function as long as all state–action pairs are visited an infinite number of times and the policy converges in the limit to the greedy policy (which can be arranged, for example, with $\epsilon$-greedy policies by setting $\epsilon = 1/t$).
 	
-- <span style="color:red;">Example of Windy Gridworld:</span>
+- Example: Sarsa in the Windy Gridworld:
+
+	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/RZeRQ/sarsa-in-the-windy-grid-world">
+	<img src="../img/chapter6/windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
+	</a>
+
+	- Notice that the first few episodes take a couple thousand steps to complete. The curve gradually gets steeper indicating that episodes are completed more quickly.
+	- Notice the episode completion rate stops increasing. This means the agents policy hovers around the optimal policy and won't be exactly optimal, because of exploration.
 
 
 ### 6.2.2 Q-learning: Off-policy TD Control
@@ -129,9 +142,18 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	- Notes:
 		- Different from Sarsa, at target state $S\prime$, Q-learning choose the greedy action that maximizes $Q(S\prime, a)$ directly, but not according to a policy derived from $Q$ (although, the derived policy from $Q$ can also be the greedy policy, if so, the update rules of Sarsa and Q-learning are identical).
 
-		- **Why is Q-learning off-policy?** Consider the derived policy from current $Q$ as the $\textit{behaviour policy}$, which can be e.g., $\epsilon$-greedy. but the $\textit{target policy}$ for Q-learning is actually the greedy policy according to the $max$ term in the update rule from above (actions are chosen according to $\epsilon$-greedy, updates are made according to the greedy policy).  
+		- **Why is Q-learning off-policy?** Consider the derived policy from current $Q$ as the $\textit{behaviour policy}$, which can be e.g., $\epsilon$-greedy. but the $\textit{target policy}$ for Q-learning is actually the greedy policy according to the $max$ term in the update rule from above (actions are chosen according to $\epsilon$-greedy, updates are made according to the greedy policy). Readers of interest can further refer to [this video.](https://www.coursera.org/learn/sample-based-learning-methods/lecture/1OikH/how-is-q-learning-off-policy) 
 
-- <span style="color:red;">Example of Cliff Walking:</span>
+- Example: Q-learning in the Windy Gridworld:
+
+	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/BZbSy/q-learning-in-the-windy-grid-world">
+	<img src="../img/chapter6/q_learning_windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
+	</a>
+
+	- In the beginning, the two algorithms learn at a similar pace. Towards the end, Q-Learning seems to learn a better final policy. 
+	- When we descres the step-size $\alpha$, Sarsa learns the same final policy as Q-Learning, but more slowly. This experiment highlights the impact of parameter choices in reinforcement learning. $\alpha$, $\epsilon$, initial values, and the length of the experiment can all influence the final result.
+
+- <span style="color:red;">Example of Cliff Walking - Another comparison between Sarsa and Q-learning </span>
 
 ### 6.2.3 Expected Sarsa
 
@@ -178,11 +200,6 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	</div>        
 
 	Expected Sarsa retains the significant advantage of Sarsa over Q-learning on this problem. In cliff walking the state transitions are all deterministic and all randomness comes from the policy. In such cases, Expected Sarsa can safely set $\alpha$ = 1 without suffering any degradation of asymptotic performance, whereas Sarsa can only perform well in the long run at a small value of $\alpha$, at which short-term performance is poor.
-
-
-## NOTES
-
-- imagine a environment in which rewards except for reaching the terminal state are all zero, and discount factor is 1. If every state (at the beginning usually) has the same state value, then for the fisrt episode, TD methods only update the single one and only state one step before the termination. While MC updates all states. (See lecture video week 2, 2.2)
 
 ## 6.3 Summary
 
