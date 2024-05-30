@@ -16,7 +16,7 @@
 
     - value function
 
-    - model of the environment (optional)
+    - model of the environment (optional): By a model of the environment we mean anything that an agent can use to predict how the environment will respond to its actions. Given a state and an action, a model produces a prediction of the resultant next state and next reward.
 
 # Chapte 2. Multi-armed Bandit
 
