@@ -12,9 +12,9 @@ In addition to the unified view of planning and learning methods, a second theme
 
 - $\textit{Model}$ (of the environment): anything that an agent can use to predict how the environment will respond to its actions, 
 
-	- Distribution models: produce a descriptioin of all possibilities and their probabilities. E.g., the model used in DP (i.e., the dynamics of the environment: $p(r, s\prime | s, a)$)
+	- $\textit{Distribution models}$: produce a descriptioin of all possibilities and their probabilities. E.g., the model used in DP (i.e., the dynamics of the environment: $p(r, s\prime | s, a)$)
 
-	- Sample models: produce just one of the possibilities, sampled according to the probabilities. E.g., the kind of model used in the blackjack example in Chapter 5 (<span style="color:red;">A link here</span>) is a sample model.
+	- $\textit{Sample models}$: produce just one of the possibilities, sampled according to the probabilities. E.g., the kind of model used in the blackjack example in Chapter 5 (<span style="color:red;">A link here</span>) is a sample model.
 
 	- Both kinds of models are used to $\textit{simulate}$ the environment and produce $\textit{simulated experience}$. Given a starting state and a policy, a sample model could produce an entire episode, and a distribution model could generate all possible episodes and their probabilities. 
 
@@ -47,41 +47,79 @@ In addition to the unified view of planning and learning methods, a second theme
 			
 ## 8.2 Dyna: Integrated Planning, Acting, and Learning
 
+- An online planning agent: interacts with the environment in real time and updates the model based on the newly gained information.
 
-- direct vs. indirect reinforcement learning:
-	- direct RL: use real experience to directly improve the valua function and policy
-	- indirect RL: use real experience to improve the model (involved in planning)
+	- The possible relationships between experience, model, values, and policy are summarized in the following diagram:
+		<div style="display: flex; justify-content: center;">
+		<img src="../img/chapter8/planning_agent.png" alt="Architecture of a planning agent" style="width: 39%;">        
+		</div>
 
-- Dyna-Q: 
-	- model $\rightarrow$ value/policy $\rightarrow$ (real) experience $\rightarrow$ model $\rightarrow$ ... (see the circle graph in section 8.2)
-	- On each arrow above: planning $\rightarrow$ acting $\rightarrow$ model learning  $\rightarrow$ ...
+	- Depending on how the real experience is used, the reinforcement learning process can be divided into direct and indirect RL:
+
+		- $\textit{direct reinforcement learning}$: uses real experience to directly improve the value function and policy.
+
+		- $\textit{indirect reinforcement learning}$ (or $\textit{model-learning}$): uses real experience to improve the model.
+
+		- Note: Indirect methods often make fuller use of a limited amount of experience and thus achieve a better policy with fewer environmental interactions. On the other hand, direct methods are much simpler and are not affected by biases in the design of the model. (Instead of exaggrating the contrast between these two, this book focuses more on discovering the similarities.)
 	
-- Dyna agent: see book figure 8.1
-	- usually the acting, model-learning, and direct RL processes require little computation, and we assum they consume just a fraction of the time. The remaining time in each step can be devoted to the planning process, which is inherently computation-intensive.
+- Dyna agent: a type of online planning agent that performs all the above processes — planning, acting, model-learning, and direct RL — all occurring continually.
 
-- Tabular Dyna-Q:
+	- Architecture:
+		<div style="display: flex; justify-content: center;">
+		<img src="../img/chapter8/dyna_agent_architecture.png" alt="Architecture of Dyna agent" style="width: 50%;">        
+		</div>
 
-	- Initialize Q(s,a) and Model(s,a) for all $s \in S$ and $a \in A$ 
-	- Loop forever:
-		- `(a)` $S \leftarrow$ current (nonterminal) state
-		- `(b)` $A \leftarrow \epsilon$-greedy(S, Q)
-		- `(c)` Take action A, observe reward R, and the next state $S\prime$
-		- `(d)` $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S\prime, a) - Q(S, A)]$
-		- `(e)` Model(S, A) $\leftarrow R, S\prime$ (assuming deterministic environment)
-		- `(f)` Loop repeat n times:
-			- S $S \leftarrow$ random **previously observed** state
-			- A $S \leftarrow$ random action **previously taken** in S
-			- $R, S\prime \leftarrow Model(S, A)$
-			- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S\prime, a) - Q(S, A)]$
+	- Explanatoin:
+		- The arrow on the left of the figure represents direct reinforcement learning operating on real experience to improve the value function and the policy. 
+		- On the right are model-based processes. The model is learned from real experience and gives rise to simulated experience.
+		- Typically, the same reinforcement learning method is used both for learning from real experience and for planning from simulated experience.
 
-- Note:
-	- Model(s, a) denotes the contents of the predicted next state and the reward reveived for state-action pair (s, a)
-	- Step (d) indicates direct Reinforcement Learning, step (e) is the model-learning, step (f) is the planning process.
-	- If (e) and (f) is ommited, the remaining algo would be one-step tabular Q-learning
-	- Note that Dyna-Q performs n updates for each environment transition
+	- Computing time allocation: 
+		- usually the acting, model-learning, and direct RL processes require little computation, and we assum they consume just a fraction of the time. 
+		- a larger fraction of time in each step can be devoted to the planning process, which is inherently computation-intensive.
+
+- A type of dyna agent: Tabular Dyna-Q for estimating $q_\pi$:
+
+	- Algorithm
+		- Initialize $Q(s,a)$ and $Model(s,a)$ for all $s \in S$ and $a \in A$ 
+		- Loop forever:
+			- `(a)` $S \leftarrow$ current (non-terminal) state
+			- `(b)` $A \leftarrow \epsilon$-greedy($S, Q$)
+			- `(c)` Take action $A$, observe reward $R$, and the next state $S\prime$
+			- `(d)` $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S\prime, a) - Q(S, A)]$
+			- `(e)` $Model(S, A)$ $\leftarrow R, S\prime$  and $S$ $\leftarrow S\prime$ (assuming deterministic environment)
+			- `(f)` Loop repeat $n$ times:
+				- $S \leftarrow$ random **previously observed** state
+				- $A \leftarrow$ random action **previously taken in $S$**
+				- $R, S\prime \leftarrow Model(S, A)$
+				- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S\prime, a) - Q(S, A)]$
+			- `(g)` If $S$ is the terminal state, then $S \leftarrow StartingState$
+			- <span style="color:red;">where should I put the greedification step in this algo?</span>
 	
+	- Notes:
+		- $Model(s, a)$ denotes the contents of the predicted next state and the reward received for state-action pair (s, a)
+		- Direct reinforcement learning, model-learning are implemented by steps `(d)` and `(e)`, respectively. 
+		- The whole step `(f)` performs the planning.
+	 		- $\textit{Search Control}$: the first two steps in step `(f)` that select the starting states and actions for the simulated experiences generated by the model.
+			- note that the starting state in planning is random selected, it does NOT have to be the real starting state
+		- If `(e)` and `(f)` are ommited, the remaining algorithm would be one-step tabular Q-learning.
+
+	- Illustrative Example (starting from `3:13`): In a gridworld with obstacles, an agent starts from the lower left grid and travels to the end state on the upper right. Initial policy $\pi$ assigns equal probability to all four action: left, right, up and down.
+
+		<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/k7Out/the-dyna-algorithm">
+		<img src="../img/chapter8/dyna_q_example.png" alt="Video: The dyna algorithm" style="width:45%;">
+		</a>
+
+		- <span style="color:red;">In the video, the lecturer claims that the planning starts working from the second episod. But can't the planning process already work after the final step in the first episode, since planning happends n times after each step of real interaction?</span>
+
+- <span style="color:red;">Example: Dyna Maze</span>
 	
-## When the model is wrong
+	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/TGSQi/dyna-q-learning-in-a-simple-maze">
+	<img src="../img/chapter8/example_maze.png" alt="Video: The Maze example" style="width:60%;">
+	</a>
+
+
+## 8.3 When the model is wrong
 
 - Inaccurate model: model is incomplete or the environment has changed
 	- It is harder to detect modeling error in the case where the environment changes to become "better" (better solutions emerge) than the environment becomes "worse"
