@@ -138,9 +138,9 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 				- Take action $A$, observe $R, S\prime$
 				- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S\prime, a) - Q(S, A)]$
 				- $S \leftarrow S\prime$
-			- until S is terminal
+			- until $S$ is terminal
 	- Notes:
-		- Different from Sarsa, at target state $S\prime$, Q-learning choose the greedy action that maximizes $Q(S\prime, a)$ directly, but not according to a policy derived from $Q$ (although, the derived policy from $Q$ can also be the greedy policy, if so, the update rules of Sarsa and Q-learning are identical).
+		- **Different from Sarsa, at target state $S\prime$, Q-learning choose the greedy action that maximizes $Q(S\prime, a)$ directly**, but not according to a policy derived from $Q$ (although, the derived policy from $Q$ can also be the greedy policy, if so, the update rules of Sarsa and Q-learning are identical).
 
 		- **Why is Q-learning off-policy?** Consider the derived policy from current $Q$ as the $\textit{behaviour policy}$, which can be e.g., $\epsilon$-greedy. but the $\textit{target policy}$ for Q-learning is actually the greedy policy according to the $max$ term in the update rule from above (actions are chosen according to $\epsilon$-greedy, updates are made according to the greedy policy). Readers of interest can further refer to [this video.](https://www.coursera.org/learn/sample-based-learning-methods/lecture/1OikH/how-is-q-learning-off-policy) 
 
