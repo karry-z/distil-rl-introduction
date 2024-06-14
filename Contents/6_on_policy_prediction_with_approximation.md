@@ -38,3 +38,68 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 ## 9.2 Stochastic-gradient and Semi-gradient Methods
 
 
+- Setup for gradient descent methods: 
+    - the weight vector is a column vector with a fixed number of real valued components, $w \dot= (w_1,w_2,...,w_d)^T$. (Note that in this book vectors are generally taken to be column vectors unless explicitly written out horizontally or transposed.)
+    - the approximate value function $v(s,w)$ is a differentiable function of $w$ for all $s \in S$. 
+
+- Sotchastic gradient method (SGD)
+    - Setup: assume that on each step, we observe a new example $S_t \rightarrow v_\pi(S_t)$ consisting of a (possibly randomly selected) state $S_t$ and its true value under the policy.
+    - SGD method:
+        - update rule:
+            $$
+            \begin{align}
+            \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
+            &= \boldsymbol{w_t} - \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            \end{align}
+            $$
+
+        - Notes: 
+            - The assumption of available $v_\pi(S_t)$ is clearly impossible in practice. In fact, as long as the target is an unbiased estimate of $v_\pi(S_t)$, i.e., $E[Target | S_t=s] = v_\pi(S_t)$, then $\boldsymbol{w_t}$ is guaranteed to converge to a local optimum under the usual stochastic approximation condition for decreasing $\alpha$ (topics of convergence are not included in DistilRL, please refer to the book chapter 2.7 for details.)
+            - By definition, the Monte Carlo target $G_t$ is an unbiased estimator of $v_\pi(S_t)$.
+    
+    - Gradient Monte Carlo Algorithm for estimating $\hat{v} \approx v_\pi$
+        - Input: the policy $\pi$ to be evaluated, 
+        - Input: a differentiable function $\hat{v}: S \times \mathbb{R}^d \rightarrow \mathbb{R}$
+        - Algorithm parameter: step size $\alpha > 0$
+        - Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w=0}$)
+        - Loop forever (for each episode):
+            - Generate an episode $S_0, A_0, R_1, ... S_{T-1}, A_{T-1}, R_T, S_T$ using $\pi$.
+            - $ \text{for } t \text{ in } \{T-1, T-2, ..., 0\}$:
+                $$
+                \boldsymbol{w} \leftarrow \boldsymbol{w} - \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
+                $$
+
+- Semi-gradient method:
+    - Setup: the training example $S_t \rightarrow U_t$ with $U_t \in \mathbb{R}$ is not the true value $v_\pi(S_t)$ but a **boostraping target** using $\hat{v}$
+
+    - Semi-gradient methods:
+        - update rule
+            $$
+            \begin{align}
+            \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
+            &= \boldsymbol{w_t} - \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            \end{align} 
+            $$
+
+        - Notes:
+            - There is no guarantees for convergence as for stochastic gradient methods if a bootstrapping estimate of $v(S_t)$ is used as the target $U­_t$. Boostrapping methods use $\hat{v}(S_{t+1}, \boldsymbol{w_t})$ as the target, which depends on the current $\boldsymbol{w_t}$. Yet the derivation from equation $(1)$ to $(2)$ requires independence regarding $\boldsymbol{w_t}$. 
+            
+                In other words, bootstrapping methods take into account the effect of changing the weight vector $\boldsymbol{w_t}$ on the estimate, but ignore its effect on the target. They include only a part of the gradient and, accordingly, we call them $\textit{semi-gradient methods}$.
+
+            - Although semi-gradient (bootstrapping) methods do not converge as robustly as gradient methods, they do converge reliably in important cases such as the linear case, and they are usually preferred in practice due to the boostrapping advantage against monte carlo methods.
+    
+    - Semi-gradient TD(0) for estimating $\hat{v} \approx v_\pi$
+        - Input: the policy $\pi$ to be evaluated, 
+        - Input: a differentiable function $\hat{v}: S^{+} \times \mathbb{R}^d \rightarrow \mathbb{R}$ such that $\hat{v}(terminal, a)=0$
+        - Algorithm parameter: step size $\alpha > 0$
+        - Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w=0}$)
+        - Loop forever (for each episode):
+            - Initialize $S$
+            - Loop for each step of episode:
+                - Choose $A \sim \pi(a|s)$
+                - Take action $A$, observe $R, S\prime$
+                - $\boldsymbol{w} \leftarrow \boldsymbol{w} - \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})$
+                - $S \leftarrow S\prime$
+            - until $S$ is terminal
+    
+-  <span style="color:red;">Example of State Aggregatioin:</span>
