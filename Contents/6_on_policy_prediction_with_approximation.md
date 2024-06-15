@@ -101,5 +101,24 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
                 - $\boldsymbol{w} \leftarrow \boldsymbol{w} - \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})$
                 - $S \leftarrow S\prime$
             - until $S$ is terminal
+
+-  Example: State Aggregatioin:
+
+    - State Aggregation: a method for generalizing function approximation by grouping states together, each group of states share one estimated value.
+
+    - Using state aggregation for gradent MC (video):
+
+        <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/aJ9j6/state-aggregation-with-monte-carlo">
+        <img src="../img/chapter9/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:70%;">
+        </a>
     
--  <span style="color:red;">Example of State Aggregatioin:</span>
+    - Using state aggregation for semi-gradient TD (video):
+
+        <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
+        <img src="../img/chapter9/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:100%;">
+        </a>
+    
+    - <span style="color:red;">Comparison between MC and TD:</span>
+
+## 9.3 Linear Models
+
