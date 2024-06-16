@@ -49,7 +49,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
             $$
             \begin{align}
             \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
-            &= \boldsymbol{w_t} - \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            &= \boldsymbol{w_t} + \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
             \end{align}
             $$
 
@@ -66,7 +66,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
             - Generate an episode $S_0, A_0, R_1, ... S_{T-1}, A_{T-1}, R_T, S_T$ using $\pi$.
             - $ \text{for } t \text{ in } \{T-1, T-2, ..., 0\}$:
                 $$
-                \boldsymbol{w} \leftarrow \boldsymbol{w} - \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
+                \boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
                 $$
 
 - Semi-gradient method:
@@ -77,7 +77,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
             $$
             \begin{align}
             \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
-            &= \boldsymbol{w_t} - \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            &= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
             \end{align} 
             $$
 
@@ -98,7 +98,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
             - Loop for each step of episode:
                 - Choose $A \sim \pi(a|s)$
                 - Take action $A$, observe $R, S\prime$
-                - $\boldsymbol{w} \leftarrow \boldsymbol{w} - \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})$
+                - $\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})$
                 - $S \leftarrow S\prime$
             - until $S$ is terminal
 
@@ -122,3 +122,65 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 
 ## 9.3 Linear Models
 
+- Linear Methods: methods that approximate the value function $\hat{v}(s, \boldsymbol{w})$ as a linear function, i.e., the inner product between $\boldsymbol{w}$ and $\boldsymbol{x}(s)$ - a feature vector, as follows:
+
+    $$
+    \hat{v}(s, \boldsymbol{w}) \dot= \boldsymbol{w}^{\intercal} \boldsymbol{x}(s) \dot= \sum_{i=1}^d w_i x_i(s)
+    $$
+
+    - In this case the approximate value function is said to be $\textit{linear in the weights}$, or simply $\textit{linear}$.
+    
+    - the feature vector $\boldsymbol{x}(s) \dot= (x_1(s), x_2(s), ... x_d(s))^{\intercal}$ has the same dimension $d$ as the weight vector $\boldsymbol{w}$. Each feature $x_i: S \rightarrow \mathbb{R}$ is a socalled $\textit{basis function}$ which assigns a value ($x_i(s)$) to the state $s$ (the feature of $s$)
+
+- (Semi-)Gradient methods for linear value function
+
+    - Update rule:
+        $$
+        \begin{align*}
+        \boldsymbol{w_{t+1}} &= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t}) \\
+        &= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x}(S_t) \\
+        \end{align*} 
+        $$
+    
+    - Convergence
+        - MC method: the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the $\overline{VE}$ under linear function approximation if $\alpha$ is reduced over time according to the usual conditions.
+
+        - TD(0) method: weight vector eventually converges to a point near the local optimum. 
+
+            - update rule:
+
+                $$
+                \begin{align*}
+                \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \hat{v}(S_{t+1}, \boldsymbol{w_t}) - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x_t} \\
+                &= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t+1}} - \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t}}]\boldsymbol{x_t} \\
+                &= \boldsymbol{w_t} + \alpha [R_{t+1}\boldsymbol{x_{t}} - \boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}\boldsymbol{w_{t}}]\\
+                \end{align*} 
+                $$
+
+                - Note: $\boldsymbol{x_t}$ is used to represent $\boldsymbol{x}(S_t)$ for simplicity
+            
+            - in steady state (convergence):
+                $$
+                E[\boldsymbol{w_{t+1}}|\boldsymbol{w_{t}}] = \boldsymbol{w_{t}} + \alpha(\boldsymbol{b - Aw_{t+1}})
+                $$
+
+                with  $\boldsymbol{b} \dot= E[R_{t+1}\boldsymbol{x_{t}}] \in \mathbb{R}^d$ and $\boldsymbol{A} \dot= E[\boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}] \in \mathbb{R}^d \times \mathbb{R}^d$ 
+
+                And at converge:
+                $$
+                \begin{align*}
+                & \Rightarrow \quad \mathbf{b} - \mathbf{A}\mathbf{w}_{\text{TD}} = \mathbf{0} \\
+                & \Rightarrow \quad \mathbf{b} = \mathbf{A}\mathbf{w}_{\text{TD}} \\
+                & \Rightarrow \quad \mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}.
+                \end{align*}
+                $$
+
+            - Notes: 
+                - The quantity $\mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}$ is called the $\textit{TD fixed point}$. Linear semi-gradient TD(0) converges to this point.
+
+                - At the TD fixed point, it has also been proven (in the continuing case) that the $\overline{VE}$ is within a bounded expansion of the lowest possible error:
+
+                    $$
+                    \overline{VE}(\mathbf{w}_{\text{TD}}) \le \frac{1}{1-\gamma} \underset{w}{min}\overline{VE}(\mathbf{w})
+                    $$
+                    Because $\gamma$ is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.
