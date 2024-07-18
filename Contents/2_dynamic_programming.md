@@ -50,7 +50,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
         - States: the nonterminal states are $S = {1, 2,...,14}$. 
         - Actions: there are four actions possible in each state, $A = \{up, down, right, left\}$, which deterministically cause the corresponding state transitions, except that actions that would take the agent off the grid in fact leave the state unchanged. 
-            - For instance, $p(6, 1|5, right) = 1, p(7, 1|7, right) = 1$, and $p(10,r|5, right) = 0$ for all $r \in R$. 
+            - For instance, $p(6, -1|5, right) = 1, p(7, -1|7, right) = 1$, and $p(10,r|5, right) = 0$ for all $r \in R$. 
         - Reward: this is an undiscounted, episodic task. The reward is $-1$ on all transitions until the terminal state is reached. The expected reward function is thus $r(s, a, s\prime)= 1$ for all states $s, s\prime$ and actions $a$.
         - Policy: an equiprobable random policy (all actions are equally likely)
     
