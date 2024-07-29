@@ -96,7 +96,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 			- Choose $A$ from S using policy derived from $Q$ (e.g., $\epsilon$-greedy)
 			- Loop for each step of episode:
 				- Take action A, observe $R, S\prime$
-				- Choose $A\prime$ from $S\prime$ using policy derived from Q (e.g., $\epsilon$-greedy)
+				- Choose $A\prime$ from $S\prime$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
 				- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma Q(S\prime, A\prime) - Q(S, A)]$
 				- $S \leftarrow S\prime, A \leftarrow A\prime$
 			- until $S$ is terminal
