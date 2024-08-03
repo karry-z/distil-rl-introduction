@@ -185,8 +185,8 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
                     $$
                     Because $\gamma$ is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.
 
-## 9.x Summary
+## 9.4 Summary
 
-- Mindmap of all methods (see lecture video: Summary)
+- Mindmap for the methods introduced in this chapter (for those whose value function can not be represented with a table)
 
-- Generalization and Discrimination
+    <img src="../img/chapter9/mindmap.png" alt="Mindmap for non-tabular methods" style="width:90%;">
