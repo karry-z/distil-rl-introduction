@@ -3,3 +3,5 @@
 This is the second part of Chapter 9, where we continue to explore the value function approximation. In particular, how to construct features for linear methods.
 
 ## 9.5 Feature Construction for Linear Methods
+
+how tile coding works: https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td
