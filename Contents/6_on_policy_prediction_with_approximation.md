@@ -283,16 +283,56 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
 ## 9.5 ${\star}$ Neural Networks 
 
+This section is optional since this tutorial is built based on the assumption that learners have already acquired a sufficient level of knowledge in deep learning. But still the following content is made to give a quick intuition about how neural networks are used in context of function approximation in RL.
+
+<!-- TODO: Update this at home with content from the weekly assignment-->
 - How to use NN to calculate V(s), give the state representation. An example with one hidden layer:
     <img src="../img/chapter9/nn_structure.png" alt="NN structure: from state representation to its value" style="width:70%;">
 
 
-## 9.5 Summary
+- Some interesting common [optimization strategies](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/WOMEl/optimization-strategies-for-nns) when trainig neural networks to be remembered.
 
-- Mindmap for the methods introduced in this chapter (for those whose value function can not be represented with a table)
 
-    <img src="../img/chapter9/mindmap.png" alt="Mindmap for non-tabular methods" style="width:90%;">
+- Optional watching: [David Silver on Deep Learning + RL = AI?](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/xZuSl/david-silver-on-deep-learning-rl-ai)
 
-- Optimization Strategies for using Neutral Networks
 
-    https://www.coursera.org/learn/prediction-control-function-approximation/lecture/WOMEl/optimization-strategies-for-nns
+## 9.6 Summary
+
+- Recap of where we are now
+
+    <img src="../img/chapter9/chapter9_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
+
+
+- Summary
+
+    In this chapter, we focused on extending **reinforcement learning** (RL) from the tabular case to **function approximation**, a crucial step for handling large state spaces in real-world problems. Here's a recap of the main concepts:
+
+    1. **Transition to Function Approximation**:
+        - Moving away from tabular methods allows RL to be applied in more complex problems where it's impractical to enumerate every state.
+        - The conceptual shift involves parameterized function approximation, where we no longer store state values in a table.
+        - We aim to minimize the **Mean Squared Value Error**, which measures the difference between the true state values and our approximations, weighted by visitation frequency $u(s)$.
+    2. **Gradient Methods**:
+        - **Gradient Monte Carlo**: Updates are made at the end of each episode using the sampled returns.
+        - **Semi-Gradient TD**: Uses bootstrapping with value estimates at the next time step, enabling updates during episodes and faster learning.
+            - We also introduced **Linear TD** with function approximation, which provably converges to a well-understood solution.
+
+    3. **Generalization and Discrimination**:
+        - **Generalization** allows updates for one state to improve value estimates for other similar states, speeding up learning.
+        - **Discrimination** ensures that distinct states are assigned different values, preventing overgeneralization.
+
+    4. **Feature Construction and Representation**:
+
+        - **Coarse coding** groups neighboring states into arbitrary-shaped features, such as overlapping circles where each circle is active (1) if the state is inside it and inactive (0) otherwise.
+
+        - **Tile Coding**:
+            - A specialized form of coarse coding that uses **overlapping grids (tilings)**.
+            - Each tiling is non-overlapping, with one active feature per grid, but multiple offset tilings allow for finer state discrimination.
+            - The design of tilings balances generalization, discrimination, and efficiency.
+
+        - **Neural Network-based Representations**:
+            - Unlike fixed representations (e.g., coarse coding), neural networks learn representations **online**.
+            - Networks use layers of neurons to transform inputs into outputs, with weights updated through **gradient descent** based on a **loss function**.
+
+
+
+    
