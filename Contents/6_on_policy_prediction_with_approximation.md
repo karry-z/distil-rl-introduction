@@ -17,7 +17,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
     $s \rightarrow R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)$
 
 - Supervised learning for function approximation
-    - we interpret each update as specifying an example of the desired input-output ($s\rightarrow u$) behavior of the value function, with $u$ indicating the $\textit{udpate target}$.
+    - We interpret each update as specifying an example of the desired input-output ($s\rightarrow u$) behavior of the value function, with $u$ indicating the $\textit{udpate target}$.
     - In function approximation, we pass the input–output behavior $s\rightarrow u$ of each update as a training example, then interpret the approximate function they produce (after training) as an estimated value function
 
 - The Prediction Objective ($\overline{VE}$)
@@ -115,10 +115,30 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
     - Using state aggregation for semi-gradient TD (video):
 
         <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
-        <img src="../img/chapter9/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:100%;">
+        <img src="../img/chapter9/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:70%;">
         </a>
     
-    - <span style="color:red;">Comparison between MC and TD:</span>
+    - Comparison between MC and TD: as already described in the above lecture video, the main differences between Temporal Difference (TD) and Monte Carlo (MC) methods in the context of function approximation are as follows:
+
+        1. **Bias in Updates**:
+            - **TD**: The TD update is biased because it relies on estimates of the value in the next state. Since value approximations are never perfect, the target may remain biased, even as estimates improve over time.
+            - **Monte Carlo**: MC methods use an unbiased estimate of the gradient of the value error, which leads to more accurate value estimates in the long run.
+
+        2. **Convergence**:
+            - **TD**: TD does not guarantee convergence to a local minimum of the Mean Squared Value Error (MSVE) because of its inherent bias. In practice, TD can oscillate around a local minimum due to the use of a constant step size.
+            - **Monte Carlo**: Over time and with enough samples, MC will converge to a local minimum of MSVE, but it may take longer because it requires more samples and decaying step sizes.
+
+        3. **Speed of Learning**:
+            - **TD**: TD generally learns faster than MC because it updates its estimates during the episode, allowing for quicker learning. The algorithm has lower variance in its updates compared to MC.
+            - **Monte Carlo**: While MC methods provide more accurate long-term estimates, they typically require more episodes and are slower in terms of early learning, especially with a small number of samples.
+
+        5. **Use of Limited Samples**:
+            - **TD**: TD makes better use of limited samples because it learns continuously during episodes.
+            - **Monte Carlo**: MC requires running episodes to completion before learning, making it slower when sample size is restricted.
+
+        **Note:** Overall, when speed of learning is critical, especially with limited samples, TD is more preferable due to its faster learning and lower variance in updates 
+
+- Optional Watching: [Doina Precup: Building Knowledge for AI Agents with Reinforcement Learning](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ipyWM/doina-precup-building-knowledge-for-ai-agents-with-reinforcement-learning)
 
 ## 9.3 Linear Models
 
@@ -142,7 +162,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
         \end{align*} 
         $$
     
-    - Convergence
+    - *Convergence
         - MC method: the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the $\overline{VE}$ under linear function approximation if $\alpha$ is reduced over time according to the usual conditions.
 
         - TD(0) method: weight vector eventually converges to a point near the local optimum. 
@@ -187,9 +207,43 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 
 ## 9.4 Feature Construction for Linear Methods
 
-Choosing features appropriate to the task is an important way of adding prior domain knowledge to reinforcement learning systems. Intuitively, the features should correspond to the aspects of the state space along which generalization may be appropriate. In this last section we study **how to construct $x(s)$** for approximating the value function and balancing between generalization and discrimination.
+Choosing features appropriate to the task is an important way of adding prior domain knowledge to reinforcement learning systems. Intuitively, the features should correspond to the aspects of the state space along which generalization may be appropriate. 
+
+A limitation of the linear form is that it cannot take into account any interactions between features, such as the presence of feature $i$ being good only in the absence of feature $j$, or to put it in another word, we need features that can take the combinations of different states or state dimensions into consideration. 
+
+In this last section we study **how to construct such $x(s)$** for approximating the value function and balancing between generalization and discrimination.
 
 ### 9.4.1 Coarse Coding
+
+- You may choose to watch this [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/JnNF5/generalization-properties-of-coarse-coding) instead since the following content is well covered in it and if you prefer visual&audio contents over texts.
+
+- Introduction: 
+
+    - Scenario: the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be $\textit{circles}$ in state space. 
+
+    - Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a $\textit{binary feature}$.)
+
+        <img src="../img/chapter9/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
+
+        Corresponding to each circle / feature is a single weight (a component of $\boldsymbol{w}$) that is affected by learning.
+
+        Performing an update to the weights in one state changes the value estimate for all states within the receptive fields (in this case, circles) of the active features. In the above image, update for state $s$ also changes the value estimate for state $s\prime$
+    
+    - Definition: Representing a state with features that overlap in the above way (although they need not be circles or binary) is known as **coarse coding**.
+
+- Generalization and Discrimination
+
+    - Demostration: Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).
+
+        <img src="../img/chapter9/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
+
+        As above, features with large receptive fields give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the receptive fields, but finest discrimination is ultimately  controlled more **by the total number of features**, as shown by the next example. 
+
+    - Example
+
+
+
+
 
 ### 9.4.2 Tile Coding
 
