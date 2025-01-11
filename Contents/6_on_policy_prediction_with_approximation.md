@@ -215,11 +215,10 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
 ### 9.4.1 Coarse Coding
 
-- You may choose to watch this [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/JnNF5/generalization-properties-of-coarse-coding) instead since the following content is well covered in it and if you prefer visual&audio contents over texts.
 
 - Introduction: 
 
-    - Scenario: the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be $\textit{circles}$ in state space. 
+    - Scenario: assume the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be $\textit{circles}$ in state space. 
 
     - Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a $\textit{binary feature}$.)
 
@@ -227,29 +226,62 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
         Corresponding to each circle / feature is a single weight (a component of $\boldsymbol{w}$) that is affected by learning.
 
-        Performing an update to the weights in one state changes the value estimate for all states within the receptive fields (in this case, circles) of the active features. In the above image, update for state $s$ also changes the value estimate for state $s\prime$
+        Performing an update to the weights in one state changes the value estimate for all states within the $\textit{receptive fields}$ (in this case, circles) of the active features. In the above image, update for state $s$ also changes the value estimate for state $s\prime$
     
     - Definition: Representing a state with features that overlap in the above way (although they need not be circles or binary) is known as **coarse coding**.
 
 - Generalization and Discrimination
 
-    - Demostration: Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).
+    - You may choose to watch this [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/JnNF5/generalization-properties-of-coarse-coding) instead, since the following content is well covered in it and if you prefer visual&audio contents over texts.
+
+    - Demostration: 
+    
+        Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).
 
         <img src="../img/chapter9/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
 
-        As above, features with large receptive fields give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the receptive fields, but finest discrimination is ultimately  controlled more **by the total number of features**, as shown by the next example. 
+        As above, features with large $\textit{receptive fields}$ give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the $\textit{receptive fields}$, but finest discrimination is ultimately  controlled more **by the total number of features**, as shown by the next example. 
 
-    - Example
+    - Example: Coarseness of Coarse Coding
 
+        - Setup: Linear function approximation based on coarse coding and Semi-Gradient method was used to learn a one-dimensional square-wave function, the values of this function were used as the targets, $U_t$.
 
+        - Results: as below, the width of the features had a strong e↵ect early in learning. However, the final function learned was a↵ected only slightly by the width of the features
 
+            <img src="../img/chapter9/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:90%;">
 
 
 ### 9.4.2 Tile Coding
 
-how tile coding works: https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td
+- Introduction
 
-### 9.4.3 Neural Networks ${\star}$
+    - Tile coding is **a form of coarse coding** for multi-dimensional continuous spaces
+
+    - In tile coding the $\textit{receptive fields}$ of the features are grouped into partitions of the state space. Each such partition is called a $\textit{tiling}$, and each element of the partition is called a $\textit{tile}$.
+
+    - Demonstration:
+
+        <img src="../img/chapter9/tile_coding.png" alt="Demonstration for Tile Coding" style="width:100%;">
+
+        - The simplest tiling of a two-dimensional state space is a uniform grid such as that shown on the left side of figure above. Note that with just one tiling, we would not have coarse coding but just a case of state aggregation.
+
+        - To get true coarse coding with tile coding, multiple tilings are used, each offset by a fraction of a tile width (shown on the right side of the figure). Every state (indicated by the white spot) falls in exactly one tile in each of the four tilings. These four tiles correspond to four features that become active when the state occurs. In this example there are $4 \times 4 \times 4 = 64$ components, all of which will be 0 except for the four corresponding to the tiles that the state $s$ falls within.
+    
+    - Advantages:
+
+        - Allowing for the learning rate $\alpha$ to be set in an easy, intuitive way: The overall number of features that are active at one time is the same for any state, so the total number of features present is always the same as the number of tilings.   <span style="color:red;">This allows the step-size parameter, $\alpha$ ,to be set in an easy, intuitive way</span>
+
+        - Computational advantages: during computation of $\sum_{i=1}^d w_i x_i(s)$ one simply computes the indices of the $n \ll d$ active features (n is equal to the number of tilings) and then adds up the n corresponding components of the weight vector.
+
+- How it works
+
+    - It is recommended to watch the lecture video below since it offers a more comprehensive explanation of how tile code works with TD.
+
+        <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td">
+            <img src="../img/chapter9/tile_coding_example.png" alt="Example for Tile Coding" style="width:70%;">
+        </a>
+
+## 9.5 ${\star}$ Neural Networks 
 
 - How to use NN to calculate V(s), give the state representation. An example with one hidden layer:
     <img src="../img/chapter9/nn_structure.png" alt="NN structure: from state representation to its value" style="width:70%;">
