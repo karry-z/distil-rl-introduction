@@ -184,3 +184,8 @@ In addition to the unified view of planning and learning methods, a second theme
 		
 
 
+## 8.4 Summary
+
+- Recap of where we are now
+
+	<img src="../img/chapter8/chapter8_mindmap.png" alt="Mindmap" style="width: 100%;"> 
