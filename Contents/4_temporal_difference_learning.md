@@ -28,7 +28,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	- **Temporal Difference methods** also uses an estimate of equation (3), yet requires no model of the environment's dynamics. It combines the above two in the following way:
 
 		$V(S_t) \leftarrow V(S_t) + \alpha (R_{t+1} + \gamma V(S_{t+1}) - V(S_t))$ with $R_{t+1} + \gamma V(S_{t+1})$ as the single realisation of $R_{t+1} + \gamma v_{\pi}(S_{t+1})$ each time. 
-		- The target for the TD update is $R_{t+1} + \gamma V(S_{t+1})$, this TD method is called **TD(0) or one-step TD**, which is a special case of the TD($\lambda$) or n-step TD (introduced in later chapters)
+		- The target for the TD update is $R_{t+1} + \gamma V(S_{t+1})$, this TD method is called **TD(0) or one-step TD**, which is a special case of the TD($\lambda$) or n-step TD (not introduced in this tutorial)
 
 		- TD combines the sampling of MC and the bootstrapping of DP: 
 			1. TD and MC both involve looking ahead to a sample successor state (or state–action pair), i.e., they both use $\textit{sample update}$ instead of $\textit{expected update}$ as in DP.
@@ -52,7 +52,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 				- $S \leftarrow S\prime$
 			- until $S$ is the terminal state
 	- Notes:
-		- notice the difference between MC algorithms, there is now no need to generate the whole episode. Instead, $V(s)$ will be updated right after an action is taken and a new state is observed, i.e., TD methods work in a fashion of “走一步，算一步” (don't know how to best desribe this in English)
+		- notice the difference between MC algorithms, there is now no need to generate the whole episode. Instead, $V(s)$ will be updated right after an action is taken and a new state is observed, i.e., TD methods work in a fashion of “走一步，算一步” (don't know how to best desribe this in English yet)
 
 - Example: Driving Home
 
@@ -93,7 +93,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 		- Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$ arbitrarily except that $A(terminal, .) = 0$
 		- Loop for each episode:
 			- Initialize $S$
-			- Choose $A$ from S using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+			- Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
 			- Loop for each step of episode:
 				- Take action A, observe $R, S\prime$
 				- Choose $A\prime$ from $S\prime$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
@@ -202,6 +202,11 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	Expected Sarsa retains the significant advantage of Sarsa over Q-learning on this problem. In cliff walking the state transitions are all deterministic and all randomness comes from the policy. In such cases, Expected Sarsa can safely set $\alpha$ = 1 without suffering any degradation of asymptotic performance, whereas Sarsa can only perform well in the long run at a small value of $\alpha$, at which short-term performance is poor.
 
 ## 6.3 Summary
+
+- Recap of where we are now
+
+	<img src="../img/chapter6/chapter6_mindmap.png" alt="Mindmap" style="width:100%;">
+
 
 The methods presented in this chapter are today the most widely used reinforcement learning methods. This is probably due to their great simplicity: they can be applied online, with a minimal amount of computation, to experience generated from interaction with an environment; they can be expressed nearly completely by single equations that can be implemented with small computer programs.
 
