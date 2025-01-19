@@ -58,13 +58,13 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
                     $$
                     S \leftarrow S\prime \\
                     A \leftarrow A\prime
-                    $$s
+                    $$
     - Update rule for semi-gradient Expected Sarsa:
         $$
         \mathbf{w} \leftarrow \mathbf{w} + \alpha \left( R_{t+1} + \gamma \sum_{a'} \pi(a' \mid S_{t+1}) \hat{q}(S_{t+1}, a', \mathbf{w}) - \hat{q}(S_t, A_t, \mathbf{w}) \right) \nabla \hat{q}(S_t, A_t, \mathbf{w})
         $$
 
-    - update rule for semi-gradient Q-learning:
+    - Update rule for semi-gradient Q-learning:
         $$
         \mathbf{w} \leftarrow \mathbf{w} + \alpha \left( R_{t+1} + \gamma \max_{a'} \hat{q}(S_{t+1}, a', \mathbf{w}) - \hat{q}(S_t, A_t, \mathbf{w}) \right) \nabla \hat{q}(S_t, A_t, \mathbf{w})
         $$
@@ -180,3 +180,25 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 - Optional Watching: [Satinder Singh on Intrinsic Rewards](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/TKPHV/satinder-singh-on-intrinsic-rewards)
 
 ## 10.3 Summary
+
+- Recap of where we are
+
+    <img src="../img/chapter10/chapter10_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
+
+- Summary
+
+    In this chapter, we extended tabular control methods to function approximation, examined changes in exploration techniques, and introduced the average reward framework for continuous control. Detailed aspects are:
+
+    1. **Action Value Estimation**: For discrete action spaces, state features can be stacked, while for continuous action spaces, the action can be treated as an input (to a neural network) along with other state variables.
+    
+    2. **Algorithm Overview**: Function approximation is introduced on the algorithm map. We focused on extending tabular control algorithms (SARSA, expected SARSA, and Q-Learning) to accommodate function approximation. These extensions involve modifying update equations to use gradient-based weight updates.
+
+    3. **Episodic SARSA**: We demonstrated how episodic SARSA could solve the mountain car problem, showing that a larger step size (0.5) allows for faster learning.
+
+    4. **Exploration Strategies**: Optimistic initialization is useful with structured features but may not work as expected with non-linear function approximators like neural networks, as optimism can fade quickly. Epsilon-greedy is a more reliable exploration method regardless of the function approximator.
+
+    5. **Average Reward Framework**: We introduced a new way to approach continuing control problems by maximizing the average reward over time, rather than focusing on discounted returns. We defined differential returns and values, which help the agent evaluate actions in this framework.
+
+    6. **Differential Semi-Gradient SARSA**: This new algorithm, using the average reward framework, approximates differential values to learn policies, extending the previous algorithms.
+
+    In next chapter, we’ll explore reinforcement learning **without value function learning**.
