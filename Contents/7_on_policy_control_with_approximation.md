@@ -105,10 +105,10 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
     - **Conclusion**: Combining optimistic values with function approximation is complex, and while Epsilon greedy can be used universally, it’s less directed. **Improving exploration in function approximation remains an open research question.**
     
 
-## 10.3 Average Reward: A New Way of Formulating Control Problems
+## 10.2 Average Reward: A New Way of Formulating Control Problems
 
-- [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/DXGwx/average-reward-a-new-way-of-formulating-control-problems)
 
+- Motivation: This [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/DXGwx/average-reward-a-new-way-of-formulating-control-problems) motivates the average rewrad setting and is optional to watch.
 
 - Definition: Like the discounted setting, the average reward setting applies to continuing problems, however, there is no discounting. In the average-reward setting, the average reward is defined as below, and reflects the quality of the policy $\pi$.
 
@@ -120,8 +120,11 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
     \end{align}
     $$
 
-    - $\mu_\pi(s)\doteq \lim_{t \to \infty} \Pr\{S_t = s \mid A_{0:t-1} \sim \pi\}$ is assumed to esit for any $\pi$ and to be independent of $S_0. (This assunmption about MDP is known as $\textit{ergodicity}$)
-    - We consider all policies that attain the maximal value of r(⇡) to be optimal.
+    - $\mu_\pi(s)\doteq \lim_{t \to \infty} \Pr\{S_t = s \mid A_{0:t-1} \sim \pi\}$ is assumed to exist for any $\pi$ and to be independent of $S_0. (This assunmption about MDP is known as $\textit{ergodicity}$)
+
+    - We consider all policies that attain the maximal value of $r(\pi)$ to be optimal.
+
+    - Necessacety for the average reward setting: the discounted setting is problematic with function approximation, readers of interests can refer to the book chapter 10.4
 
 - Derived definitions:
     - Returns: returns are defined in terms of differences between rewards and the average reward:
@@ -153,33 +156,27 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         \end{align}
         $$
 
-- Derived Algorithm Example: **Differential semi-gradient Sarsa for estimating** $\hat{q} \approx q_*$
-  
-    - **Input:** a differentiable action-value function $\hat{q}: \mathcal{S} \times \mathcal{A} \times \mathbb{R}^d \rightarrow \mathbb{R}$  
-    - **Algorithm parameters:** step sizes $\alpha, \beta > 0$  
-    - **Initialize:**  
-        - Value-function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w = 0}$)  
-        - Average reward estimate $\bar{R} \in \mathbb{R}$ arbitrarily (e.g., $\bar{R} = 0$)  
-    - Initialize state $S$ and action $A$.  
-    - **Loop forever (for each step):**  
-        - Take action $A$, observe $R$ and $S'$.  
-        - Choose $A'$ as a function of $\hat{q}(S', \cdot, \boldsymbol{w})$ (e.g., $\epsilon$-greedy).  
-        - Compute:  
-            $$
-            \delta \leftarrow R - \bar{R} + \hat{q}(S', A', \boldsymbol{w}) - \hat{q}(S, A, \boldsymbol{w})
-            $$  
-        - Update average reward:  
-            $$
-            \bar{R} \leftarrow \bar{R} + \beta \delta
-            $$  
-        - Update value-function weights:  
-            $$
-            \boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha \delta \nabla \hat{q}(S, A, \boldsymbol{w})
-            $$  
-        - Update state and action:  
-            $$
-            S \leftarrow S', \quad A \leftarrow A'
-            $$  
+- Derived Algorithm Example: 
+    - **Differential semi-gradient Sarsa for estimating** $\hat{q} \approx q_*$
+        - **Input:** a differentiable action-value function $\hat{q}: \mathcal{S} \times \mathcal{A} \times \mathbb{R}^d \rightarrow \mathbb{R}$  
+        - **Algorithm parameters:** step sizes $\alpha, \beta > 0$  
+        - **Initialize:**  
+            - Value-function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w = 0}$)  
+            - Average reward estimate $\bar{R} \in \mathbb{R}$ arbitrarily (e.g., $\bar{R} = 0$)  
+        - Initialize state $S$ and action $A$.  
+        - **Loop forever (for each step):**  
+            - Take action $A$, observe $R$ and $S'$.  
+            - Choose $A'$ as a function of $\hat{q}(S', \cdot, \boldsymbol{w})$ (e.g., $\epsilon$-greedy).  
+            - Compute:  $\delta \leftarrow R - \bar{R} + \hat{q}(S', A', \boldsymbol{w}) - \hat{q}(S, A, \boldsymbol{w}) $
+            - Keep tracking the average reward:  $\bar{R} \leftarrow \bar{R} + \beta \delta$  
+            - Update value-function weights:  $\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha \delta \nabla \hat{q}(S, A, \boldsymbol{w})$  
+            - Update state and action:  $S \leftarrow S', \quad A \leftarrow A'$  
+    - Note: Unlike Sarsa, a key difference of differential Sarsa is that it has to track an estimate of the average reward under its policy and subtract it from the sample reward in its update as below:
 
+        $$\bar{R} \leftarrow \bar{R} + \beta (R-\bar{R})$$ 
+
+        In practice, the term $(R-\bar{R})$ is replaced with $\delta$ to achieve better performance (lower variance).
 
 - Optional Watching: [Satinder Singh on Intrinsic Rewards](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/TKPHV/satinder-singh-on-intrinsic-rewards)
+
+## 10.3 Summary
