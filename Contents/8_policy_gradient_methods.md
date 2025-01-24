@@ -87,16 +87,64 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
     This [optional lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/Wv6wa/the-policy-gradient-theorem) (between 2:08 - ) provides an intuition of what the term $\sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)$ does. For a detailed derivation of the policy gradient theorem, please refer to the book chapter 13.2, page 325.
 
 
-## 10.3 REINFORCE
+## 10.3 REINFORCE (with Baseline): Monte Carlo Policy Gradient
 
-$$
-\begin{align*}
-\nabla J(\theta) &= \mathbb{E}_{\pi} \left[ \sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a) \frac{\nabla \pi(a|S_t, \theta)}{\pi(a|S_t, \theta)} \right] \\
+- REINFORCE
 
-&= \mathbb{E}_{\pi} \left[ q_{\pi}(S_t, A_t) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right] \\
+    - Derivation of REINFORCE's update rule:
 
-&= \mathbb{E}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]
-\end{align*} \\
-$$
+        The strategy of stohastic gradient ascent requires a way to obtain samples such that the expectation of the sample gradient is proportional to the actual gradient of the performance measure, i.e., we need some way of sampling whose expectation equals or approximates the expression given by the policy gradient theorem. 
 
-The second equation simplifies the first one by replacing the summation over actions $a$ with a specific action $A_t$, which is drawn according to the policy $\pi$
+        Naturally, we can reformulate the policy gradient theorem as
+
+        $$
+            \begin{align*}
+            \nabla J(\theta) &\propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta) \\
+
+            &= \mathbb{E}_{\pi} \left[ \sum_a q_{\pi}(S_t, a) \nabla \pi(a | S_t, \theta) \right]
+            \end{align*}
+        $$
+        
+        then stop here and instantiate the stochastic gradient-ascent algorithm as
+
+        $$\theta_{t+1} \doteq \theta_t + \alpha \sum_a \hat{q}(S_t, a, \mathbf{w}) \nabla \pi(a | S_t, \theta)$$
+
+        This update algorithm is called an $\textit{all-actions}$ method because its update involves all of the actions. The algorithm is promising and deserves further study, but our current interest is the classical REINFORCE algorithm, which continues the above transformation as follows:
+
+        $$
+            \begin{align*}
+            \nabla J(\theta) &= \mathbb{E}_{\pi} \left[ \sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a) \frac{\nabla \pi(a|S_t, \theta)}{\pi(a|S_t, \theta)} \right] \\
+
+            &= \mathbb{E}_{\pi} \left[ q_{\pi}(S_t, A_t) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \ \text{(replacing \( a \) by the sample \( A_t \sim \pi \))}\\
+
+            &= \mathbb{E}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \  \text{(because \( \mathbb{E}_{\pi} [ G_t | S_t, A_t] = q_{\pi}(S_t, A_t) \))}
+            \end{align*} \\
+        $$
+
+        The stochastic gradient-ascent update of REINFORCE can therefore be instantiated as 
+
+        $$\theta_{t+1} \doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}$$
+    
+    - Intuition on REINFORCE
+
+    - Algorithm of REINFORCE: Monte-Carlo Policy-Gradient Control (episodic) for $\pi_{\star}$
+        - Input: a differentiable policy parameterization \( \pi(a | s, \theta) \)
+        - Algorithm parameter: step size \( \alpha > 0 \)
+        - Initialize policy parameter \( \theta \in \mathbb{R}^d \) (e.g., to \( 0 \))
+        - Loop forever (for each episode):
+            - Generate an episode \( S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T \), following \( \pi(\cdot | \theta) \)
+            - Loop for each step of the episode \( t = 0, 1, \dots, T-1 \):
+                - Compute return:
+                $$
+                G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
+                $$
+                - Update policy parameters:
+                $$
+                \theta \leftarrow \theta + \alpha \gamma^t G \nabla \ln \pi(A_t | S_t, \theta)
+                $$
+
+
+    - Example
+
+
+- REINFORCE with Baseline
