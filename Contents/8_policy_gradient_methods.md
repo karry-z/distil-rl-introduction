@@ -247,3 +247,53 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
         Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.
     
 ## 13.4 Actor–Critic Methods
+
+
+$$ 
+\begin{align*}
+\theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \\
+
+&\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
+
+&\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
+
+&= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
+
+&= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
+\end{align*}
+$$
+
+
+
+- Algorithm of One-step Actor-Critic (episodic): Monte-Carlo Policy-Gradient Control for $\pi_\theta \approx \pi_{\star}$
+  - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
+  - Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$
+  - Parameters: step sizes $\alpha^{\theta} > 0$, $\alpha^{w} > 0$
+  - Initialize policy parameter $\theta \in \mathbb{R}^d$ and state-value weights $\mathbf{w} \in \mathbb{R}^d$ (e.g., to $0$)
+  - Loop forever (for each episode):
+    - Initialize $S$ (first state of the episode)
+    - $I \leftarrow 1$
+    - **Loop while $S$ is not terminal (for each time step)**:
+      - Sample action $A \sim \pi(\cdot | S, \theta)$
+      - Take action $A$, observe $S'$, $R$
+      - Compute TD error:
+        $$
+        \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
+        $$
+        (if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)
+      - Update state-value weights:
+        $$
+        \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
+        $$
+      - Update policy parameters:
+        $$
+        \theta \leftarrow \theta + \alpha^{\theta} I \delta \nabla \ln \pi(A | S, \theta)
+        $$
+      - Update importance weight:
+        $$
+        I \leftarrow \gamma I
+        $$
+      - Update state:
+        $$
+        S \leftarrow S'
+        $$
