@@ -63,7 +63,7 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
     - Continuing Setting with Average Reward Formulation: $G_t = \sum_{t=0}^{\infty} R_t - r(\pi)$
 
 
-    In this chapter, we focus on the continuing setting with average reward as the objective. The average reward for a policy $\pi$ is defined as: 
+    In this chapter, **we focus on the continuing setting with average reward as the objective**. The average reward for a policy $\pi$ is defined as: 
 
     $$
     \begin{align*}
@@ -118,7 +118,9 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
         
         and we can just stop here and instantiate the stochastic gradient-ascent algorithm as
 
-        $$\theta_{t+1} \doteq \theta_t + \alpha \sum_a \hat{q}(S_t, a, \mathbf{w}) \nabla \pi(a | S_t, \theta),$$
+        $$
+            \theta_{t+1} \doteq \theta_t + \alpha \sum_a \hat{q}(S_t, a, \mathbf{w}) \nabla \pi(a | S_t, \theta),
+        $$
 
         where $\hat{q}$ is some learned approximation to $q_\pi$. This update algorithm is called an $\textit{all-actions}$ method because its update involves all of the actions. The algorithm is promising and deserves further study, but our current interest is the classical REINFORCE algorithm, which continues the above transformation as follows:
 
@@ -144,7 +146,7 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
 
             - The return $G_t$ in the incremental term causes the parameter to move most in the directions that favor actions that yield the highest return.
 
-            - The vector, on the other hand, is a typical form of what is called $\textit{relative rate of change}$. In this case, it indicates the direction in parameter space that most increases the probability of repeating the action $A_t$ on future visits to state $S_t$. 
+            - The vector $\frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}$, on the other hand, is a typical form of what is called $\textit{relative rate of change}$. In this case, it indicates the direction in parameter space that most increases the probability of repeating the action $A_t$ on future visits to state $S_t$. 
             
                 Moreover, the update is inversely proportional to the action probability, giving actions that are less frequently selected an advantag, i.e., encouraging exploration.
         
@@ -167,13 +169,13 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
                 $$
 
 
-    - Performance of REINFORCE on the short corridor example
+    - Performance of REINFORCE on the short-corridor example
 
         <img src="../img/chapter13/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:80%;">
 
         - Results: as shown, with a good step size, the total reward per episode approaches the optimal value of the start state ($v_\star(s_0)$).
 
-        - Properties of REINFORCE: for suffciently small $\alpha$, the improvement in expected performance is assured, and convergence to a local optimum under standard stochastic approximation conditions happends for decreasing $\alpha$. However, as a Monte Carlo method REINFORCE may be of high variance and thus produce slow learning.
+        - Properties of REINFORCE: for suffciently small $\alpha$, the improvement in expected performance is assured, and convergence to a local optimum under standard stochastic approximation conditions happens for decreasing $\alpha$. However, as a Monte Carlo method REINFORCE may be of high variance and thus produce slow learning.
 
 
 - REINFORCE with Baseline
@@ -181,11 +183,12 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
     - Derivation of REINFORCE with Baseline
 
         We now generalize the policy gradient theorem to include a comparison of the action value $q_{\pi}(s, a)$ to an arbitrary $baseline \ b(s)$
+
         $$
         \nabla J(\theta) \propto \sum_{s} \mu(s) \sum_{a} \left( q_{\pi}(s, a) - b(s) \right) \nabla \pi(a \mid s, \theta).
         $$
 
-        The baseline can be any function, even a random variable, as long as it does not vary with a, and the equation remains valid because the subtracted quantity is zero:
+        The baseline can be any function, even a random variable, **as long as it does not vary with $a$**, and the equation remains valid because the subtracted quantity is zero:
 
         $$
         \begin{align*}
@@ -203,13 +206,16 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
     
     - Justification for adding the baseline
 
-        In general, the baseline leaves the expected value of the update unchanged, but it can have a large effect on its variance. Adding a baseline can significantly reduce the variance (and thus speed the learning). 
+        - Lower the variance: In general, the baseline leaves the expected value of the update unchanged, but it can have a large effect on its variance. Adding a baseline can significantly reduce the variance (and thus speed the learning). 
         
-        Moreover, for MDPs the baseline should vary with state. In some states all actions have high values and we need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions will have low values and a low baseline is appropriate.
+        - Setting of the baseline: 
+        
+            For MDPs, the baseline should vary with state. In some states all actions have high values and we need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions will have low values and a low baseline is appropriate.
 
-        Therefore, a natural choice of the baseline is an estimate of the state value: $\hat{v}(S_t, \boldsymbol{w})$. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights $\boldsymbol{w}$. To this end, we give the algorithm of REINFORCE with Baseline as below.
+            Therefore, a natural choice of the baseline is an estimate of the state value: $\hat{v}(S_t, \boldsymbol{w})$. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights $\boldsymbol{w}$. To this end, we give the algorithm of REINFORCE with Baseline as below.
 
     - Algorithm of REINFORCE with Baseline: Monte-Carlo Policy-Gradient Control (episodic) for $\pi_\theta \approx \pi_{\star}$
+
         - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
         - Input: a differentiable state-value function parameterization $\hat{v}(s, \boldsymbol{w})$
         - Algorithm parameters: step sizes $\alpha^{\theta} > 0$, $\alpha^{w} > 0$
@@ -221,11 +227,11 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
                 $$
                 G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
                 $$
-            - <span style="color:red;">Compute TD error:</span>
+            - Compute TD error (note that the TD error is computed with $G$):
                 $$
                 \delta \leftarrow G - \hat{v}(S_t, \mathbf{w})
                 $$
-            - <span style="color:red;">Update state-value weights:</span>
+            - Update state-value weights with semi-gradient method:
                 $$
                 \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
                 $$
@@ -233,3 +239,11 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
                 $$
                 \theta \leftarrow \theta + \alpha^{\theta} \gamma^t \delta \nabla \ln \pi(A_t | S_t, \theta)
                 $$
+
+    - Performance of REINFORCE with Baseline on the short-corridor example
+        
+        <img src="../img/chapter13/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:80%;">
+
+        Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.
+    
+## 13.4 Actor–Critic Methods
