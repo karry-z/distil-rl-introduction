@@ -63,7 +63,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     - Continuing Setting with Average Reward Formulation: $G_t = \sum_{t=0}^{\infty} R_t - r(\pi)$
 
 
-    In this chapter,  <span style="color:red;">**we focus on the continuing setting with average reward as the objective** (the algos in this chapter do not seem to have used average reward, consider maybe to change this)</span>. The average reward for a policy $\pi$ is defined as: 
+    In this chapter, **we focus on the continuing setting with average reward as the objective** (only for continuing tasks, of course). The average reward for a policy $\pi$ is defined as: 
 
     $$
     \begin{align*}
@@ -73,7 +73,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     \end{align*}
     $$
 
-    Therefore, The goal is to find a policy that maximizes this average reward, so the gradient ascent update we introduced at the beginning of this chapter can be formulated as:
+    Therefore, the goal is to find a policy that maximizes this average reward, so the gradient ascent update we introduced at the beginning of this chapter can be formulated as:
 
     $$
     \begin{align*}
