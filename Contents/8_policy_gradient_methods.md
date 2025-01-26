@@ -63,7 +63,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     - Continuing Setting with Average Reward Formulation: $G_t = \sum_{t=0}^{\infty} R_t - r(\pi)$
 
 
-    In this chapter, **we focus on the continuing setting with average reward as the objective**. The average reward for a policy $\pi$ is defined as: 
+    In this chapter,  <span style="color:red;">**we focus on the continuing setting with average reward as the objective** (the algos in this chapter do not seem to have used average reward, consider maybe to change this)</span>. The average reward for a policy $\pi$ is defined as: 
 
     $$
     \begin{align*}
@@ -227,7 +227,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
                 $$
                 G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
                 $$
-            - Compute TD error (note that the TD error is computed with $G$):
+            - Compute TD error (note that this term minic the TD error and it is not really TD according to TD's definition):
                 $$
                 \delta \leftarrow G - \hat{v}(S_t, \mathbf{w})
                 $$
@@ -254,56 +254,108 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     Since REINFORCE with baseline is essentially a Monte Carlo method, it is unbiased and will converge asymptotically to a local minimum. As we learned from TD learning methods, only through bootstrapping do we introduce bias, and an asymptotic dependence on the quality of the function approximation, and thereby reduce variance and accelerate learning. In order to gain these advantages in the case of policy gradient methods we use actor–critic methods with a bootstrapping critic.
 
-- Derivation
+- AC methods for episodic tasks:
 
-    One-step actor–critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:
+    - Derivation
 
-    $$ 
-        \begin{align*}
-        \theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \\
+        One-step actor–critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:
 
-        &\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
+        $$ 
+            \begin{align*}
+            \theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \\
 
-        &\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
+            &\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
 
-        &= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
+            &\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
 
-        &= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
-        \end{align*}
-    $$
+            &= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
 
-    The natural state-value-function learning method to pair with this is semi-gradient TD(0) as given in the following algorithm. Note that **it is now a fully online, incremental algorithm**, with states, actions, and rewards processed as they occur and then never revisited.
+            &= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
+            \end{align*}
+        $$
+
+        The natural state-value-function learning method to pair with this is semi-gradient TD(0) as given in the following algorithm. Note that **it is now a fully online, incremental algorithm**, with states, actions, and rewards processed as they occur and then never revisited.
 
 
-- Algorithm: One-step Actor-Critic (episodic) for estimating $\pi_\theta \approx \pi_{\star}$
+    - Algorithm: One-step Actor-Critic (episodic) for estimating $\pi_\theta \approx \pi_{\star}$
+        - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
+        - Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$
+        - Parameters: step sizes $\alpha^{\theta} > 0$, $\alpha^{w} > 0$
+        - Initialize policy parameter $\theta \in \mathbb{R}^d$ and state-value weights $\mathbf{w} \in \mathbb{R}^d$ (e.g., to $0$)
+        - Loop forever (for each episode):
+            - Initialize $S$ (first state of the episode)
+            - $I \leftarrow 1$
+            - Loop while $S$ is not terminal (for each time step):
+            - Sample action $A \sim \pi(\cdot | S, \theta)$
+            - Take action $A$, observe $S'$, $R$
+            - Compute TD error:
+                $$
+                \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w}) \ \ \text{(if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)}
+                $$
+                
+            - Update state-value weights:
+                $$
+                \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
+                $$
+            - Update policy parameters:
+                $$
+                \theta \leftarrow \theta + \alpha^{\theta} I \delta \nabla \ln \pi(A | S, \theta)
+                $$
+            - Update importance weight:
+                $$
+                I \leftarrow \gamma I
+                $$
+            - Update state:
+                $$
+                S \leftarrow S'
+                $$
+
+
+- AC methods for continuing tasks:
+
+    - Setup: 
+    
+    For continuing problems without episode boundaries, we define the performance $J(\theta)$ in terms of the average rate of reward per time step $r(\pi)$. <span style="color:red;">The definition of $r(\pi)$ can be found in section 10.2 from the last chapter. (adapt chapter numbering and add link here)</span> 
+
+    Note that the policy gradient theorem as given for the episodic case remains true for the continuing case, a proof can be found in the book chapter 13.6 on page 334. Therefore, we are now able to adapt the algorithm for AC methods with average reward setting as demonstrated below.
+
+- Algorithm of Actor-Critic (continuing): Monte-Carlo Policy-Gradient Control for $\pi_\theta \approx \pi_{\star}$
   - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
   - Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$
-  - Parameters: step sizes $\alpha^{\theta} > 0$, $\alpha^{w} > 0$
-  - Initialize policy parameter $\theta \in \mathbb{R}^d$ and state-value weights $\mathbf{w} \in \mathbb{R}^d$ (e.g., to $0$)
-  - Loop forever (for each episode):
-    - Initialize $S$ (first state of the episode)
-    - $I \leftarrow 1$
-    - Loop while $S$ is not terminal (for each time step):
-      - Sample action $A \sim \pi(\cdot | S, \theta)$
-      - Take action $A$, observe $S'$, $R$
-      - Compute TD error:
-        $$
-        \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w}) \ \ \text{(if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)}
-        $$
-        
-      - Update state-value weights:
-        $$
-        \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
-        $$
-      - Update policy parameters:
-        $$
-        \theta \leftarrow \theta + \alpha^{\theta} I \delta \nabla \ln \pi(A | S, \theta)
-        $$
-      - Update importance weight:
-        $$
-        I \leftarrow \gamma I
-        $$
-      - Update state:
-        $$
-        S \leftarrow S'
-        $$
+  - Initialize average reward estimate $\bar{R} \in \mathbb{R}$ to $0$
+  - Initialize state-value weights $\mathbf{w} \in \mathbb{R}^d$ and policy parameter $\theta \in \mathbb{R}^{d'}$ (e.g., to $0$)
+  - Algorithm parameters: $\alpha^w > 0$, $\alpha^\theta > 0$, $\alpha^{\bar{R}} > 0$
+  - Initialize $S \in \mathcal{S}$
+  - **Loop forever (for each time step)**:
+    - Sample action $A \sim \pi(\cdot | S, \theta)$
+    - Take action $A$, observe $S'$, $R$
+    - Compute TD error:
+      $$
+      \delta \leftarrow R - \bar{R} + \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
+      $$
+    - Update average reward estimate:
+      $$
+      \bar{R} \leftarrow \bar{R} + \alpha^{\bar{R}} \delta
+      $$
+    - Update state-value weights:
+      $$
+      \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
+      $$
+    - Update policy parameters:
+      $$
+      \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A | S, \theta)
+      $$
+    - Update state:
+      $$
+      S \leftarrow S'
+      $$
+
+
+- This [optional lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/h9nDv/actor-critic-algorithm) (starting from 2:02 - ) gives a thorough explanation of how subtracting the "baseline" ()
+
+and how the actor and the critic interact 
+
+<img src="../img/chapter13/actor_critic_interaction.png" alt="Demonstration of how actor and critic interact" style="width:35%;">
+
+
+## 13.5 
