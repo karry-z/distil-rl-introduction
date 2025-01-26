@@ -400,3 +400,48 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
 
 ## 13.5 Policy Parameterization for Continuous Actions
+
+- Setup of Gausssian Policies for Continuous Actions:
+
+    We now turn out attention to continuous actions spaces with an infinite number of actions. For such problems, instead of computing learned probabilities for each of the many actions, we instead learn statistics of the probability distribution, and choose actions by sampling from this distribution.
+
+    Assume the distribution is normal, to produce a policy parameterization, the policy can be defined as the normal probability density over a real-valued scalar action, with mean and standard deviation given by parametric function approximators that depend on the state, as follows:
+
+    $$
+    \pi(a | s, \theta) \doteq \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right),
+    $$
+
+    where $\mu : \mathcal{S} \times \mathbb{R}^{d'} \to \mathbb{R}$ and $\sigma : \mathcal{S} \times \mathbb{R}^{d'} \to \mathbb{R}^+$ are two parameterized function approximators. Therefore, the policy has two parts of parameters to learn $\theta = [\theta_\mu, \theta_\sigma]^\top$.
+
+    The mean can be approximated as a linear function. The standard deviation must always be positive and is better approximated as the exponential of a linear function. Thus
+
+    $$
+    \mu(s, \theta) \doteq \theta_{\mu}^{\top} \mathbf{x}_{\mu}(s) 
+    \quad \text{and} \quad 
+    \sigma(s, \theta) \doteq \exp \left( \theta_{\sigma}^{\top} \mathbf{x}_{\sigma}(s) \right),
+    $$
+
+    With these definitions, all the algorithms described in the rest of this chapter can be applied to learn to select real-valued actions.
+
+- Gaussian Policies applied to the Pendulum Swing-Up Task:
+
+    - States and Reward: Remain the same
+
+    - Actions: Instead of three discrete actions, the agent now selects continuous angular acceleration in the range [-3, 3]. 
+    
+    - Parameterization: We now use Gaussian policy and draw actions from a state-dependent Gaussian distribution. $\mu(s)$ and $\sigma(s)$ are modeled as linear and exponential functions as mentioned above respectively. 
+
+    - Action selection: 1) Compute $\mu(s)$ and $\sigma(s)$ based on the current state $s$. 2) Sample an action from the Gaussian poliyc with these parameters. 
+    
+        During selection, $\sigma(s)$ controls exploration: large $\sigma$ means high variance and leads to high exploration, in contrast, small $\sigma$ leads to low exploration. We typically initialize $\sigma(s)$ to be large and as learning progresses, we expect the variance to shrink and the policy to concentrate around the best action in each state. 
+
+- Why Continuous Action Policies:
+
+    - More Flexible Action Selection: The agent can apply fine-grained adjustments rather than picking from a fixed set of actions.
+
+    - Generalization Over Actions: If an action is found to be good, nearby actions also gain probability, reducing the need for extensive exploration.
+    
+    - Handling Large or Infinite Action Spaces: Even if the true action space is discrete but large, treating it as continuous helps avoid the cost of exploring every action separately.
+
+
+## 13.6 Summary
