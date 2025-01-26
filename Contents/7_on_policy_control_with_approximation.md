@@ -110,7 +110,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
 - Motivation: This [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/DXGwx/average-reward-a-new-way-of-formulating-control-problems) motivates the average rewrad setting and is optional to watch.
 
-- Definition: Like the discounted setting, the average reward setting applies to continuing problems, however, there is no discounting. In the average-reward setting, the average reward is defined as below, and reflects the quality of the policy $\pi$.
+- Definition: Like the discounted setting, the average reward setting **applies to continuing problems**, however, there is no discounting. In the average-reward setting, the average reward is defined as below, and reflects the quality of the policy $\pi$.
 
     $$
     \begin{align}
