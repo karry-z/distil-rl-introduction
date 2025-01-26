@@ -392,8 +392,8 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
             $$
 
             where:
-            - $R_t^{EW}$ is the exponentially weighted reward at time step \( t \).
-            - $R_t$ is the actual reward received at time \( t \).
+            - $R_t^{EW}$ is the exponentially weighted reward at time step $t$.
+            - $R_t$ is the actual reward received at time $t$.
             - $\lambda$ is the smoothing factor (typically between 0 and 1).
             - $R_0^{EW}$ is initialized to the first reward.
 
