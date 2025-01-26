@@ -445,3 +445,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
 
 ## 13.6 Summary
+
+- Mindmap of where we are now
+
+    <img src="../img/chapter13/chapter13_mindmap.png" alt="Mindmap" style="width:100%;">
