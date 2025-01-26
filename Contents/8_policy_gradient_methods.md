@@ -8,7 +8,7 @@ $$\theta_{t+1} = \theta_t + \alpha \nabla \widehat{J}(\theta_t)$$
 
 where $\nabla \widehat{J}(\theta_t)$ is a stohastic estimate whose expectation approximates the gradient of the performance measure with respect to its argument $\theta_t$. All methods that follow this general schema are called $\textit{policy gradient methods}$.
 
-Among  $\textit{policy gradient methods}$, methods that learn approximations to both policy and value functions are often called $\textit{actor–critic methods}$, where $\textit{'actor'}$ is a reference to the learned policy, and $\textit{'critic'}$ refers to the learned value function.
+Among $\textit{policy gradient methods}$, methods that learn approximations to both policy and value functions are often called $\textit{actor–critic methods}$, where $\textit{'actor'}$ is a reference to the learned policy, and $\textit{'critic'}$ refers to the learned value function.
 
 ## 10.1 Policy Approximation and its Advantages
 
@@ -144,13 +144,13 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
 
         - The final update form: the increment of REINFORCE is proportional to the product of a return $G_t$ and a vector (called the $\textit{eligibility vector}$) - the gradient of the probability of taking the action actually taken divided by the probability of taking that action. The latter may sound horrible when first hearing it, so let's shed some light on what this increment indicates:
 
-            - The return $G_t$ in the incremental term causes the parameter to move most in the directions that favor actions that yield the highest return.
+            - The return $G_t$ in the incremental term causes the parameter to move most in the directions that favor actions that yield the highest return. (This is where the name REINFORCE comes from, because the algorithm reinforces good actions and discourages bad ones.)
 
             - The vector $\frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}$, on the other hand, is a typical form of what is called $\textit{relative rate of change}$. In this case, it indicates the direction in parameter space that most increases the probability of repeating the action $A_t$ on future visits to state $S_t$. 
             
                 Moreover, the update is inversely proportional to the action probability, giving actions that are less frequently selected an advantag, i.e., encouraging exploration.
         
-        - Why Monte Carlo: Note that REINFORCE uses the complete return $G_t$ from time $t$, which includes all future rewards up until the end of the episode. In this sense it is a Monte Carlo algorithm and is well defined **only for the episodic case**
+        - Why Monte Carlo: Note that REINFORCE uses the complete return $G_t$ from time $t$, which includes all future rewards up until the end of the episode. In this sense it is a Monte Carlo algorithm and is well defined **only for the episodic case**.
 
     - Algorithm of REINFORCE: Monte-Carlo Policy-Gradient Control (episodic) for $\pi_{\star}$
         - Input: a differentiable policy parameterization $ \pi(a | s, \theta) $
@@ -248,24 +248,34 @@ Among  $\textit{policy gradient methods}$, methods that learn approximations to 
     
 ## 13.4 Actor–Critic Methods
 
+- Motivation:
 
-$$ 
-\begin{align*}
-\theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \\
+    At the beginning of this chapter, we briefly defined actor-critc methods, i.e., policy gradient methods that learn approximations to both policy and value functions. At this point, it is important to note that though REINFORCE with baseline method learns both, it is NOT considered to be an actor-critic method. The reason is that its state-value function is used only as a baseline, not as a critic. That is, the value function is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated. 
 
-&\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
+    Since REINFORCE with baseline is essentially a Monte Carlo method, it is unbiased and will converge asymptotically to a local minimum. As we learned from TD learning methods, only through bootstrapping do we introduce bias, and an asymptotic dependence on the quality of the function approximation, and thereby reduce variance and accelerate learning. In order to gain these advantages in the case of policy gradient methods we use actor–critic methods with a bootstrapping critic.
 
-&\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
+- Derivation
 
-&= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
+    One-step actor–critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:
 
-&= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
-\end{align*}
-$$
+    $$ 
+        \begin{align*}
+        \theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \\
+
+        &\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
+
+        &\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
+
+        &= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
+
+        &= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
+        \end{align*}
+    $$
+
+    The natural state-value-function learning method to pair with this is semi-gradient TD(0) as given in the following algorithm. Note that **it is now a fully online, incremental algorithm**, with states, actions, and rewards processed as they occur and then never revisited.
 
 
-
-- Algorithm of One-step Actor-Critic (episodic): Monte-Carlo Policy-Gradient Control for $\pi_\theta \approx \pi_{\star}$
+- Algorithm: One-step Actor-Critic (episodic) for estimating $\pi_\theta \approx \pi_{\star}$
   - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
   - Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$
   - Parameters: step sizes $\alpha^{\theta} > 0$, $\alpha^{w} > 0$
@@ -273,14 +283,14 @@ $$
   - Loop forever (for each episode):
     - Initialize $S$ (first state of the episode)
     - $I \leftarrow 1$
-    - **Loop while $S$ is not terminal (for each time step)**:
+    - Loop while $S$ is not terminal (for each time step):
       - Sample action $A \sim \pi(\cdot | S, \theta)$
       - Take action $A$, observe $S'$, $R$
       - Compute TD error:
         $$
-        \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
+        \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w}) \ \ \text{(if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)}
         $$
-        (if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)
+        
       - Update state-value weights:
         $$
         \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
