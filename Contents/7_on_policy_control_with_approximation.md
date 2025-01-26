@@ -120,7 +120,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
     \end{align}
     $$
 
-    - $\mu_\pi(s)\doteq \lim_{t \to \infty} \Pr\{S_t = s \mid A_{0:t-1} \sim \pi\}$ is assumed to exist for any $\pi$ and to be independent of $S_0$ (This assunmption about MDP is known as $\textit{ergodicity assumption}$).
+    - $\mu_\pi(s)\doteq \lim_{t \to \infty} \Pr\{S_t = s \mid A_{0:t-1} \sim \pi\}$ is the steady-state distribution and is assumed to exist for any $\pi$ and to be independent of $S_0$ (This assunmption about MDP is known as $\textit{ergodicity assumption}$).
 
     - We consider all policies that attain the maximal value of $r(\pi)$ to be optimal.
 
