@@ -203,7 +203,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 ## 6.3 Summary
 
-- Recap of where we are now
+- Mindmap of where we are now
 
 	<img src="../img/chapter6/chapter6_mindmap.png" alt="Mindmap" style="width:100%;">
 

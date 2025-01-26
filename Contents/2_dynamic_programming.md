@@ -247,7 +247,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
 ## 4.6 Summary
 
-- Recap of where we are now
+- Mindmap of where we are now
     <img src="../img/chapter4/chapter4_mindmap.png" alt="Mindmap" style="width:100%;">
 
 Classical DP methods operate in sweeps through the state set, performing an $\textit{expected update}$ operation on each state. The update of states based on estimates of the values of successor states. That is, estimates are updated on the basis of other estimates. We call this general idea $\textit{bootstrapping}$ and requires a perfect model of the environment.

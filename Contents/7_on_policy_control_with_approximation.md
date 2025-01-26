@@ -181,7 +181,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
 ## 10.3 Summary
 
-- Recap of where we are
+- Mindmap of where we are now
 
     <img src="../img/chapter10/chapter10_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
 

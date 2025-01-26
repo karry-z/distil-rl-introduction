@@ -298,7 +298,7 @@ This section is optional since this tutorial is built based on the assumption th
 
 ## 9.6 Summary
 
-- Recap of where we are now
+- Mindmap of where we are now
 
     <img src="../img/chapter9/chapter9_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
 
