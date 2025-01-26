@@ -254,6 +254,8 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     Since REINFORCE with baseline is essentially a Monte Carlo method, it is unbiased and will converge asymptotically to a local minimum. As we learned from TD learning methods, only through bootstrapping do we introduce bias, and an asymptotic dependence on the quality of the function approximation, and thereby reduce variance and accelerate learning. In order to gain these advantages in the case of policy gradient methods we use actor–critic methods with a bootstrapping critic.
 
+    In AC methods, the state-value function assigns credit to "critizes" the policy’s action selections, and accordingly the former is termed the critic and the latter the actor, more details on this can be found in the algorithms later in this section.
+
 - AC methods for episodic tasks:
 
     - Derivation
@@ -315,47 +317,86 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     - Setup: 
     
-    For continuing problems without episode boundaries, we define the performance $J(\theta)$ in terms of the average rate of reward per time step $r(\pi)$. <span style="color:red;">The definition of $r(\pi)$ can be found in section 10.2 from the last chapter. (adapt chapter numbering and add link here)</span> 
+        For continuing problems, we define the performance $J(\theta)$ in terms of the average rate of reward per time step $r(\pi)$. <span style="color:red;">The definition of $r(\pi)$ can be found in section 10.2 from the last chapter. (adapt chapter numbering and add link here)</span> 
 
-    Note that the policy gradient theorem as given for the episodic case remains true for the continuing case, a proof can be found in the book chapter 13.6 on page 334. Therefore, we are now able to adapt the algorithm for AC methods with average reward setting as demonstrated below.
+        Note that the policy gradient theorem as given for the episodic case remains true for the continuing case, a proof can be found in the book chapter 13.6 on page 334. Therefore, we are now able to adapt the algorithm for AC methods with average reward setting as demonstrated below.
 
-- Algorithm of Actor-Critic (continuing): Monte-Carlo Policy-Gradient Control for $\pi_\theta \approx \pi_{\star}$
-  - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
-  - Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$
-  - Initialize average reward estimate $\bar{R} \in \mathbb{R}$ to $0$
-  - Initialize state-value weights $\mathbf{w} \in \mathbb{R}^d$ and policy parameter $\theta \in \mathbb{R}^{d'}$ (e.g., to $0$)
-  - Algorithm parameters: $\alpha^w > 0$, $\alpha^\theta > 0$, $\alpha^{\bar{R}} > 0$
-  - Initialize $S \in \mathcal{S}$
-  - **Loop forever (for each time step)**:
-    - Sample action $A \sim \pi(\cdot | S, \theta)$
-    - Take action $A$, observe $S'$, $R$
-    - Compute TD error:
-      $$
-      \delta \leftarrow R - \bar{R} + \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
-      $$
-    - Update average reward estimate:
-      $$
-      \bar{R} \leftarrow \bar{R} + \alpha^{\bar{R}} \delta
-      $$
-    - Update state-value weights:
-      $$
-      \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
-      $$
-    - Update policy parameters:
-      $$
-      \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A | S, \theta)
-      $$
-    - Update state:
-      $$
-      S \leftarrow S'
-      $$
-
-
-- This [optional lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/h9nDv/actor-critic-algorithm) (starting from 2:02 - ) gives a thorough explanation of how subtracting the "baseline" ()
-
-and how the actor and the critic interact 
-
-<img src="../img/chapter13/actor_critic_interaction.png" alt="Demonstration of how actor and critic interact" style="width:35%;">
+    - Algorithm of Actor-Critic (continuing), for estimating $\pi_\theta \approx \pi_{\star}$
+        - Input: a differentiable policy parameterization $\pi(a | s, \theta)$
+        - Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$
+        - Initialize average reward estimate $\bar{R} \in \mathbb{R}$ to $0$
+        - Initialize state-value weights $\mathbf{w} \in \mathbb{R}^d$ and policy parameter $\theta \in \mathbb{R}^{d'}$ (e.g., to $0$)
+        - Algorithm parameters: $\alpha^w > 0$, $\alpha^\theta > 0$, $\alpha^{\bar{R}} > 0$
+        - Initialize $S \in \mathcal{S}$
+        - Loop forever (for each time step):
+            - Sample action $A \sim \pi(\cdot | S, \theta)$
+            - Take action $A$, observe $S'$, $R$
+            - Compute TD error:
+                $$
+                \delta \leftarrow R - \bar{R} + \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
+                $$
+            - Update average reward estimate:
+                $$
+                \bar{R} \leftarrow \bar{R} + \alpha^{\bar{R}} \delta
+                $$
+            - Update state-value weights:
+                $$
+                \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
+                $$
+            - Update policy parameters:
+                $$
+                \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A | S, \theta)
+                $$
+            - Update state:
+                $$
+                S \leftarrow S'
+                $$
 
 
-## 13.5 
+    - More on Actor-Critic algorithm (continuing):
+
+        - Interaction between actor and critic: This [optional lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/h9nDv/actor-critic-algorithm) (starting from 2:56 - 3:49) gives a vivid explanation of how the actor and the critic interact with each other.
+
+        - Approximation of value function and policy: This [optional lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/OO2jp/actor-critic-with-softmax-policies) offers an example of how to approximate $\pi(A | S, \theta)$ with softmax policy as described in the beginning of this chapter, and $\hat{v}(S, \mathbf{w})$ and action preference $h(s,a,\theta)$ with linear methods.
+
+
+- Example of AC method: Pendulum Swing-up (continuing task)
+
+    <img src="../img/chapter13/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
+
+    - Setup: an agent must balance a pendulum upright by applying torque to a pivot point, the pendulum starts from rest position (hanging down) with zero velocity and can move freely under the influence of gravity and the applied actions.
+        
+        - States: Angular position $\beta$ and angular velocity $\dot{\beta}$ with $-2\pi < \dot{\beta} < 2\pi$ (as high angular velocity could damage the system).
+
+        - Actions: Apply torque in one of three ways: 1) Clockwise torque, 2)Counterclockwise torque and 3) No torque
+
+        - Reward: $r=−∣\beta∣$, i.e., staying upright gives the highest reward zero.
+
+    - Parameterization and Features:
+
+        - State-value function: $\hat{v}(s, \mathbf{w}) \dot= \mathbf{w}^{\intercal} x(s)$
+
+        - Softmax policy: $\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}$ with $h(s, a, \theta) = \theta^\top x_h(s, a)$
+
+        - Feature construction: Since state is two-dimensional, we can easily use tile coding with 32 tilings of size 8×8.
+
+    - Learning: generally, we want $\alpha^\theta < \alpha^\mathbf{w}$, namely **to let the critic to have a bigger step size than the actor** (learning rate) to allow it to update at a faster rate. That way, the critic can accurately critique the more slowly changing policy.  
+
+    - Performance: Training was repeated 100 times, and an exponentially weighted reward plot was used to evaluate performance. As shown by the figure below, the learned policy is quite stable and reliable
+
+        <img src="../img/chapter13/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:70%;">
+
+        - Optional: The Exponentially Weighted Moving Average (EWMA) for reward is commonly used in reinforcement learning to reduce noise and better observe trends in an agent's learning progress, it is calculated as:
+            $$
+            R_t^{EW} = \lambda R_{t-1}^{EW} + (1 - \lambda) R_t
+            $$
+
+            where:
+            - $R_t^{EW}$ is the exponentially weighted reward at time step \( t \).
+            - $R_t$ is the actual reward received at time \( t \).
+            - $\lambda$ is the smoothing factor (typically between 0 and 1).
+            - $R_0^{EW}$ is initialized to the first reward.
+
+
+
+## 13.5 Policy Parameterization for Continuous Actions
