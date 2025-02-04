@@ -1,23 +1,3 @@
-# Chapter 1. Introduction to RL
-
-- Definition
-
-- tpyes:
-    - deterministic env: the next state and the value of the reward are always the same given a certain state, action pair.
-
-- Examples
-
-
-- Elements of Reinforcement Learning
-
-    - policy
-
-    - reward model
-
-    - value function
-
-    - model of the environment (optional): By a model of the environment we mean anything that an agent can use to predict how the environment will respond to its actions. Given a state and an action, a model produces a prediction of the resultant next state and next reward.
-
 # Chapte 2. Multi-armed Bandit
 
 In this chapter we study the evaluative aspect of reinforcement learning in a simplified setting, one that does not involve learning to act in more than one situation, i.e., there is only one single state.
@@ -61,11 +41,15 @@ $$
     - set $k=10$
     - the reward distribution of each action follows a standard normal distribution ($\mu=0 \text{ and } \sigma=1$) 
 
-    ![reward distribution](../img/reward_distribution.png)
+        <div style="display: flex; justify-content: center;">
+        <img src="../img/chapter2/reward_distribution.png" alt="Reward Distribution" style="width:70%;">
+        </div>
 
     - the performance of each action selection method is measured by averaging the results from 2000 independent $\textit{runs}$, with each $\textit{run}$ containing 1000 time steps 
 
-    ![result](../img/running_results.png)
+        <div style="display: flex; justify-content: center;">
+        <img src="../img/chapter2/running_results.png" alt="Results of running" style="width:80%;">
+        </div>
 
 - Conclusions:
     - The greedy method performed significantly worse in the long run because it often got stuck performing suboptimal actions.
@@ -84,15 +68,15 @@ $$
 
 - Let $R_i$ denote the reward received at the i-th selection of action $a$, and $Q_n$ denote the estimate of the action value after it has been selected $n-1$ times.
 
-$$
-\begin{align*}
-Q_{n+1} &= \frac{R_1 + R_2 + ... + R_n}{n} \\
-&= \frac{1}{n}\sum_{i=1}^{n}R_i \\
-&= \frac{1}{n}(R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1}R_i) \\
-&= \frac{1}{n}(R_{n} + (n-1)Q_n) \\
-&= Q_n + \frac{1}{n}(R_{n} - Q_n)
-\end{align*}
-$$
+    $$
+        \begin{align*}
+        Q_{n+1} &= \frac{R_1 + R_2 + ... + R_n}{n} \\
+        &= \frac{1}{n}\sum_{i=1}^{n}R_i \\
+        &= \frac{1}{n}(R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1}R_i) \\
+        &= \frac{1}{n}(R_{n} + (n-1)Q_n) \\
+        &= Q_n + \frac{1}{n}(R_{n} - Q_n)
+        \end{align*}
+    $$
 
 - The incremental estimation follows the general form:
 
@@ -102,8 +86,9 @@ $$
 
 - We now can write a pseudocode for solving **stationary** bandit problem using the incremental implementation
 
-![bandit algorithm](../img/bandit_algorithm.png)
-
+    <div style="display: flex; justify-content: center;">
+    <img src="../img/chapter2/bandit_algorithm.png" alt="Bandit Algorithm" style="width:90%;">
+    </div>
 
 ### 2.4.2 For nonstationary problems
 
@@ -139,7 +124,9 @@ Simple tricks to encourage exploration except $\epsilon$-greedy (or as its exten
 
 - In 10-armed bandit testbed introduced in section [2.3](#23-the-10-armed-testbed) setting $Q_1(a)=+5$ for all $a$, perform again, 2000 runs with each run up to 1000 time steps
 
-![optimistic_initial_value](../img/optimistic_initial_value.png)
+    <div style="display: flex; justify-content: center;">
+    <img src="../img/chapter2/optimistic_initial_value.png" alt="Optimistic initial value" style="width:90%;">
+    </div>
 
 - Difficulties that made optimistic initial values not practical for nonstationary problems:
     - its drive for exploration is inherently temporary, i.e., only in the beginning of a run. 
@@ -165,7 +152,9 @@ Simple tricks to encourage exploration except $\epsilon$-greedy (or as its exten
 
 - Experimentation:
 
-![UCB](../img/ucb.png)
+    <div style="display: flex; justify-content: center;">
+    <img src="../img/chapter2/ucb.png" alt="Upper-Confidence-Bound result" style="width:90%;">
+    </div>
 
 - Difficulties that made UCB not practical for nonstationary problems:
     - One difficulty is that it tends to exploit more aggressively once it has identified a seemingly optimal action, compared to $\epsilon$-greedy method

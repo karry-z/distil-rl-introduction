@@ -45,7 +45,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - Description: 
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 400px;">
+        <img src="../img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 70%;">
         </div>
 
         - States: the nonterminal states are $S = {1, 2,...,14}$. 
@@ -57,28 +57,32 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - Policy Evaluation:
         - The first sweep:
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 430px;">        
+            <img src="../img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 75%;">        
             </div>
 
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.3.png" alt="Step1.2" style="width: 430px;">        
+            <img src="../img/chapter4/example4.1.3.png" alt="Step1.2" style="width: 75%;">        
             </div>
 
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.4.png" alt="Step1.3" style="width: 430px;">        
+            <img src="../img/chapter4/example4.1.4.png" alt="Step1.3" style="width: 75%;">        
             </div>
+
         - The second sweep:
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.5.png" alt="Step2" style="width: 430px;">        
+            <img src="../img/chapter4/example4.1.5.png" alt="Step2" style="width: 75%;">        
             </div>
+
         - The third sweep:
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.6.png" alt="Step3" style="width: 430px;">        
+            <img src="../img/chapter4/example4.1.6.png" alt="Step3" style="width: 75%;">        
             </div>
+
         - ...
+
         - The final sweep: $\Delta = 0$ and is finally smaller than $\theta$, $V$ and $V\prime$ are both $V_\pi$
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.7.png" alt="Final Step" style="width: 430px;">        
+            <img src="../img/chapter4/example4.1.7.png" alt="Final Step" style="width: 75%">        
             </div>
 
 ## 4.2 Policy Improvement

@@ -1,4 +1,4 @@
-# Chapter 13. Policy Gradient Methods
+# Chapter 10. Policy Gradient Methods
 
 So far in this book almost all the methods have been action-value methods, i.e., they try to learn the values of actions and then selected actions based on their estimated action values. We now consider methods that instead learn a parameterized policy that can select actions without consulting a value function. Note that a value function may still be used to $\textit{learn}$ the policy parameter (denoted by $\theta \in \mathbb{R}^{d'}$), but is not required for action selection.
 
@@ -39,7 +39,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
 - Example: Short corridor with switched actions
 
-    <img src="../img/chapter13/short_corridor.png" alt="Example of short corridor with switched actions" style="width:70%;">
+    <img src="../img/chapter10/short_corridor.png" alt="Example of short corridor with switched actions" style="width:70%;">
 
     - Setup: 
         - As shown in the image, there are three nonterminal states, the reward is 1 per step.
@@ -171,7 +171,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     - Performance of REINFORCE on the short-corridor example
 
-        <img src="../img/chapter13/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:80%;">
+        <img src="../img/chapter10/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:80%;">
 
         - Results: as shown, with a good step size, the total reward per episode approaches the optimal value of the start state ($v_\star(s_0)$).
 
@@ -242,7 +242,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     - Performance of REINFORCE with Baseline on the short-corridor example
         
-        <img src="../img/chapter13/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:80%;">
+        <img src="../img/chapter10/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:80%;">
 
         Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.
     
@@ -362,7 +362,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
 - Example of AC method: Pendulum Swing-up (continuing task)
 
-    <img src="../img/chapter13/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
+    <img src="../img/chapter10/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
 
     - Setup: an agent must balance a pendulum upright by applying torque to a pivot point, the pendulum starts from rest position (hanging down) with zero velocity and can move freely under the influence of gravity and the applied actions.
         
@@ -384,7 +384,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     - Performance: Training was repeated 100 times, and an exponentially weighted reward plot was used to evaluate performance. As shown by the figure below, the learned policy is quite stable and reliable
 
-        <img src="../img/chapter13/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:70%;">
+        <img src="../img/chapter10/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:80%;">
 
         - Optional: The Exponentially Weighted Moving Average (EWMA) for reward is commonly used in reinforcement learning to reduce noise and better observe trends in an agent's learning progress, it is calculated as:
             $$
@@ -448,4 +448,4 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter13/chapter13_mindmap.png" alt="Mindmap" style="width:100%;">
+    <img src="../img/chapter10/chapter13_mindmap.png" alt="Mindmap" style="width:100%;">

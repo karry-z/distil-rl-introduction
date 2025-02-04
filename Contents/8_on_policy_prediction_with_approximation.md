@@ -1,4 +1,4 @@
-# Chapter 9. On-policy Prediction with Approximation
+# Chapter 8. On-policy Prediction with Approximation
 
 In this chapter, we now focus on estimating the state-value function from on-policy data. The approximate value function will be represented not as a table but as a parameterized functional form, written as $\hat{v}(s, w) \approx v_\pi(s)$, with weight vector $w \in \mathbb{R}^d$.
 
@@ -109,13 +109,13 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
     - Using state aggregation for gradent MC (video):
 
         <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/aJ9j6/state-aggregation-with-monte-carlo">
-        <img src="../img/chapter9/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:70%;">
+        <img src="../img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:70%;">
         </a>
     
     - Using state aggregation for semi-gradient TD (video):
 
         <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
-        <img src="../img/chapter9/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:70%;">
+        <img src="../img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:70%;">
         </a>
     
     - Comparison between MC and TD: as already described in the above lecture video, the main differences between Temporal Difference (TD) and Monte Carlo (MC) methods in the context of function approximation are as follows:
@@ -138,7 +138,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 
         **Note:** Overall, when speed of learning is critical, especially with limited samples, TD is more preferable due to its faster learning and lower variance in updates 
 
-- Optional Watching: [Doina Precup: Building Knowledge for AI Agents with Reinforcement Learning](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ipyWM/doina-precup-building-knowledge-for-ai-agents-with-reinforcement-learning)
+- Optional lecture video: [Doina Precup: Building Knowledge for AI Agents with Reinforcement Learning](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ipyWM/doina-precup-building-knowledge-for-ai-agents-with-reinforcement-learning)
 
 ## 9.3 Linear Models
 
@@ -222,7 +222,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
     - Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a $\textit{binary feature}$.)
 
-        <img src="../img/chapter9/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
+        <img src="../img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
 
         Corresponding to each circle / feature is a single weight (a component of $\boldsymbol{w}$) that is affected by learning.
 
@@ -248,7 +248,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
         - Results: as below, the width of the features had a strong e↵ect early in learning. However, the final function learned was a↵ected only slightly by the width of the features
 
-            <img src="../img/chapter9/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:90%;">
+            <img src="../img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:90%;">
 
 
 ### 9.4.2 Tile Coding
@@ -261,7 +261,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
     - Demonstration:
 
-        <img src="../img/chapter9/tile_coding.png" alt="Demonstration for Tile Coding" style="width:100%;">
+        <img src="../img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:100%;">
 
         - The simplest tiling of a two-dimensional state space is a uniform grid such as that shown on the left side of figure above. Note that with just one tiling, we would not have coarse coding but just a case of state aggregation.
 
@@ -278,7 +278,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
     - It is recommended to watch the lecture video below since it offers a more comprehensive explanation of how tile code works with TD.
 
         <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td">
-            <img src="../img/chapter9/tile_coding_example.png" alt="Example for Tile Coding" style="width:70%;">
+        <img src="../img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:70%;">
         </a>
 
 ## 9.5 ${\star}$ Neural Networks 
@@ -287,7 +287,7 @@ This section is optional since this tutorial is built based on the assumption th
 
 <!-- TODO: Update this at home with content from the weekly assignment-->
 - How to use NN to calculate V(s), give the state representation. An example with one hidden layer:
-    <img src="../img/chapter9/nn_structure.png" alt="NN structure: from state representation to its value" style="width:70%;">
+    <img src="../img/chapter8/nn_structure.png" alt="NN structure: from state representation to its value" style="width:70%;">
 
 
 - Some interesting common [optimization strategies](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/WOMEl/optimization-strategies-for-nns) when trainig neural networks to be remembered.
@@ -300,7 +300,7 @@ This section is optional since this tutorial is built based on the assumption th
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter9/chapter9_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
+    <img src="../img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
 
 
 - Summary

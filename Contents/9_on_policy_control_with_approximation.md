@@ -1,4 +1,4 @@
-# Chapter 10. On-policy Control with Approximation
+# Chapter 9. On-policy Control with Approximation
 
 In this chapter we return to the control problem (policy improvement) and estimate action value function $\hat{q}(s, a, \boldsymbol{w}) \approx q_\star(s,a)$, and still restrict our attention to the on-policy case.  
 
@@ -74,7 +74,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 - Using gradient methods for on-policy control: Example of Mountain Car
 
     <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/YgKc7/episodic-sarsa-in-mountain-car">
-    <img src="../img/chapter10/mountain_car_example.png" alt="Video: The Mountain Car Example" style="width:80%;">
+    <img src="../img/chapter9/mountain_car_example.png" alt="Video: The Mountain Car Example" style="width:80%;">
     </a>
 
     - Quick intro: driving an underpowered car up a steep mountain road and gravity is stronger than the car’s engine - a simple example of a continuous control task where things have to get worse in a sense (farther from the goal) before they can get better. Set up of this problem:
@@ -183,7 +183,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter10/chapter10_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
+    <img src="../img/chapter9/chapter9_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
 
 - Summary
 
