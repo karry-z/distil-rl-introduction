@@ -2,58 +2,65 @@
 
 MDPs are a  formalization of sequential decision making, where actions influence both immediate rewards, and subsequent states, and thereby the future rewards. So it must consider the trade-off between the immediate reward and delayed reward. 
 
-Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each action $a$, in MDPs we estimate the value $q_{\star}(s, a)$ of each action a in each state $s$, or we estimate the value $v_{\star}(s)$ of each state given optimal action selections (Meaning of these notations will be explained later). 
+Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each action $a$, in MDPs we would need to estimate the value $q_{\star}(s, a)$ of each action $a$ in each state $s$, or we estimate the value $v_{\star}(s)$ of each state given optimal action selection. Meaning of these notations will be explained later in this chapter. 
 
+## 3.1. Agent-Environment Interface
 
-## 1. Agent-Environment Interface
-
-- Overview:
+- Illustration of a MDP: MDPs are meant to be a straightforward framing of the problem of learning from interaction between a learner and the environment to achieve a goal, illustrated as follows:
 
     <div style="display: flex; justify-content: center;">
     <img src="../img/chapter3/agent_env_interaction.png" alt="Agent Environment Interaction" style="width: 70%;">
     </div>
 
+    - Explanation:
 
-- Explanation:
-    - Agent: the learner and decision maker
-    - Environment: the thing the agent interacts with, comprising everything outside the agent.
+        - $\textit{Agent}$: the learner and decision maker
 
-    - At time step $t$, the agent receives some representation of the environment's state $S_t \in S$, selects on that basis an action $A_t \in A(s)$, as a consequence it then receives a numerical reward $R_{t+1} \in R \subset \mathbb{R}$, and finds itself in a new environment state $S_{t+1} \in S$.
-    This interaction leads to a $\textit{trajectory}$: $s_0, a_0, r_1, s_1, a_1, r_2, ... , s_t, a_t, r_{t+1}$
+        - $\textit{Environment}$: the thing the agent interacts with, comprising everything outside the agent.
 
-- Dynamics of MDP: in a $\textit{finite MDP}$ - the sets of $S, A, R$ all have finite elements, so $S_t, R_t$ have well defined discrete probability distributions dependent only on the preceding state and action (Markov property).
+        - Interaction process: at time step $t$, the agent receives some representation of the environment's state $S_t \in S$, selects on that basis an action $A_t \in A(s)$, as a consequence it then receives a numerical reward $R_{t+1} \in R \subset \mathbb{R}$, and finds itself in a new environment state $S_{t+1} \in S$.
+
+        - $\textit{Trajectory}$: The sequence led by the interaction process: $s_0, a_0, r_1, s_1, a_1, r_2, ... , s_t, a_t, r_{t+1}$ (sometimes when we talk about MDPs, we refer to this kind of sequences directly).
+
+- Dynamics of MDP: in a $\textit{finite MDP}$ - the sets of $S, A, R$ all have finite elements, so $S_t, R_t$ have well defined discrete probability distributions that are dependent only on the preceding state and action ($\textit{Markov property}$) - the dynamics of a finite MDP can be represented in this form as follows:
 
     $$
         p(s\prime, r | s, a) \dot= Pr(S_{t+1}=s\prime, R_{t+1}=r | A_t=a, S_t=s) \\
         \text{with} \sum_{s\prime \in S} \sum_{ r\in R} p(s\prime, r | s, a) = 1, \text{for all} \ s \in S, a \in A(s)
     $$
 
-- Derivation: with the dynamics of a MDP known, one can compute anything one might want to know about the envrionment:
-    - state-transition probability:
+- Useful derivations: with the dynamics of a MDP known, one can compute anything one might want to know about the envrionment:
+
+    - State-transition probability:
         $$
-            p(s\prime | s, a) \dot= Pr(S_{t+1}=s\prime | A_t=a, S_t=s) = \sum_{r \in R}p(s\prime, r | s, a)
+            p(s\prime | s, a) \doteq Pr(S_{t+1}=s\prime | A_t=a, S_t=s) = \sum_{r \in R}p(s\prime, r | s, a)
         $$
-    - expected reward for state-action pairs:
+
+    - Expected reward for state-action pairs:
         $$
-            r(s,a) = E[R_{t+1}|S_t=s, A_t=a] = \sum_{r \in R} r \times \sum_{s\prime \in S}p(s\prime, r|s, a) 
+            r(s,a) \doteq E[R_{t+1}|S_t=s, A_t=a] = \sum_{r \in R} r \sum_{s\prime \in S}p(s\prime, r|s, a) 
         $$
-    - <span style="color:red;">expected reward for state-action-next_state triple</span>
 
-- <span style="color:red;">Example:</span>
+    - Expected reward for state-action-next-state triples:
 
-## 2. About Rewards and Returns
+        $$
+            r(s, a, s') \doteq \mathbb{E}[R_t \mid S_{t-1} = s, A_{t-1} = a, S_t = s'] = \sum_{r \in \mathcal{R}} r \frac{p(s', r \mid s, a)}{p(s' \mid s, a)}.
+        $$
 
-### 2.1 Goals and Rewards
 
-In reinforcement learning, the purpose or goal of the agent is formalized in terms of a special scalar signal, called the $\textit{reward} \ (R_t \in R)$, passing from the environment to the agent.
+## 3.2. About Rewards and Returns
 
-The idea of maximizing the cumulative reward to allow the agent to show desirablt behaviour is based on the $\textit{reward hypothesis}$: that all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of the reward.
+### 3.2.1 Goals and Rewards
 
-Note that the reward signal is your way of communicating to the robot what you want it to achieve, not how you want it achieved.
+- Definition of reward: In reinforcement learning, the purpose or goal of the agent is formalized in terms of a special scalar signal, called the $\textit{reward} \ (R_t \in R)$, passing from the environment to the agent.
+
+    Note that the reward signal is your way of communicating to the agent of what you want it to achieve, NOT how you want it achieved, i.e., reward signal doesn't take the process into account.
+
+- Reward hypothesis: The idea of maximizing the cumulative reward to allow the agent to show desirablt behaviour is based on the $\textit{reward hypothesis}$: that all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of the reward.
 
 ### 2.2 Returns and Episodes
 
-- In general,we seek to maximize the $\textit{expected return}$ of a sequence of rewards: 
+- Goal: In general, we seek to maximize the $\textit{expected return} \ G_t$ of a sequence of rewards: 
 
     - for episodic tasks:
         $$
@@ -71,50 +78,77 @@ Note that the reward signal is your way of communicating to the robot what you w
 
 - Details on the two type of tasks:
 
-    - Episodic tasks: episodes end in a special state called the $\textit{terminal state}$, followed by a reset to a standard starting state or to a sample from a standard distribution of starting states. 
+    - Episodic tasks: episodes end in a special state called the $\textit{terminal state}$, followed by a reset to a standard starting state or to a sample from a standard distribution of starting states. Note that
     
-        - The next episode begins independently of how the previous one ended
-        - The episodes can all be considered to end in the same $\textit{terminal state}$
-        - Notation $S^+$ is used to denote the set of all non-terminal states plus the terminal state.
+        - the next episode begins independently of how the previous one ended
 
-    - Continuing tasks: in contrast, continuing tasks are those tasks in which the agent–environment interaction does not break naturally into identifiable episodes, but goes on continually without limit.
+        - episodes can all be considered to end in the same $\textit{terminal state}$
+
+        - notation $S^+$ is used to denote the set of all non-terminal states plus the terminal state.
+
+    - Continuing tasks: in contrast, continuing tasks are those tasks in which the agent–environment interaction does not break naturally into identifiable episodes, but goes on continually without limit. Note that in continuous cases,
 
         - $\gamma \in (0,1)$ is called the $\textit{discout rate}$, and is used to represent the agent's preference between immediate and future reward. The more $\gamma$ approaches 1, the more "farsighted" the agent becomes.
 
-        - Though $G_t$ is a sum of an infinite number of terms, it is still finite if the reward is nonzero and constant and $\gamma \in (0,1)$.
+        - though $G_t$ is a sum of an infinite number of terms, it is still finite if the reward is nonzero and constant and $\gamma \in (0,1)$.
 
-        - Special case for continuing tasks: if reward signal is +1 all the time, then:
+        - special case for continuing tasks: if reward signal is +1 all the time, then:
             $$
             G_t = \sum_{k=0}^{\infty} \gamma^k = \frac{1}{1 - \gamma}
             $$
 
-        - Notation $S$ is used to denote the set of all non-terminal states (when it is a continuing task).
+        - notation $S$ is used to denote the set of all non-terminal states.
 
-### 2.3 Unified Notation for Episodic and Continuing Tasks
+- Example of the two type of tasks: Pole-Balancing (could be episode or continuing)
 
-In practice, it turns out that when we discuss episodic tasks we almost never have to distinguish between different episodes.
+    <div style="display: flex; justify-content: center;">
+    <img src="../img/chapter3/cart_pole.png" alt="Example of Cart-Pole" style="width: 50%;">
+    </div>
 
-The two types of tasks can be unified by considering episode termination to be the entering of a special $\textit{absorbing state}$ that transitions only to itself and that generates only rewards of zero.
+    - Objective: to apply forces to a cart moving along a track so as to keep a pole hinged to the cart from falling over. The pole is reset to vertical after each failure.
+
+    - Episodic perspective:
+
+        - Description: This task could be treated as episodic, where the natural episodes are the repeated attempts to balance the pole. 
+        
+        - Reward: The reward in this case could be $+1$ for every time step on which failure did not occur
+        
+        - Return: Return at each time would be the number of steps until failure.
+
+    - Continuing perspective:
+
+        - Description: We could also treat this as a continuing task, using discounting. 
+        
+        - Reward: In this case the reward would be $-1$ on each failure and zero at all other times. 
+        
+        - Return: The return at each time step would then be related to $-\gamma^K$, where K is the number of time steps before failure. The return is maximized by keeping the pole balanced for as long as possible.
+
+### 3.2.3 Unified Notation for Episodic and Continuing Tasks
+
+In practice, it turns out that when we discuss episodic tasks we almost never have to distinguish between different episodes. The two types of tasks can be unified by considering episode termination to be the entering of a special $\textit{absorbing state}$ that transitions only to itself and that generates only rewards of zero.
 
 <div style="display: flex; justify-content: center;">
-<img src="../img/chapter3/absorbing_state.png" alt="Absorbing State" style="width: 70%;">
+<img src="../img/chapter3/absorbing_state.png" alt="Absorbing State" style="width: 60%;">
 </div>
 
 So the expected return of both episodic and continuing tasks can now be written as $G_t=\sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$
 
 
-## 3. Policies and Value Functions
+## 3.3. Policies and Value Functions
 
+Almost all reinforcement learning algorithms involve estimating value functions - functions of states (or of state - action pairs) that estimate how good it is for the agent to be in a given state. We start this section by first defining policy:
 
-### 3.1 Bellman Equations
-
-- Policy: formally, a $\textit{policy}$ is a mapping from states to probabilities of selecting each possible action:
+- Definition: formally, a $\textit{policy}$ is a mapping from states to probabilities of selecting each possible action:
 
     $$
         \pi(a|s) = Pr(A_t=a|S_t=s)
     $$
 
-- Value Function (of state $s$) under policy $\pi$: is the expected return when starting in $s$ and following $\pi$ thereafter:
+and then we introduce Bellman equations and Bellman optimality equations for recursively computing value functions (both state-value and action-value functions).
+
+### 3.3.1 Bellman Equations
+
+- Value Function (of state $s$) under policy $\pi$: is the expected return when starting in state $s$ and following $\pi$ thereafter:
 
     $$
         \begin{align*}
@@ -122,7 +156,7 @@ So the expected return of both episodic and continuing tasks can now be written 
         &= \mathbb{E}_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1} | S_t=s\right] \\
         &= \colorbox{lightyellow}{$\sum_a \pi(a|s)q(s,a)$} \\
         &= \sum_a \pi(a|s) \sum_{s', r}p(s', r|s, a) [r + \gamma \mathbb{E}_{\pi}[G_{t+1}|S_{t+1}=s']] \\
-        &= \colorbox{lightyellow}{$\sum_a \pi(a|s) \sum_{s', r}p(s', r|s, a) [r + \gamma v_{\pi}(s')]$}
+        &= \colorbox{lightyellow}{$\sum_a \pi(a|s) \sum_{s', r}p(s', r|s, a) [r + \gamma v_{\pi}(s')]$} \quad (\text{Bellman equation for} \ v_\pi)
         \end{align*}
     $$
 
@@ -130,13 +164,13 @@ So the expected return of both episodic and continuing tasks can now be written 
 
     - States-value functions are always defined by the policy, when changing the policy, the resulted state-value function will usually be different.
 
-    - The last equation above is called $\textit{Bellman Equation}$ for $v_{\pi}$, which expresses a relationship between the value of a state and the values of its successor states. The bellman equation can be understood with help of the following backup diagram for $v_{\pi}$:
+    - The final equation above is called $\textit{Bellman Equation}$ for $v_{\pi}$, which expresses a relationship between the value of a state and the values of its successor states. The bellman equation can be understood with help of the following backup diagram for $v_{\pi}$:
 
         <div style="display: flex; justify-content: center;">
         <img src="../img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 28%;">
         </div>
 
-        The backup operations (from bottom to top) transfer value information back to a state from its successor states.
+        The backup operations (from bottom $s'$ to top $s$) transfer value information back to a state from its successor states.
 
 - Action-value function under policy $\pi$: the expected return starting from $s$, taking the action $a$, and thereafter following policy $\pi$:
 
@@ -146,11 +180,11 @@ So the expected return of both episodic and continuing tasks can now be written 
         &= \mathbb{E}_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1} | S_t=s, A_t=a\right] \\
         &= \colorbox{lightyellow}{$\sum_{s', r} p(s', r|s, a) (r + \gamma v(s'))$}\\
         &= \sum_{s', r} p(s', r|s, a) (r + \gamma \sum_{a'} \pi(a'|s')\mathbb{E}_{\pi}[G_{t+1}|S_{t+1}=s', A_{t+1}=a']) \\
-        &= \colorbox{lightyellow}{$\sum_{s', r} p(s', r|s, a) [r+ \gamma \sum_{a'} \pi(a'|s') q(s', a')]$}
+        &= \colorbox{lightyellow}{$\sum_{s', r} p(s', r|s, a) [r+ \gamma \sum_{a'} \pi(a'|s') q(s', a')]$} \quad (\text{Bellman equation for} \ q_\pi)
         \end{align*}
     $$
 
-    - likewise, $q_{\pi}(s,a)$ is a function of state $s$ and action $a$, and is defined unique to the policy $\pi$.
+    - Likewise, $q_{\pi}(s,a)$ is a function of state $s$ and action $a$, and is defined unique to the policy $\pi$.
 
     - The bellman equation for $q_{\pi}(s,a)$ can be understood with help of the following backup diagram:
         <div style="display: flex; justify-content: center;">
@@ -158,10 +192,16 @@ So the expected return of both episodic and continuing tasks can now be written 
         </div>
 
 
-- <span style="color:red;">Example of Gridworld</span>
+- Example of Gridworld (lecture video)
+
+    Watch this lecture video linked to the following cover, which gives a vivid example of how Bellman equation is computed in a gridworld environment. If the image is not clickable, try [this link](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations)
+
+	<a href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations">
+	<img src="../img/chapter3/gridworld_example.png" alt="Video: Gridworld Example" style="width:70%;">
+	</a>
 
 
-### 3.2 Bellman Optimality Equation
+### 3.3.2 Bellman Optimality Equation
 
 - Optimal Policy:
 
