@@ -14,7 +14,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 	- $\textit{Distribution models}$: produce a descriptioin of all possibilities and their probabilities. E.g., the model used in DP (i.e., the dynamics of the environment: $p(r, s\prime | s, a)$)
 
-	- $\textit{Sample models}$: produce just one of the possibilities, sampled according to the probabilities. E.g., the kind of model used in the blackjack example in Chapter 5 (<span style="color:red;">A link here</span>) is a sample model.
+	- $\textit{Sample models}$: produce just one of the possibilities, sampled according to the probabilities. E.g., the kind of model used in the blackjack example in [Chapter 5](../Contents/5_monte_carlo_methods.md) is a sample model.
 
 	- Both kinds of models are used to $\textit{simulate}$ the environment and produce $\textit{simulated experience}$. Given a starting state and a policy, a sample model could produce an entire episode, and a distribution model could generate all possible episodes and their probabilities. 
 
@@ -179,7 +179,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 			- Note that $\tau$ will not be updated in the planning process, but only in real interactions.
 
-			- This type of way to encourage exploration is similar to Upper-Confidence-Bound Action Selection descibed in chapter 2 (<span style="color:red;">Link to chapter 2 here</span>), which both measure the uncertainty in a way. 
+			- This type of way to encourage exploration is similar to Upper-Confidence-Bound Action Selection descibed in [Chapter 2](../Contents/2_multi_armed_bandits.md) which both measure the uncertainty in a way. 
 
 		- Modification 2: actions that had never been tried before from a state were allowed to be considered in the planning step `(f)`. The initial model for such actions was that they would lead back to the same state with a reward of zero.
 		
@@ -189,4 +189,4 @@ In addition to the unified view of planning and learning methods, a second theme
 
 - Mindmap of where we are now
 
-	<img src="../img/chapter7/chapter8_mindmap.png" alt="Mindmap" style="width: 100%;"> 
+	<img src="../img/chapter7/chapter7_mindmap.png" alt="Mindmap" style="width: 100%;"> 
