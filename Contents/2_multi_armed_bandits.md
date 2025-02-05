@@ -14,7 +14,9 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
             q_{*}(a) \dot= E[R_{t}|A_{t}=a]
         $$
 
-        We assume that you do not know the action values with certainty (otherwise the problem is already solved). You may have an estimate for the value of action $a$ at time step $t$ as $Q_t(a)$, and ideally $Q_t(a)$ would be close to $q_{*}(a)$, 
+        We assume that you do not know the action values with certainty (otherwise the problem is already solved). You may have an estimate for the value of action $a$ at time step $t$ as $Q_t(a)$, and ideally $Q_t(a)$ would be close to $q_{*}(a)$.
+
+    - For beginners who find this setting abstract, feel free to watch this [optional lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/PtVBs/sequential-decision-making-with-evaluative-feedback), in which the lecturer motivates this problem with a small example of a doctor choosing medicines.
 
 - To explore or to exploit: In any RL problem, we are always forced to trade-off between the two options: exploration or exploitation. explained in this setting as follows:
 
@@ -237,3 +239,5 @@ This chapter introduces multi-armed bandits, a simplified reinforcement learning
 - Efficient Learning
   - **Sample-average updates** work for stable rewards. 
   - **Constant step-size ($\alpha$) updates** adapt to changing rewards.  
+
+- Optional lecture video: [Jonathan Langford: Contextual Bandits for Real World Reinforcement Learning](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/GkDVA/jonathan-langford-contextual-bandits-for-real-world-reinforcement-learning)
