@@ -312,3 +312,5 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
     6. Generalized Policy Iteration (GPI):
         - Continuous interaction of policy evaluation and improvement.
         - Stabilizes when the policy is greedy with respect to its own value function.
+
+- Optional lecture video: [Warren Powell: Approximate Dynamic Programming for Fleet Management (Long)](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/phTdz/warren-powell-approximate-dynamic-programming-for-fleet-management-long)
