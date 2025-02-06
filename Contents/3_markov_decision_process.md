@@ -146,7 +146,7 @@ Almost all reinforcement learning algorithms involve estimating value functions 
 
 and then we introduce Bellman equations and Bellman optimality equations for recursively computing value functions (both state-value and action-value functions).
 
-### 3.3.1 Bellman Equations
+### 3.3.1 Bellman Equations ([Optional Lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/X5VDU/bellman-equation-derivation))
 
 - Value Function (of state $s$) under policy $\pi$: is the expected return when starting in state $s$ and following $\pi$ thereafter:
 
@@ -160,9 +160,9 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
         \end{align*}
     $$
 
-    - States are the independent variables for the value function, i.e., for each input state, state-value function assigns a respective state value.
+    - States are the independent variables for the value function, i.e., **for each input state, state-value function assigns a respective state value.**
 
-    - States-value functions are always defined by the policy, when changing the policy, the resulted state-value function will usually be different.
+    - **States-value functions are always defined by the policy**, when changing the policy, the resulted state-value function will usually be different.
 
     - The final equation above is called $\textit{Bellman Equation}$ for $v_{\pi}$, which expresses a relationship between the value of a state and the values of its successor states. The bellman equation can be understood with help of the following backup diagram for $v_{\pi}$:
 
@@ -194,16 +194,16 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
 - Example of Gridworld (lecture video)
 
-    Watch this lecture video linked to the following cover, which gives a vivid example of how Bellman equation is computed in a gridworld environment. If the image is not clickable, try [this link](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations)
+    Watch this lecture video linked to the following image, which gives a vivid example of how Bellman equation is computed in a gridworld environment. If the image is not clickable, try [this link](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations)
 
 	<a href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations">
 	<img src="../img/chapter3/gridworld_example.png" alt="Video: Gridworld Example" style="width:70%;">
 	</a>
 
 
-### 3.3.2 Bellman Optimality Equation
+### 3.3.2 Bellman Optimality Equation ([Optional Lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/9DFPk/optimal-value-functions))
 
-- Optimal Policy:
+- Optimal Policy: This [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/AjTR1/optimal-policies) introduces optimal policy in depth if you find the textual definition too abstract.
 
     - Better or Equal Policy: A policy $\pi$ is defined to be **better or equal** to another policy $\pi'$ if:
     $$ v_{\pi}(s) \ge v_{\pi'}(s) \quad \text{for all } s \in S $$
@@ -221,8 +221,9 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     $$ q_{\star}(s, a) \doteq \max_{\pi} q_{\pi}(s, a) \text{ for all } s \in S, a \in A(s) $$
 
 
-- Bellman Optimality Equation
-	- for $v_{\star}(s)$:
+- Bellman Optimality Equation:
+
+	- for $v_{\star}(s)$ (also written as $v_{\pi_\star}(s)$):
 
 	$$
     \begin{align*}
@@ -233,7 +234,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     \end{align*}
     $$
 
-	- for $q_{\star}(s,a)$:
+	- for $q_{\star}(s,a)$ (also written as $q_{\pi_\star}(s,a)$):
 
 	$$
     \begin{align*}
@@ -244,31 +245,62 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     $$
 
     - Similarly, the bellman optimality equation can be easily memorized with help of these two backup diagrams:
+        
         <div style="display: flex; justify-content: center;">
         <img src="../img/chapter3/backup_diagam_optimality.png" alt="Backup diagram for $v_{\star}$ and $q_{\star}$" style="width: 70%;">
         </div>
 
-    - **$v_{\star}(s) =  \underset{a \in A(s)}{\max} q_{\star}(s,a)$ is the key of deriving both bellmann optimality equations.**
+        - Keep in mind that **$v_{\star}(s) =  \underset{a \in A(s)}{\max} q_{\star}(s,a)$ is the key of deriving both bellmann optimality equations.**
 
-- Notes:
-    - The Bellman optimality equation is actually a system of equations, one for each state, so if there are n states, then there are n equations in n unknowns. If the dynamics p of the environment are known, then in principle one can solve this system of equations for $v_{\star}$
+- Why are we doing: you could feel confused at this point of what are we doing here. Well in short, the one thing we need in the end of RL process is the (near-)optimal policy, which supports our (or should I say, the agent's) decision making. 
 
-    - Optimal policy: any policy that is greedy with respect to the optimal state-value function $v_{\star}$ is an optimal policy, because $v_{\star}$ already takes into account the reward consequences of all possible future behavior.
+    The optimal policy can be derived by having the optimal value function, and the optimal value function can be solved with bellmann optimality equation. To give you more details, 
 
-    - In reality, optimal action-value function $q_{\star}$ is often more desirable, with it, decisions can be made without knowing the dynamics of the environment. ($v_{\star}$, on the other hand, can only be used for decision making when environment dynamics are known - possible successor states and their values are known)
+    - the Bellman optimality equation is actually a system of equations, one for each state, so if there are $n$ states, then there are $n$ equations in $n$ unknowns. **If the dynamics $p$ of the environment are known**, then in principle one can solve this system of equations for $v_{\star}$
 
-- <span style="color:red;">last example of the Robot...</span>
+    - **any policy that is greedy with respect to the optimal state-value function $v_{\star}$ is an optimal policy**, because $v_{\star}$ already takes into account the reward consequences of all possible future behavior.
+
+    In reality, optimal action-value function $q_{\star}$ is often more desirable, with it, decisions can be made without knowing the dynamics of the environment. ($v_{\star}$, on the other hand, can only be used for decision making when environment dynamics are known - possible successor states and their values are known)
 
 
-- Final Words:
+## 3.4 Summary
+
+- Key Takeaways:
+
+    1. MDP Basics:
+        - MDPs model sequential decision-making where actions influence immediate and future rewards.
+        - The Markov property states that the next state depends only on the current state and action.
+
+    2. Agent-Environment Interaction:
+        - The agent makes decisions; the environment provides state and reward feedback.
+        - A trajectory is a sequence of states, actions, and rewards:  $(s_0, a_0, r_1, s_1, a_1, r_2, \ldots)$.
+
+    3. MDP Dynamics:
+        - Transition probability:      $p(s', r | s, a) = \Pr(S_{t+1} = s', R_{t+1} = r | S_t = s, A_t = a)$.
+        - Expected reward:  $r(s, a) = \mathbb{E}[R_{t+1} | S_t = s, A_t = a]$.
+
+    4. Rewards and Returns:
+        - The reward signal defines what the agent should achieve, not how to achieve it.
+        - The return $G_t$ is the cumulative sum of rewards:
+            - Episodic tasks: $G_t = R_{t+1} + R_{t+2} + \ldots + R_T$.
+            - Continuing tasks:  $G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$,  where $\gamma$ is the discount factor $(0 < \gamma < 1)$.
+
+    5. Policies and Value Functions:
+        - A policy $\pi$ maps states to action probabilities: $\pi(a|s) = \Pr(A_t = a | S_t = s)$.
+        - State-value function $v_\pi(s)$:  $v_\pi(s) = \mathbb{E}_\pi[G_t | S_t = s]$.
+        - Action-value function $q_\pi(s, a)$:  $q_\pi(s, a) = \mathbb{E}_\pi[G_t | S_t = s, A_t = a]$.
+
+    6. Bellman (optimality) Equations: refer to [section 3.3](#33-policies-and-value-functions) for their derivations
+        
+- Final note:
 
     Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. However, this solution is rarely directly useful - it relies on at least three assumptions that are rarely true in practice:
 
-    1) we accurately know the dynamics of the environment; 
+    1) we accurately know the dynamics $p$ of the environment; 
     2) we have enough computational resources to complete the computation of the solution; and 
     3) the Markov property.
 
-    Even in a simple tabular setting where 1. and 3. are met, the number of states could easily scale beyond any current suptercomputer's ability. Therefore, there are other reinforcement learning methods that can be understood as approximately solving the Bellman optimality equation, and will be introduced in the following chapters.
+    Even in a simple tabular setting where 1. and 3. are met, the number of states could easily scale beyond any current suptercomputer's ability. Therefore, there are other reinforcement learning methods that can be understood as **approximately solving the Bellman optimality equation**, and will be introduced in the following chapters.
 
 
 
