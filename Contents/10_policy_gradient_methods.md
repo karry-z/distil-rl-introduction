@@ -68,8 +68,8 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     $$
     \begin{align*}
     r(\pi) &= \sum_{s}\mu(s) v(s) \\
-    &= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s^\prime, \theta) q(s,a) \\
-    &= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s^\prime, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
+    &= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) q(s,a) \\
+    &= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
     \end{align*}
     $$
 
@@ -79,7 +79,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     \begin{align*}
     \theta_{t+1} &= \theta_t + \alpha \nabla \widehat{J}(\theta_t) \\
     &= \theta_t + \alpha \nabla r(\pi) \\
-    &= \theta_t + \alpha \nabla \sum_{s}\mu(s) \sum_{a} \pi(a \vert s^\prime, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
+    &= \theta_t + \alpha \nabla \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
     \end{align*}
     $$ 
 
