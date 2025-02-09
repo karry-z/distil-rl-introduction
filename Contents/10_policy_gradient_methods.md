@@ -245,7 +245,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
     Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.
     
-## 13.4 Actorâ€“Critic Methods
+## 10.4 Actorâ€“Critic Methods
 
 At the beginning of this chapter, we briefly defined actor-critc methods, i.e., policy gradient methods that learn approximations to both policy and value functions. At this point, it is important to note that though REINFORCE with baseline method learns both, it is NOT considered to be an actor-critic method. The reason is that its state-value function is used only as a baseline, not as a critic. That is, the value function is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated. 
 
@@ -396,7 +396,7 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
 
 
 
-## 13.5 Policy Parameterization for Continuous Actions
+## 10.5 Policy Parameterization for Continuous Actions
 
 - Setup of Gausssian Policies for Continuous Actions:
 
@@ -441,7 +441,7 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
     - Handling Large or Infinite Action Spaces: Even if the true action space is discrete but large, treating it as continuous helps avoid the cost of exploring every action separately.
 
 
-## 13.6 Summary
+## 10.6 Summary
 
 This chapter introduces policy gradient methods, a family of reinforcement learning techniques that directly parameterize and optimize policies, as opposed to traditional action-value methods that estimate action values and derive policies from them. A quick summary:
 
