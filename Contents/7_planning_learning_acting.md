@@ -238,3 +238,5 @@ In addition to the unified view of planning and learning methods, a second theme
 		- Incremental planning allows flexible adaptation to changes.
 		- Model-based methods learn faster with fewer interactions, while model-free methods are simpler and avoid model bias.
 		- Effective planning requires prioritizing useful simulated experiences through search control.
+
+- Extra lecture video (optional): [Drew Bagnell: self-driving, robotics, and Model Based RL](https://www.coursera.org/learn/sample-based-learning-methods/lecture/pvjdV/drew-bagnell-self-driving-robotics-and-model-based-rl)
