@@ -271,4 +271,4 @@ The special cases of TD methods introduced in the present chapter should rightly
 
 	- Convergence: All methods converge to optimal policies if exploration is sufficient, and learning rates are properly set.
 
-
+- Extra lecture video (optional): [Rich Sutton: The Importance of TD Learning](https://www.coursera.org/learn/sample-based-learning-methods/lecture/MgFyz/rich-sutton-the-importance-of-td-learning)
