@@ -130,7 +130,7 @@ Apparently, these two assumptions are hardly truth in practice, so we are now go
 
 - $\epsilon$-soft policies:
 
-    - $\epsilon$-greedy policy: as introduced in [Chapter 2](../Contents/2_multi_armed_bandits.md) section 2.2 all non-greedy action are given the minimal probability of selection $\frac{\epsilon}{|A(s)|}$ (**uniform distribution**), the greedy action has the probability of $1 - \epsilon + \frac{\epsilon}{|A(s)|}$. 
+    - $\epsilon$-greedy policy: as introduced in Chapter 2 [section 2.2]((../Contents/2_multi_armed_bandits.md#22-action-value-methods)) all non-greedy action are given the minimal probability of selection $\frac{\epsilon}{|A(s)|}$ (**uniform distribution**), the greedy action has the probability of $1 - \epsilon + \frac{\epsilon}{|A(s)|}$. 
         - $\epsilon$-greedy policy is a type of $\epsilon$-soft policies. Among $\epsilon$-soft policies, $\epsilon$-greedy policies are in some sense those that are closest to greedy.
 
     - $\epsilon$-soft policy: all actions have probability of $\pi(a|s)>\frac{\epsilon}{|A(s)|}$ for all states. This means that the agent explores all possible actions with non-zero probability $\frac{\epsilon}{|A(s)|}$, but **not necessarily uniformly**.
@@ -280,7 +280,7 @@ Let's recap On / Off-policy learning:
 
 - Incremental Implementation for updating $Q(s,a)$:
     - For on-policy methods:
-        $Q(s,a)$ is calculated by simply averaging the collected return realizations, so the incremental implementation can be done the same way as in [Chapter 2](../Contents/2_multi_armed_bandits.md) in section 2.4.1, namely:
+        $Q(s,a)$ is calculated by simply averaging the collected return realizations, so the incremental implementation can be done the same way as in Chapter 2 in [section 2.4.1](../Contents/2_multi_armed_bandits.md#241-stationary-problems), namely:
         $$
         NewEstimate \leftarrow OldEstimate + StepSize*[Target - OldEstimate]$$
     - For off-policy methods:

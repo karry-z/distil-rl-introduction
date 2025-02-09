@@ -6,7 +6,7 @@ For example, $\hat{v}$ might be a linear function in features of the state, with
 
 Typically, the number of weights (the dimensionality of $w$) is much less than the number of states ($d << |S|$), and changing one weight changes the estimated value of many states. Consequently, when a single state is updated, the change generalizes from that state to affect the values of many other states. Such generalization makes the learning potentially more powerful but also potentially more diffcult to manage and understand.
 
-## 9.1 Value-function Approximation
+## 8.1 Value-function Approximation
 
 - Update rules recap:
     - Dynamic programming: 
@@ -35,7 +35,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 
         - Often times, for complex function approximators such as Neural Networks, we can not find a global optimum of $w_\star$, for which  $\overline{VE}(w_\star) \le \overline{VE}(w)$ for all $w$. Rather, we can only find a local optimum for which  $\overline{VE}(w_\star) \le \overline{VE}(w)$ for all $w$ in some neighborhood of $w_\star$, but oftern this is enough.
 
-## 9.2 Stochastic-gradient and Semi-gradient Methods
+## 8.2 Stochastic-gradient and Semi-gradient Methods
 
 
 - Setup for gradient descent methods: 
@@ -140,7 +140,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 
 - Extra lecture video (optional): [Doina Precup: Building Knowledge for AI Agents with Reinforcement Learning](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ipyWM/doina-precup-building-knowledge-for-ai-agents-with-reinforcement-learning)
 
-## 9.3 Linear Models
+## 8.3 Linear Models
 
 - Linear Methods: methods that approximate the value function $\hat{v}(s, \boldsymbol{w})$ as a linear function, i.e., the inner product between $\boldsymbol{w}$ and $\boldsymbol{x}(s)$ - a feature vector, as follows:
 
@@ -205,7 +205,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
                     $$
                     Because $\gamma$ is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.
 
-## 9.4 Feature Construction for Linear Methods
+## 8.4 Feature Construction for Linear Methods
 
 Choosing features appropriate to the task is an important way of adding prior domain knowledge to reinforcement learning systems. Intuitively, the features should correspond to the aspects of the state space along which generalization may be appropriate. 
 
@@ -213,7 +213,7 @@ A limitation of the linear form is that it cannot take into account any interact
 
 In this last section we study **how to construct such $x(s)$** for approximating the value function and balancing between generalization and discrimination.
 
-### 9.4.1 Coarse Coding
+### 8.4.1 Coarse Coding
 
 
 - Introduction: 
@@ -251,7 +251,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
             <img src="../img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
 
 
-### 9.4.2 Tile Coding
+### 8.4.2 Tile Coding
 
 - Introduction
 
@@ -279,7 +279,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
     <img src="../img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
     </a>
 
-## 9.5 Summary
+## 8.5 Summary
 In this chapter, we focused on extending reinforcement learning (RL) from the tabular case to function approximation, a crucial step for handling large state spaces in real-world problems. A quick summary:
 
 - Mindmap of where we are now

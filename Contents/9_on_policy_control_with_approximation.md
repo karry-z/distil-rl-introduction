@@ -4,7 +4,7 @@ In this chapter we return to the control problem (policy improvement) and estima
 
 We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-gradient TD(0) (last chapter) to action values and to on-policy control. In the episodic case, the extension is straightforward, but in the continuing case we have to take a few steps backward and re-examine how we have used discounting to define an optimal policy. We will talk about how we would give up discounting and switch to a new “average-reward” formulation of the control problem, with new “differential” value functions.
 
-## 10.1 Episodic semi-gradient control
+## 9.1 Episodic semi-gradient control
 
 - How to compute action-value function (linear case)
 
@@ -108,7 +108,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
     - **Conclusion**: Combining optimistic values with function approximation is complex, and while Epsilon greedy can be used universally, it’s less directed. **Improving exploration in function approximation remains an open research question.**
     
 
-## 10.2 Average Reward: A New Way of Formulating Control Problems
+## 9.2 Average Reward: A New Way of Formulating Control Problems
 
 
 - Motivation: This [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/DXGwx/average-reward-a-new-way-of-formulating-control-problems) motivates the average reward setting and is optional to watch.
@@ -191,7 +191,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
 - Optional Watching: [Satinder Singh on Intrinsic Rewards](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/TKPHV/satinder-singh-on-intrinsic-rewards)
 
-## 10.3 Summary
+## 9.3 Summary
 In this chapter, we extended tabular control methods to function approximation, examined changes in exploration techniques, and introduced the average reward framework for continuous control. Detailed aspects are:
 
 - Mindmap of where we are now

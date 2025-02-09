@@ -10,7 +10,7 @@ In this chapter we develop a unified view of reinforcement learning methods that
 
 In addition to the unified view of planning and learning methods, a second theme in this chapter is the benefits of planning in small, incremental steps. This enables planning to be interrupted or redirected at any time with little wasted computation, which appears to be a key requirement for effciently intermixing planning with acting and with learning of the model.
 
-## 8.1 Models and Planning
+## 7.1 Models and Planning
 
 - $\textit{Model}$ (of the environment): anything that an agent can use to predict how the environment will respond to its actions, 
 
@@ -52,7 +52,7 @@ In addition to the unified view of planning and learning methods, a second theme
 			- 3. Apply **one-step tabular Q-learning** to $S, A, R, S'$: 
 				$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S', a) - Q(S, A)]$
 			
-## 8.2 Dyna: Integrated Planning, Acting, and Learning
+## 7.2 Dyna: Integrated Planning, Acting, and Learning
 
 - An online planning agent: interacts with the environment in real time and updates the model based on the newly gained information.
 
@@ -134,7 +134,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 	- In larger environments random search control becomes even more problematic. But in this example, the more planning we did the better the agent performed
 
-## 8.3 When the model is wrong
+## 7.3 When the model is wrong
 
 - An inaccurate model: model is either incomplete (does not contain some transition information) or the environment has changed (leads the transition information stored in the model become inaccurate).
 
@@ -197,7 +197,7 @@ In addition to the unified view of planning and learning methods, a second theme
 		
 
 
-## 8.4 Summary
+## 7.4 Summary
 
 - Mindmap of where we are now
 
