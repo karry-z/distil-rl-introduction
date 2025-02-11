@@ -1,0 +1,766 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 6. Temporal-Difference Learning &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/6_temporal_difference_learning';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 7. Planning and Learning with Tabular Methods" href="7_planning_learning_acting.html" />
+    <link rel="prev" title="Chapter 5. Monte Carlo Methods" href="5_monte_carlo_methods.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DistilRLIntro 0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/6_temporal_difference_learning.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 6. Temporal-Difference Learning</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#td-prediction">6.1 TD prediction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#td-control">6.2 TD Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sarsa-on-policy-td-control">6.2.1 Sarsa: On-policy TD Control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q-learning-off-policy-td-control">6.2.2 Q-learning: Off-policy TD Control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-sarsa">6.2.3 Expected Sarsa</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">6.3 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="chapter-6-temporal-difference-learning">
+<h1>Chapter 6. Temporal-Difference Learning<a class="headerlink" href="#chapter-6-temporal-difference-learning" title="Link to this heading">#</a></h1>
+<p>Temporal-Difference (TD) Learning is a combination of Monte Carlo ideas and Dynamic Programming (DP). Like MC methods, TD methods <strong>can learn directly from raw experience</strong> without a model of the environment’s dynamics. Like DP, TD methods update estimates based in part on other learned estimates, without waiting for a final outcome (<strong>they bootstrap</strong>).</p>
+<p>As usual, we start by focusing on the policy evaluation or prediction problem, the problem of estimating the value function $v_\pi$ for a given policy $\pi$. For the control problem (finding an optimal policy), DP, TD, and MC methods all use some variation of generalized policy iteration (GPI). The differences in the methods are primarily differences in their approaches to the prediction problem.</p>
+<section id="td-prediction">
+<h2>6.1 TD prediction<a class="headerlink" href="#td-prediction" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>To introduce TD methods, first recall that</p>
+<p>$$
+\begin{align}
+v_{\pi}(s) &amp;\dot= E[G_t | S_t = s] \
+&amp;= E[R_{t+1} + \gamma G_{t+1}| S_t = s] \
+&amp;= E[R_{t+1} + \gamma v_{\pi}(S_{t+1})| S_t = s]
+\end{align}
+$$</p>
+<ul>
+<li><p><strong>Monte Carlo methods</strong> use an estimate of equation (1) as a target:</p>
+<p>$V(S_t) \leftarrow V(S_t) + \alpha (G_t - V(S_t))$ with $G_t$ as the single realisation from each episode .</p>
+</li>
+<li><p><strong>Dynamic Programming methods</strong> use an estiamte of equation (3) as a target:</p>
+<p>$V(s) = \sum_a \pi(a|s) \sum_{s’, r} p(s’,r|s,a) [r + \gamma V(s’)]$</p>
+</li>
+<li><p><strong>Temporal Difference methods</strong> also uses an estimate of equation (3), yet requires no model of the environment’s dynamics. It combines the above two in the following way:</p>
+<p>$V(S_t) \leftarrow V(S_t) + \alpha (R_{t+1} + \gamma V(S_{t+1}) - V(S_t))$ with $R_{t+1} + \gamma V(S_{t+1})$ as the single realisation of $R_{t+1} + \gamma v_{\pi}(S_{t+1})$ each time.</p>
+<ul class="simple">
+<li><p>The target for the TD update is $R_{t+1} + \gamma V(S_{t+1})$, this TD method is called <strong>TD(0) or one-step TD</strong>, which is a special case of the TD($\lambda$) or n-step TD (not included in this tutorial)</p></li>
+<li><p>TD combines the sampling of MC and the bootstrapping of DP:</p>
+<ol class="arabic simple">
+<li><p>TD and MC both involve looking ahead to a sample successor state (or state–action pair), i.e., they both use $\textit{sample update}$ instead of $\textit{expected update}$ as in DP.</p></li>
+<li><p>Whereas MC methods must wait until the end of the episode to determine the increment to $V(S_t)$ (only then is $G_t$ known), TD and DP methods need to wait only until the next time step, i.e., they bootstrap.</p></li>
+</ol>
+</li>
+<li><p>The term $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$ is called $\textit{TD error}$. $\delta_t$ is the error in $V(S_t)$, yet available at time $t+1$.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Tabular TD(0) for estimating $v_\pi$:</p>
+<ul class="simple">
+<li><p>Algorithm:</p>
+<ul>
+<li><p>Input:</p>
+<ul>
+<li><p>the policy $\pi$ to be evaluated</p></li>
+<li><p>Algorithm parameter: step size $\alpha \in (0,1]$</p></li>
+<li><p>Initialize $V(s)$, for all $s \in S^+$ arbitrarily except that V($terminal$) = 0</p></li>
+</ul>
+</li>
+<li><p>Loop for each episode:</p>
+<ul>
+<li><p>Initialize $S$</p></li>
+<li><p>Loop for each step of episode:</p>
+<ul>
+<li><p>$A \leftarrow$ action given by $\pi$ for S</p></li>
+<li><p>Take action $A$, observe $R, S’$</p></li>
+<li><p>$V(S) \leftarrow V(S) + \alpha (R + \gamma V(S’) - V(S))$</p></li>
+<li><p>$S \leftarrow S’$</p></li>
+</ul>
+</li>
+<li><p>until $S$ is the terminal state</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Notes:</p>
+<ul>
+<li><p>notice the difference between MC algorithms, there is now no need to generate the whole episode. Instead, $V(s)$ will be updated right after an action is taken and a new state is observed, i.e., TD methods work in a “step-wise” fashion.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example of Driving Home (Click to watch the lecture video)</p>
+  <a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/9Dxlq/the-advantages-of-temporal-difference-learning">
+  <img src="../img/chapter6/driving_home.png" alt="Video: TD prediction on Driving Home Example" style="width:70%;">
+  </a>
+</li>
+<li><p>Advantages of TD prediction:</p>
+<ul>
+<li><p>Over dynamic programming: TD methods do not need a model of the environment. Over Monte Carlo: TD methods are naturally implemented in an online, fully incremental fashion, i.e., they do not require to wait until the end of an episode.</p></li>
+<li><p>For any fixed policy $\pi$, TD(0) has been proved to converge to $v_\pi$. For details, refer to the book chapter 6.2, we skip the proof in this tutorial.</p></li>
+<li><p>In practice, TD methods have usually been found to  converge faster than constant-$\alpha$ MC methods on stochastic tasks. A demonstrative example is given in the following video:</p>
+  <a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/CEzFc/comparing-td-and-monte-carlo">
+  <img src="../img/chapter6/random_walk.png" alt="Video: Comparing TD and MC" style="width:70%;">
+  </a>			
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="td-control">
+<h2>6.2 TD Control<a class="headerlink" href="#td-control" title="Link to this heading">#</a></h2>
+<section id="sarsa-on-policy-td-control">
+<h3>6.2.1 Sarsa: On-policy TD Control<a class="headerlink" href="#sarsa-on-policy-td-control" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Backgound for Sarsa:</p>
+<ul>
+<li><p>Since TD methods deal with tasks where there is no model of environment available, it is natural to estimate $Q_\pi(s,a)$ instead of $V_\pi(s)$. Similar to <a class="reference internal" href="#61-td-prediction"><span class="xref myst">section 6.1</span></a>, the <strong>update rule for Sarsa</strong> is:</p>
+<p>$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]$$</p>
+<p>with $Q(S_t, A_t)=0$ if $S_t$ is the terminal state.</p>
+</li>
+<li><p><strong>Naming of Sarsa</strong>: the above update rule uses every element of the quintuple of events, ($S_t,A_t,R_{t+1},S_{t+1},A_{t+1}$), that make up a transition from one state–action pair to the next. This quintuple gives rise to the name Sarsa (<strong>S</strong>tate, <strong>A</strong>ction, <strong>R</strong>eward, <strong>S</strong>tate, <strong>A</strong>ction)</p></li>
+<li><p>Similar to any other on-policy methods, we continually estimate $q_\pi$ for the behavior policy $\pi$, and at the same time change $\pi$ toward greediness with respect to $q_\pi$ (pattern of generalized policy iteration (GPI)).</p></li>
+</ul>
+</li>
+<li><p>Sarsa (on-policy TD control) for estimating $Q \approx q_{\star}$</p>
+<ul class="simple">
+<li><p>Algorithm:</p>
+<ul>
+<li><p>Algorithm parameter: step size $\alpha \in (0,1]$, small $\epsilon&gt;0$</p></li>
+<li><p>Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$ arbitrarily except that $A(terminal, .) = 0$</p></li>
+<li><p>Loop for each episode:</p>
+<ul>
+<li><p>Initialize $S$</p></li>
+<li><p>Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)</p></li>
+<li><p>Loop for each step of episode:</p>
+<ul>
+<li><p>Take action A, observe $R, S’$</p></li>
+<li><p>Choose $A’$ from $S’$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)</p></li>
+<li><p>$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma Q(S’, A’) - Q(S, A)]$</p></li>
+<li><p>$S \leftarrow S’, A \leftarrow A’$</p></li>
+</ul>
+</li>
+<li><p>until $S$ is terminal</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Notes:</p>
+<ul>
+<li><p><strong>There is no need to initialize a policy $\pi$ in the beginning</strong>, the action can be derived directly from a given policy wth $Q(s,a), \text{ for all } s \in S, a \in A(s)$ available.</p></li>
+<li><p>While deriving the next action, make sure to use a soft-policy to ensure exploration.</p></li>
+<li><p>Notice that after transit to the state $S’$, you still need to take another action $A’$ to be able to update $Q(S,A)$.</p></li>
+<li><p>Sarsa converges with probability 1 to an optimal policy and action-value function as long as all state–action pairs are visited an infinite number of times and the policy converges in the limit to the greedy policy (which can be arranged, for example, with $\epsilon$-greedy policies by setting $\epsilon = 1/t$).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example: Sarsa in the Windy Gridworld:</p>
+  <a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/RZeRQ/sarsa-in-the-windy-grid-world">
+  <img src="../img/chapter6/windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
+  </a>
+<ul class="simple">
+<li><p>Notice that the first few episodes take a couple thousand steps to complete. The curve gradually gets steeper indicating that episodes are completed more quickly.</p></li>
+<li><p>Notice the episode completion rate stops increasing. This means the agents policy hovers around the optimal policy and won’t be exactly optimal, because of exploration.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="q-learning-off-policy-td-control">
+<h3>6.2.2 Q-learning: Off-policy TD Control<a class="headerlink" href="#q-learning-off-policy-td-control" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Backgound for Q-learning:</p>
+<ul class="simple">
+<li><p>The update rule for Q-learning is:
+$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$$</p></li>
+<li><p>This way of directly approximating $q_\star$ dramatically simplifies the analysis of the algorithm and enabled early convergence proofs. All that is required for correct convergence is that all pairs continue to be updated (exploration).</p></li>
+</ul>
+</li>
+<li><p>$Q$-learning (off-policy TD control) for estimating $\pi \approx \pi_{\star}$</p>
+<ul class="simple">
+<li><p>Algorithm:</p>
+<ul>
+<li><p>Algorithm parameter: step size $\alpha \in (0,1], \epsilon &gt; 0$</p></li>
+<li><p>Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$</p></li>
+<li><p>Loop for each episode:</p>
+<ul>
+<li><p>Initialize $S$</p></li>
+<li><p>Loop for each step of episode:</p>
+<ul>
+<li><p>Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)</p></li>
+<li><p>Take action $A$, observe $R, S’$</p></li>
+<li><p>$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S’, a) - Q(S, A)]$</p></li>
+<li><p>$S \leftarrow S’$</p></li>
+</ul>
+</li>
+<li><p>until $S$ is terminal</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Notes:</p>
+<ul>
+<li><p><strong>Different from Sarsa, at target state $S’$, Q-learning choose the greedy action that maximizes $Q(S’, a)$ directly</strong>, but not according to a policy derived from $Q$ (although, the derived policy from $Q$ can also be the greedy policy, if so, the update rules of Sarsa and Q-learning are identical).</p></li>
+<li><p><strong>Q-learning is off-policy, but why?</strong> Consider the derived policy from current $Q$ as the $\textit{behaviour policy}$, which can be e.g., $\epsilon$-greedy. but the $\textit{target policy}$ for Q-learning is actually the greedy policy according to the $max$ term in the update rule from above (actions are chosen according to $\epsilon$-greedy, updates are made according to the greedy policy). Readers of interest about why exactly Q-learning is off-policy can further refer to this <a class="reference external" href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/1OikH/how-is-q-learning-off-policy">lecture video.</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example: Q-learning in the Windy Gridworld:</p>
+  <a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/BZbSy/q-learning-in-the-windy-grid-world">
+  <img src="../img/chapter6/q_learning_windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
+  </a>
+<ul class="simple">
+<li><p>In the beginning, the two algorithms learn at a similar pace. Towards the end, Q-Learning seems to learn a better final policy.</p></li>
+<li><p>When we descrease the step-size $\alpha$, Sarsa learns the same final policy as Q-Learning, but more slowly. This experiment highlights the impact of parameter choices in reinforcement learning. $\alpha$, $\epsilon$, initial values, and the length of the experiment can all influence the final result.</p></li>
+</ul>
+</li>
+<li><p>Example of Cliff Walking - Another comparison between Sarsa and Q-learning</p>
+  <img src="../img/chapter6/cliff_walking.png" alt="Video: Sarsa in the Windy Gridworld" style="width:95%;">
+<ul class="simple">
+<li><p>Description:</p>
+<ul>
+<li><p>States and goal: the agent start at state S on the lower left and tries to reach the goal G on the lower right.</p></li>
+<li><p>Actions: up, down, right, and left.</p></li>
+<li><p>Reward: $-1$ on all transitions except those into the region marked “The Cliff”, which incurs a reward of $-100$.</p></li>
+</ul>
+</li>
+<li><p>Performance comparison:</p>
+<ul>
+<li><p>Q-learning (red): learns values for the optimal policy, that which travels right along the edge of the cliff. But this results in its occasionally falling off the cliff because of the $\epsilon$-greedy action selection.</p></li>
+<li><p>Sarsa (blue): learns the longer but safer path through the upper part of the grid.</p></li>
+<li><p>Although Q-learning actually learns the values of the optimal policy, <strong>its online performance is worse than that of Sarsa, which learns the roundabout policy</strong>. Of course, if $\epsilon$ were gradually reduced, then <strong>both methods would asymptotically converge to the optimal policy.</strong></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="expected-sarsa">
+<h3>6.2.3 Expected Sarsa<a class="headerlink" href="#expected-sarsa" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Backgound for expected Sarsa:</p>
+<ul class="simple">
+<li><p>update rule:
+$$
+\begin{align*}
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma E_{\pi}[Q(S_{t+1}, A_{t+1})|S_{t+1})] - Q(S_t, A_t)] \
+\leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \sum_{a}\pi(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)]
+\end{align*}
+$$</p></li>
+<li><p>Given the next state, $S_{t+1}$, this update moves deterministically in the same direction as Sarsa moves in expectation, and accordingly it is called Expected Sarsa.</p></li>
+<li><p>Expected Sarsa is more complex computationally than Sarsa but, in return, it eliminates the variance due to the random selection of $A_{t+1}$. Given the same amount of experience we might expect it to perform slightly better than Sarsa.</p></li>
+</ul>
+</li>
+<li><p>Expected Sarsa for estimating $\pi \approx \pi_{\star}$</p>
+<ul class="simple">
+<li><p>Algorithm:</p>
+<ul>
+<li><p>Algorithm parameter: step size $\alpha \in (0,1], \epsilon &gt; 0$</p></li>
+<li><p>Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$</p></li>
+<li><p>Loop for each episode:</p>
+<ul>
+<li><p>Initialize $S$</p></li>
+<li><p>Loop for each step of episode:</p>
+<ul>
+<li><p>Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)</p></li>
+<li><p>Take action $A$, observe $R, S’$</p></li>
+<li><p>$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma \sum_{a}\pi(a|S’) Q(S’, a) - Q(S, A)]$</p></li>
+<li><p>$S \leftarrow S’$</p></li>
+</ul>
+</li>
+<li><p>until $S$ is terminal</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Notes:</p>
+<ul>
+<li><p>The algorithm is just like Q-learning except that instead of using the maximum over next state-action pairs it uses the expected value, taking into account how likely each action is under the current policy.</p></li>
+<li><p>The fun part about Expected Sarsa is that <strong>it can be both on- and off-policy</strong>. The above algorithm is a on-policy setting, but in general expected sarsa might use a policy different from the target policy $\pi$ to generate behavior, in which case it becomes an off-policy algorithm.</p>
+<ul>
+<li><p>For example, suppose $\pi$ is the greedy policy while behavior is more exploratory; then Expected Sarsa is then exactly Q-learning.</p></li>
+<li><p>In the above sense Expected Sarsa subsumes and generalizes Q-learning while reliably improving over Sarsa. <strong>Except for the small additional computational cost, Expected Sarsa may completely dominate both of the other more-well-known TD control algorithms.</strong></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Comparison on Cliff Walking example:</p>
+<p>The figure below shows the interim and asymptotic performance of the three TD control methods on the cliff-walking task as a function of $\alpha$.</p>
+<ul>
+<li><p>All three algorithms use $\epsilon$-greedy policy with $\epsilon$=0.1</p></li>
+<li><p>Asymptotic performance is an average over 100,000 episodes, then averaged over 10 runs.</p></li>
+<li><p>Interim performance is an average over the first 100 episodes, then averaged over 50,000 runs.</p>
+  <img src="../img/chapter6/comparison_cliff_walking.png" alt="Comparison of three TD control methods on cliff walking task" style="width: 60%;">
+</li>
+</ul>
+<p>Expected Sarsa retains the significant advantage of Sarsa over Q-learning on this problem. In cliff walking the state transitions are all deterministic and all randomness comes from the policy. In such cases, Expected Sarsa can safely set $\alpha$ = 1 without suffering any degradation of asymptotic performance, whereas Sarsa can only perform well in the long run at a small value of $\alpha$, at which short-term performance is poor.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h2>6.3 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>The methods presented in this chapter are today the most widely used reinforcement learning methods. This is probably due to their great simplicity: they can be applied online, with a minimal amount of computation, to experience generated from interaction with an environment; they can be expressed nearly completely by single equations that can be implemented with small computer programs.</p>
+<p>The special cases of TD methods introduced in the present chapter should rightly be called $\textit{one-step, tabular, model-free}$ TD methods. In the next chapter we extend them to the form that include a model of the environment. But for now, a quick summary:</p>
+<ul>
+<li><p>Mindmap of where we are now</p>
+  <img src="../img/chapter6/chapter6_mindmap.png" alt="Mindmap" style="width:100%;">
+</li>
+<li><p>Key Takeaways</p>
+<ul class="simple">
+<li><p>TD Prediction (TD(0))</p>
+<ul>
+<li><p>Updates value estimates after each step:<br />
+$V(S_t) ← V(S_t) + α (R_{t+1} + γ V(S_{t+1}) - V(S_t))$</p></li>
+<li><p>TD error ($δ_t$) measures the difference between predicted and updated values.</p></li>
+<li><p>Advantages: No model needed, incremental updates, faster convergence than MC.</p></li>
+</ul>
+</li>
+<li><p>TD Control Methods</p>
+<ul>
+<li><p>Sarsa (on-policy): Updates based on the current policy. Safer, but may not find the most optimal paths.<br />
+$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]$</p></li>
+<li><p>Q-learning (off-policy): Updates using the maximum possible future reward. Learns optimal policies but can be riskier during exploration.<br />
+$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$</p></li>
+<li><p>Expected Sarsa: Uses expected future rewards, reducing variance and improving stability.<br />
+$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Σ_a π(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)]$</p></li>
+</ul>
+</li>
+<li><p>Comparisons</p>
+<ul>
+<li><p>Sarsa learns conservative policies, good for risky environments.</p></li>
+<li><p>Q-learning finds optimal policies but can perform poorly online due to risky exploration.</p></li>
+<li><p>Expected Sarsa balances both, offering stable performance with minimal extra computation.</p></li>
+</ul>
+</li>
+<li><p>Convergence: All methods converge to optimal policies if exploration is sufficient, and learning rates are properly set.</p></li>
+</ul>
+</li>
+<li><p>Extra lecture video (optional): <a class="reference external" href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/MgFyz/rich-sutton-the-importance-of-td-learning">Rich Sutton: The Importance of TD Learning</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="5_monte_carlo_methods.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 5. Monte Carlo Methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="7_planning_learning_acting.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 7. Planning and Learning with Tabular Methods</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#td-prediction">6.1 TD prediction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#td-control">6.2 TD Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sarsa-on-policy-td-control">6.2.1 Sarsa: On-policy TD Control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q-learning-off-policy-td-control">6.2.2 Q-learning: Off-policy TD Control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-sarsa">6.2.3 Expected Sarsa</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">6.3 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

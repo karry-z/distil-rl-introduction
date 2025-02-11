@@ -1,0 +1,8 @@
+- On-policy methods, such as SARSA, learn the value or policy function for the current policy that the agent is following. This means that the agent learns by interacting with the environment using the same policy that it is improving. For example, if the agent is following an epsilon-greedy policy, it will continue to explore and update the policy based on its exploration.
+
+- Off-policy methods, such as Q-learning, learn the value or policy function for a different policy than the one that the agent is currently following. In other words, the agent learns by following one policy (often an exploratory policy) and uses the data collected from that policy to update a different target policy. For example, the agent could follow a completely random policy to explore the environment and collect data, but then update its policy using a greedy policy that maximizes the estimated value of each action.
+
+
+In reinforcement learning, an $\epsilon$-greedy policy is a policy that selects the action with the highest estimated value with probability $1-\epsilon$, and selects a random action (uniformly from all possible actions) with probability $\epsilon$. This ensures that the agent explores all actions with some probability, even if the estimated value of those actions is low.
+
+An $\epsilon$-soft policy, on the other hand, is a policy that selects all actions with non-zero probability, with the probabilities being at least $\frac{\epsilon}{n}$, where $N$ is the number of possible actions. This means that the agent explores all possible actions with non-zero probability, but not necessarily uniformly.

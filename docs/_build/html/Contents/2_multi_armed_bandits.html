@@ -1,0 +1,720 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapte 2. Multi-armed Bandit &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/2_multi_armed_bandits';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 3. Finite Markov Decision Processes" href="3_markov_decision_process.html" />
+    <link rel="prev" title="Chapter 1. Introduction to RL" href="1_intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DistilRLIntro 0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/2_multi_armed_bandits.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapte 2. Multi-armed Bandit</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-k-armed-bandit-problem">2.1 A k-armed Bandit Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#action-value-methods">2.2 Action-value methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-10-armed-testbed">2.3 The 10-armed Testbed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#incremental-estimation-for-action-values">2.4 Incremental Estimation for Action Values</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-problems">2.4.1 Stationary problems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nonstationary-problems">2.4.2 Nonstationary problems</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-on-exploration-tricks">2.5 More on exploration tricks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimistic-initial-values">2.5.1 Optimistic Initial Values:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#upper-confidence-bound-action-selection">2.5.2 Upper-Confidence-Bound Action Selection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">2.6 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="chapte-2-multi-armed-bandit">
+<h1>Chapte 2. Multi-armed Bandit<a class="headerlink" href="#chapte-2-multi-armed-bandit" title="Link to this heading">#</a></h1>
+<p>In this chapter we study the evaluative aspect of reinforcement learning in a simplified setting, one that does not involve learning to act in more than one situation, i.e., there is only one single state.</p>
+<section id="a-k-armed-bandit-problem">
+<h2>2.1 A k-armed Bandit Problem<a class="headerlink" href="#a-k-armed-bandit-problem" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Setting: In one single state, you are given $k$ different options, or actions. With each action taken, a random numerical reward chosen from a stationary probability distribution will be given. <strong>The objective is to maximize the expected total reward over some time period.</strong></p>
+<ul>
+<li><p>Time steps: time steps describe the number of times actions being taken.</p></li>
+<li><p>Value of an action: mean reward received by taking this action</p>
+<p>$$
+q_{*}(a) \dot= E[R_{t}|A_{t}=a]
+$$</p>
+<p>We assume that you do not know the action values with certainty (otherwise the problem is already solved). You may have an estimate for the value of action $a$ at time step $t$ as $Q_t(a)$, and ideally $Q_t(a)$ would be close to $q_{*}(a)$.</p>
+</li>
+<li><p>For beginners who find this setting abstract, feel free to watch this <a class="reference external" href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/PtVBs/sequential-decision-making-with-evaluative-feedback">optional lecture video</a>, in which the lecturer motivates this problem with a small example of a doctor choosing medicines.</p></li>
+</ul>
+</li>
+<li><p>To explore or to exploit: In any RL problem, we are always forced to trade-off between the two options: exploration or exploitation. explained in this setting as follows:</p>
+<ul class="simple">
+<li><p>Exploitation: to exploit your current knowledge of the values of the actions, i.e., to always choose that one action whose estimated value is the greatest. This action is also called the $\textit{greedy action.}$</p></li>
+<li><p>Exploration: to select one of the nongreedy actions. This is beneficial since it enables you to improve your estimate of the nongreedy action’s value.</p></li>
+</ul>
+<p>Exploitation is the right thing to do to maximize the expected reward on the one step, but exploration may produce the greater total reward in the long run. The trade-off is faced nearly everywhere in RL problems. We will see some tricks about encouraging exploration later in <a class="reference internal" href="#25-more-on-exploration-tricks"><span class="xref myst">section 2.5</span></a></p>
+</li>
+</ul>
+</section>
+<section id="action-value-methods">
+<h2>2.2 Action-value methods<a class="headerlink" href="#action-value-methods" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Definition: methods for estimating the values of actions and for using the estimates to make action selection decisions are called action-value methods.</p></li>
+<li><p>Estimation for $Q_{t}(a)$:</p>
+<p>One natural way to estimate $Q_{t}(a)$ is by averaging the rewards actually received using the socalled $\textit{sample-average method}$</p>
+<p>$$
+\begin{align*}
+Q_{t}(a) \ &amp;\dot= \ \frac{\text{sum of reward when \textit{a} taken prior to t}}{\text{number of times \textit{a} taken prior to t}} \
+&amp;= \frac{\sum_{i=1}^{t-1}R_{i} \cdot \mathbb{1}<em>{A</em>{i}=a}}{\sum_{i=1}^{t-1} \mathbb{1}<em>{A</em>{i}=a}}
+\end{align*}
+$$</p>
+</li>
+<li><p>Action selection methods: there are two natural ways when selecting actions based on estimates, one maximizes exploitation and the other takes exploration into account based on that:</p>
+<ul class="simple">
+<li><p>Greedy action selection: always exploits current knowledge to maximize immediate reward
+$$
+A_t \dot= \underset{a}{\arg\max} Q_{t}(a)
+$$</p></li>
+<li><p>$\epsilon$-greedy action selection: behave greedily most of the time, but each time with a small probability $\epsilon$ (with $0&lt;\epsilon&lt;1$ and close to $0$), we select randomly among all the actions (including the greedy action) with equal probability.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="the-10-armed-testbed">
+<h2>2.3 The 10-armed Testbed<a class="headerlink" href="#the-10-armed-testbed" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Setup: To demonstrate the effectiveness of greedy and $\epsilon$-greedy action selection, we create the following experiment:</p>
+<ul>
+<li><p>We set $k=10$, i.e., create a 10-armed bandit problem.</p></li>
+<li><p>Design the reward distribution of each action to follow a standard normal distribution ($\mu=0 \text{ and } \sigma=1$)</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../img/chapter2/reward_distribution.png" alt="Reward Distribution" style="width:70%;">
+  </div>
+</li>
+</ul>
+</li>
+<li><p>Performance: The performance of each action selection method is measured by averaging the results from 2000 independent $\textit{runs}$, with each $\textit{run}$ containing 1000 time steps (recall that time steps describe the number of times actions being taken.)</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../img/chapter2/running_results.png" alt="Results of running" style="width:70%;">
+  </div>
+<p>With greater $\epsilon$ value indicating more exploration and all selection methods used sample averages as their action-value estimates, conclusions from above the above figure are:</p>
+<ul class="simple">
+<li><p>The greedy method performed significantly worse in the long run because it often got stuck performing suboptimal actions.</p></li>
+<li><p>The $\epsilon=0.01$ method (less exploration) improved more slowly, but eventually would perform better than the $\epsilon=0.1$ (more exploration) method. This emphasizes the trade-off between exploration and exploitation, i.e., exploration ($\epsilon=0.01$) can improve performance yet worsen result when too much ($\epsilon=0.1$).</p></li>
+</ul>
+</li>
+<li><p>Note on the advantage of exploration: It depends on the task.</p>
+<ul class="simple">
+<li><p>Reward Variance: if the reward variance is large (noisier reward), it takes more exploration to find the optimal action, in this case  $\epsilon$-greedy method should be better. On the contrary, if reward variance is zero, greedy method will clearly perform best.</p></li>
+<li><p>Stationarity: assume the distribution of the reward changs over time (as in a Markov Decision Process in different states, which will be introduced in the next chapter). In this case exploration is needed even in the deterministic case to make sure one of the nongreedy actions has not changed to become better than the greedy one.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="incremental-estimation-for-action-values">
+<h2>2.4 Incremental Estimation for Action Values<a class="headerlink" href="#incremental-estimation-for-action-values" title="Link to this heading">#</a></h2>
+<p>We now take another look at sample-average method mentioned in <a class="reference internal" href="#22-action-value-methods"><span class="xref myst">section 2.2</span></a> and study how those averages can be computed in a computationally effcient manner. Specifically, we study this problem in stationary and nonstationary scenario, respectively.</p>
+<section id="stationary-problems">
+<h3>2.4.1 Stationary problems<a class="headerlink" href="#stationary-problems" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Derivation: Let $R_i$ denote the reward received at the $i$-th selection of action $a$, and $Q_n$ denote the estimate of the action value after it has been selected $n-1$ times. For $n$-th action selection:</p>
+<p>$$
+\begin{align*}
+Q_{n+1} &amp;= \frac{R_1 + R_2 + … + R_n}{n} \
+&amp;= \frac{1}{n}\sum_{i=1}^{n}R_i \
+&amp;= \frac{1}{n}(R_{n} + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1}R_i) \
+&amp;= \frac{1}{n}(R_{n} + (n-1)Q_n) \
+&amp;= Q_n + \frac{1}{n}(R_{n} - Q_n) \quad \text{(An incremental estimation)}
+\end{align*}
+$$</p>
+<ul>
+<li><p>The above incremental estimation follows the general form:</p>
+<p>$$
+NewEstimate \leftarrow OldEstimate + StepSize*[Target - OldEstimate]
+$$</p>
+<p>with $StepSize$ is equal to $\frac{1}{n}$, which changes from time step to time step. In this book, the $StepSize$ is denoted by $\alpha$ or more generally by $\alpha_t(a)$</p>
+</li>
+<li><p>The above equation of incremental estimation is a very representative form of many fundamental update rules in reinforcement learning and will be introduced in depth in <a class="reference internal" href="6_temporal_difference_learning.html"><span class="std std-doc">Chapter 6</span></a> in particular.</p></li>
+<li><p>With this incremental implementation, we now can write a pseudocode for solving <strong>stationary</strong> bandit problem as below.</p></li>
+</ul>
+</li>
+<li><p>Algorithm: A simple bandit algorithm</p>
+<ul class="simple">
+<li><p><strong>Initialization</strong>:</p>
+<ul>
+<li><p>For each action $a = 1$ to $k, initialize $Q(a) \leftarrow 0$, $N(a) \leftarrow 0$</p></li>
+</ul>
+</li>
+<li><p><strong>Loop</strong> (forever):</p>
+<ul>
+<li><p>Select Action
+$$
+A \leftarrow
+\begin{cases}
+\arg\max_a Q(a) &amp; \text{with probability } 1 - \epsilon \
+\text{a random action} &amp; \text{with probability } \epsilon
+\end{cases}
+$$</p></li>
+<li><p>Get reward:
+$$R \leftarrow \text{bandit}(A)$$</p></li>
+<li><p>Update the selection count:
+$$N(A) \leftarrow N(A) + 1$$</p></li>
+<li><p>Update the estimated value:<br />
+$$Q(A) \leftarrow Q(A) + \frac{1}{N(A)} \left[ R - Q(A) \right]$$</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="nonstationary-problems">
+<h3>2.4.2 Nonstationary problems<a class="headerlink" href="#nonstationary-problems" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Derivation: If the problem if nonstationary, i.e., the reward distribution changes over time, it would make more sense to give more weights to recent reward than the long-past rewards. To achieve this goal, we could use a constant step-size parameter $\alpha$</p>
+<p>$$
+\begin{align*}
+Q_{n+1} &amp;= Q_n + \alpha \left[ R_n - Q_n \right] \
+&amp;= \alpha R_n + (1 - \alpha) Q_n \
+&amp;= \alpha R_n + (1 - \alpha) \left[ \alpha R_{n-1} + (1 - \alpha) Q_{n-1} \right] \
+&amp;= \alpha R_n + (1 - \alpha) \alpha R_{n-1} + (1 - \alpha)^2 Q_{n-1} \
+&amp;= \alpha R_n + (1 - \alpha) \alpha R_{n-1} + (1 - \alpha)^2 \alpha R_{n-2} + \
+&amp;\quad \ldots + (1 - \alpha)^{n-1} \alpha R_1 + (1 - \alpha)^n Q_1 \
+&amp;=(1 - \alpha)^n Q_1 + \sum_{i=1}^n \alpha (1 - \alpha)^{n-i} R_i
+\end{align*}
+$$</p>
+</li>
+<li><p>Explanation:</p>
+<ul class="simple">
+<li><p>Intuition for the final form</p>
+<ul>
+<li><p>The final result is still a weighted average since $(1 - \alpha)^n + \sum_{i=1}^n \alpha (1 - \alpha)^{n-i} = 1$</p></li>
+<li><p>The weight given to $R_i$ decreases exponentially as the number of intervening rewards increases, i.e., as $i$ becomes past</p></li>
+</ul>
+</li>
+<li><p>Intuition for $\alpha$</p>
+<ul>
+<li><p>If $\alpha=1$, $Q_{n+1} = R_n$, and if $\alpha=0$, $Q_{n+1} = Q_{n}$. $\alpha$ controls the weights given to recent rewards.</p></li>
+<li><p>The choice of $\alpha_n(a)=\frac{1}{n}$ results in the sample-average method</p></li>
+</ul>
+</li>
+<li><p>Optional: For the study of estimation convergence for different choice of $\alpha_n(a)$, refer to the original book chapter 2.5. In general, it is actually more desirable that $\alpha_n(a)$ makes the estimation never converge due to nonstationarity in reality.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="more-on-exploration-tricks">
+<h2>2.5 More on exploration tricks<a class="headerlink" href="#more-on-exploration-tricks" title="Link to this heading">#</a></h2>
+<p>There are two more simple tricks for encouraging exploration beyond $\epsilon$-greedy (or as its extension). Note that they only work well for stationary problems for reasons that will be explained in each section</p>
+<section id="optimistic-initial-values">
+<h3>2.5.1 Optimistic Initial Values:<a class="headerlink" href="#optimistic-initial-values" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Definition: the method that encourages exploration (only in the beginning) by setting the initial action values to a large positive number.</p></li>
+<li><p>Performance: As an example, in 10-armed bandit testbed introduced in <a class="reference internal" href="#23-the-10-armed-testbed"><span class="xref myst">section 2.3</span></a>, we now set $Q_1(a)=+5$ for all $a$ (which is wildly optimistic since action values are given by standard normal distribution). Perform the experiment again use the same setting as before, i.e., averaging 2000 runs with each run up to 1000 time steps</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../img/chapter2/optimistic_initial_value.png" alt="Optimistic initial value" style="width:70%;">
+  </div>
+<ul class="simple">
+<li><p>Initially, the optimistic method performs worse because it explores more, but eventually it performs better because its exploration decreases with time.</p></li>
+<li><p>At the beginning, the optimistic method has a sharp rise in optimal action ratio because of its frequent exploration.</p></li>
+</ul>
+</li>
+<li><p>Properties:</p>
+<ul class="simple">
+<li><p>It is not well suited to nonstationary problems because its drive for exploration is inherently temporary, i.e., only in the beginning of a run.</p></li>
+<li><p>Nevertheless, these simple methods (including sample-average methods), and one of them, or some simple combination of them, is often adequate in practice.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="upper-confidence-bound-action-selection">
+<h3>2.5.2 Upper-Confidence-Bound Action Selection<a class="headerlink" href="#upper-confidence-bound-action-selection" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Definition: explores actions by taking their uncertainty into account as below:</p>
+<p>$$
+A_t \dot= \underset{a}{\arg\max} [Q_{t}(a) + c\sqrt{\frac{ln(t)}{N_t(A)}}]
+$$</p>
+<ul class="simple">
+<li><p>$t$ denotes the current time step</p></li>
+<li><p>$N_t(A)$ denotes the number of action $A$ being selected up to time step $t§</p></li>
+<li><p>$c&gt;0$ controls the degree of exploration</p></li>
+</ul>
+</li>
+<li><p>Intuition:</p>
+<ul class="simple">
+<li><p>Naming convention: The square-root term is a measure of the $\textit{uncertainty}$ or variance in the estimate of $a$’s value. The quantity being maximized over is thus a sort of <strong>upper bound on the possible true value</strong> of action $a$, with $c$ determining the confidence level.</p></li>
+<li><p>Working mechanism:</p>
+<ul>
+<li><p>Each time $a$ is selected the uncertainty is presumably reduced: $N_t(a)$ increments, and, as it appears in the denominator, the uncertainty term decreases.</p></li>
+<li><p>On the other hand, each time an action other than $a$ is selected, the uncertainty estimate of $a$ increases, causing its action value estimate to be bigger and the action will be explored more in later selection.</p></li>
+<li><p>All actions will eventually be selected, but actions with lower value estimates, or that have already been selected frequently, will be selected with decreasing frequency over time. In short, more uncertainty leads to more exploration, causing the uncertainty to decrease in return.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Performance:</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../img/chapter2/ucb.png" alt="Upper-Confidence-Bound result" style="width:65%;">
+  </div>
+<ul class="simple">
+<li><p>UCB generally performs better than $\epsilon$-greedy action selection, except in the first $k$ steps, when it selects randomly among the as-yet-untried actions.</p></li>
+<li><p>Similar to the optimitic initial value method, UCB also leads to a sudden increase in the average reward in the beginning of the experiment. This is because that UCB initializes each action with an optimistic upper confidence bound ($c\sqrt{\frac{ln(t)}{N_t(A)}}$ is quite large when $N_t(a)$ is small), leading all actions to have high values and to be explored in the beginning.</p></li>
+</ul>
+</li>
+<li><p>Properties: UCB is more diffcult than $\epsilon$-greedy to extend beyond bandits to the more general reinforcement learning settings considered in the rest of this book due to its:</p>
+<ul class="simple">
+<li><p>Difficulty in dealing with nonostationary problems: For UCB method, $N_t(a)$ accumulates over time. This means older observations dominate the estimated reward $Q_t(a)$. If the reward distribution shifts over time, UCB does not adapt quickly, i.e., it keeps exploiting an outdated “optimal” action rather than re-exploring.</p></li>
+<li><p>Difficulty in dealing with large state spaces: UCB can be computationally expensive with a large number of actions or when actions need to be reassessed frequently due to changes in the environment.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h2>2.6 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>This chapter introduces multi-armed bandits, a simplified reinforcement learning problem where an agent chooses between $k$ actions, each with an unknown reward distribution. The goal is to maximize total reward over time while balancing exploitation and exploration.  Key takeaways for this chapter are</p>
+<ul class="simple">
+<li><p>Trade-off: Exploration vs. Exploitation</p>
+<ul>
+<li><p>Greedy methods <strong>maximize immediate reward</strong> but can get stuck.</p></li>
+<li><p><strong>ε-greedy</strong> explores randomly with probability <strong>ε</strong> (averaged among all actions) to find better actions.</p></li>
+</ul>
+</li>
+<li><p>Better Exploration Methods</p>
+<ul>
+<li><p><strong>Optimistic Initial Values</strong>: Start high to encourage early exploration.</p></li>
+<li><p><strong>Upper Confidence Bound (UCB)</strong>: Explores actions with <strong>high uncertainty</strong> more often.</p></li>
+</ul>
+</li>
+<li><p>Efficient Learning</p>
+<ul>
+<li><p><strong>Sample-average updates</strong> work for stable rewards.</p></li>
+<li><p><strong>Constant step-size ($\alpha$) updates</strong> adapt to changing rewards.</p></li>
+</ul>
+</li>
+<li><p>Optional lecture video: <a class="reference external" href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/GkDVA/jonathan-langford-contextual-bandits-for-real-world-reinforcement-learning">Jonathan Langford: Contextual Bandits for Real World Reinforcement Learning</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="1_intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 1. Introduction to RL</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="3_markov_decision_process.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 3. Finite Markov Decision Processes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-k-armed-bandit-problem">2.1 A k-armed Bandit Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#action-value-methods">2.2 Action-value methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-10-armed-testbed">2.3 The 10-armed Testbed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#incremental-estimation-for-action-values">2.4 Incremental Estimation for Action Values</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-problems">2.4.1 Stationary problems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nonstationary-problems">2.4.2 Nonstationary problems</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-on-exploration-tricks">2.5 More on exploration tricks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimistic-initial-values">2.5.1 Optimistic Initial Values:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#upper-confidence-bound-action-selection">2.5.2 Upper-Confidence-Bound Action Selection</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">2.6 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

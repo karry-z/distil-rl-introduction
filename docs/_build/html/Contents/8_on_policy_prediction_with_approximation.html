@@ -1,0 +1,825 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 8. On-policy Prediction with Approximation &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/8_on_policy_prediction_with_approximation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 9. On-policy Control with Approximation" href="9_on_policy_control_with_approximation.html" />
+    <link rel="prev" title="Chapter 7. Planning and Learning with Tabular Methods" href="7_planning_learning_acting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DistilRLIntro 0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/8_on_policy_prediction_with_approximation.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 8. On-policy Prediction with Approximation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#value-function-approximation">8.1 Value-function Approximation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-and-semi-gradient-methods">8.2 Stochastic-gradient and Semi-gradient Methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-models">8.3 Linear Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-construction-for-linear-methods">8.4 Feature Construction for Linear Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coarse-coding">8.4.1 Coarse Coding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tile-coding">8.4.2 Tile Coding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">8.5 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="chapter-8-on-policy-prediction-with-approximation">
+<h1>Chapter 8. On-policy Prediction with Approximation<a class="headerlink" href="#chapter-8-on-policy-prediction-with-approximation" title="Link to this heading">#</a></h1>
+<p>In this chapter, we now focus on estimating the state-value function from on-policy data. The approximate value function will be represented not as a table but as a parameterized functional form, written as $\hat{v}(s, w) \approx v_\pi(s)$, with weight vector $w \in \mathbb{R}^d$.</p>
+<p>For example, $\hat{v}$ might be a linear function in features of the state, with $w$ being the vector of feature weights. More generally, $\hat{v}$ might be the function computed by a multi-layer artificial neural network, with $w$ the vector of connection weights in all the layers.</p>
+<p>Typically, the number of weights (the dimensionality of $w$) is much less than the number of states ($d &lt;&lt; |S|$), and changing one weight changes the estimated value of many states. Consequently, when a single state is updated, the change generalizes from that state to affect the values of many other states. Such generalization makes the learning potentially more powerful but also potentially more diffcult to manage and understand.</p>
+<section id="value-function-approximation">
+<h2>8.1 Value-function Approximation<a class="headerlink" href="#value-function-approximation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Update rules recap:</p>
+<ul>
+<li><p>Dynamic programming:
+$s \rightarrow E_\pi[R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)|S_t = s]$</p></li>
+<li><p>Monte Carlo:
+$s \rightarrow G_t$</p></li>
+<li><p>Temperal Difference:
+$s \rightarrow R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)$</p></li>
+</ul>
+</li>
+<li><p>Supervised learning for function approximation</p>
+<ul>
+<li><p>We interpret each update as specifying an example of the desired input-output ($s\rightarrow u$) behavior of the value function, with $u$ indicating the $\textit{udpate target}$.</p></li>
+<li><p>In function approximation, we pass the input–output behavior $s\rightarrow u$ of each update as a training example, then interpret the approximate function they produce (after training) as an estimated value function</p></li>
+</ul>
+</li>
+<li><p>The Prediction Objective ($\overline{VE}$)</p>
+<ul>
+<li><p>Motivation: by assumption we have far more states than weights, so making one state’s estimate more accurate invariably means making others’ less accurate. We are obligated then to say which states we care most about.</p></li>
+<li><p>Measure: Mean Squared Value Error ($\overline{VE}$)
+$$
+\overline{VE}(w) = \sum_{s \in S} u(s)[v_\pi(s) - \hat{v}(s,w)]^2
+$$</p>
+<ul>
+<li><p>The state distribution $u(s) \ge 0, \sum_s u(s)=1$ is called $\textit{on-policy distribution}$, and denotes how much we care about the error in each state $s$. “Often $μ(s)$ is chosen to be the fraction of time spent in $s$.</p></li>
+</ul>
+</li>
+<li><p>Notes:</p>
+<ul>
+<li><p>The best value function for finding a better policy in control is not necessarily the best for minimizing $\overline{VE}$. Nevertheless, it is not yet clear what a more useful alternative goal for value prediction might be. For now, we will focus on $\overline{VE}$.</p></li>
+<li><p>Often times, for complex function approximators such as Neural Networks, we can not find a global optimum of $w_\star$, for which  $\overline{VE}(w_\star) \le \overline{VE}(w)$ for all $w$. Rather, we can only find a local optimum for which  $\overline{VE}(w_\star) \le \overline{VE}(w)$ for all $w$ in some neighborhood of $w_\star$, but oftern this is enough.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="stochastic-gradient-and-semi-gradient-methods">
+<h2>8.2 Stochastic-gradient and Semi-gradient Methods<a class="headerlink" href="#stochastic-gradient-and-semi-gradient-methods" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Setup for gradient descent methods:</p>
+<ul class="simple">
+<li><p>the weight vector is a column vector with a fixed number of real valued components, $w \dot= (w_1,w_2,…,w_d)^T$. (Note that in this book vectors are generally taken to be column vectors unless explicitly written out horizontally or transposed.)</p></li>
+<li><p>the approximate value function $v(s,w)$ is a differentiable function of $w$ for all $s \in S$.</p></li>
+</ul>
+</li>
+<li><p>Sotchastic gradient method (SGD)</p>
+<ul class="simple">
+<li><p>Setup: assume that on each step, we observe a new example $S_t \rightarrow v_\pi(S_t)$ consisting of a (possibly randomly selected) state $S_t$ and its true value under the policy.</p></li>
+<li><p>SGD method:</p>
+<ul>
+<li><p>update rule:
+$$
+\begin{align}
+\boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \
+&amp;= \boldsymbol{w_t} + \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+\end{align}
+$$</p></li>
+<li><p>Notes:</p>
+<ul>
+<li><p>The assumption of available $v_\pi(S_t)$ is clearly impossible in practice. In fact, as long as the target is an unbiased estimate of $v_\pi(S_t)$, i.e., $E[Target | S_t=s] = v_\pi(S_t)$, then $\boldsymbol{w_t}$ is guaranteed to converge to a local optimum under the usual stochastic approximation condition for decreasing $\alpha$ (topics of convergence are not included in DistilRL, please refer to the book chapter 2.7 for details.)</p></li>
+<li><p>By definition, the Monte Carlo target $G_t$ is an unbiased estimator of $v_\pi(S_t)$.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Gradient Monte Carlo Algorithm for estimating $\hat{v} \approx v_\pi$</p>
+<ul>
+<li><p>Input: the policy $\pi$ to be evaluated,</p></li>
+<li><p>Input: a differentiable function $\hat{v}: S \times \mathbb{R}^d \rightarrow \mathbb{R}$</p></li>
+<li><p>Algorithm parameter: step size $\alpha &gt; 0$</p></li>
+<li><p>Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w=0}$)</p></li>
+<li><p>Loop forever (for each episode):</p>
+<ul>
+<li><p>Generate an episode $S_0, A_0, R_1, … S_{T-1}, A_{T-1}, R_T, S_T$ using $\pi$.</p></li>
+<li><p>$ \text{for } t \text{ in } {T-1, T-2, …, 0}$:
+$$
+\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
+$$</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Semi-gradient method:</p>
+<ul>
+<li><p>Setup: the training example $S_t \rightarrow U_t$ with $U_t \in \mathbb{R}$ is not the true value $v_\pi(S_t)$ but a <strong>boostraping target</strong> using $\hat{v}$</p></li>
+<li><p>Semi-gradient methods:</p>
+<ul>
+<li><p>update rule
+$$
+\begin{align}
+\boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \
+&amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+\end{align}
+$$</p></li>
+<li><p>Notes:</p>
+<ul>
+<li><p>There is no guarantees for convergence as for stochastic gradient methods if a bootstrapping estimate of $v(S_t)$ is used as the target $U­_t$. Boostrapping methods use $\hat{v}(S_{t+1}, \boldsymbol{w_t})$ as the target, which depends on the current $\boldsymbol{w_t}$. Yet the derivation from equation $(1)$ to $(2)$ requires independence regarding $\boldsymbol{w_t}$.</p>
+<p>In other words, bootstrapping methods take into account the effect of changing the weight vector $\boldsymbol{w_t}$ on the estimate, but ignore its effect on the target. They include only a part of the gradient and, accordingly, we call them $\textit{semi-gradient methods}$.</p>
+</li>
+<li><p>Although semi-gradient (bootstrapping) methods do not converge as robustly as gradient methods, they do converge reliably in important cases such as the linear case, and they are usually preferred in practice due to the boostrapping advantage against monte carlo methods.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Semi-gradient TD(0) for estimating $\hat{v} \approx v_\pi$</p>
+<ul class="simple">
+<li><p>Input: the policy $\pi$ to be evaluated,</p></li>
+<li><p>Input: a differentiable function $\hat{v}: S^{+} \times \mathbb{R}^d \rightarrow \mathbb{R}$ such that $\hat{v}(terminal, a)=0$</p></li>
+<li><p>Algorithm parameter: step size $\alpha &gt; 0$</p></li>
+<li><p>Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w=0}$)</p></li>
+<li><p>Loop forever (for each episode):</p>
+<ul>
+<li><p>Initialize $S$</p></li>
+<li><p>Loop for each step of episode:</p>
+<ul>
+<li><p>Choose $A \sim \pi(a|s)$</p></li>
+<li><p>Take action $A$, observe $R, S\prime$</p></li>
+<li><p>$\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})$</p></li>
+<li><p>$S \leftarrow S\prime$</p></li>
+</ul>
+</li>
+<li><p>until $S$ is terminal</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example: State Aggregatioin:</p>
+<ul>
+<li><p>State Aggregation: a method for generalizing function approximation by grouping states together, each group of states share one estimated value.</p></li>
+<li><p>Using state aggregation for gradent MC (Lecture video):</p>
+  <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/aJ9j6/state-aggregation-with-monte-carlo">
+  <img src="../img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:60%;">
+  </a>
+</li>
+<li><p>Using state aggregation for semi-gradient TD (Lecture video):</p>
+  <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
+  <img src="../img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:60%;">
+  </a>
+</li>
+<li><p>Comparison between MC and TD: as already described in the above lecture video, the main differences between Temporal Difference (TD) and Monte Carlo (MC) methods in the context of function approximation are as follows:</p>
+<ol class="arabic simple">
+<li><p><strong>Bias in Updates</strong>:</p>
+<ul class="simple">
+<li><p><strong>TD</strong>: The TD update is biased because it relies on estimates of the value in the next state. Since value approximations are never perfect, the target may remain biased, even as estimates improve over time.</p></li>
+<li><p><strong>Monte Carlo</strong>: MC methods use an unbiased estimate of the gradient of the value error, which leads to more accurate value estimates in the long run.</p></li>
+</ul>
+</li>
+<li><p><strong>Convergence</strong>:</p>
+<ul class="simple">
+<li><p><strong>TD</strong>: TD does not guarantee convergence to a local minimum of the Mean Squared Value Error (MSVE) because of its inherent bias. In practice, TD can oscillate around a local minimum due to the use of a constant step size.</p></li>
+<li><p><strong>Monte Carlo</strong>: Over time and with enough samples, MC will converge to a local minimum of MSVE, but it may take longer because it requires more samples and decaying step sizes.</p></li>
+</ul>
+</li>
+<li><p><strong>Speed of Learning</strong>:</p>
+<ul class="simple">
+<li><p><strong>TD</strong>: TD generally learns faster than MC because it updates its estimates during the episode, allowing for quicker learning. The algorithm has lower variance in its updates compared to MC.</p></li>
+<li><p><strong>Monte Carlo</strong>: While MC methods provide more accurate long-term estimates, they typically require more episodes and are slower in terms of early learning, especially with a small number of samples.</p></li>
+</ul>
+</li>
+<li><p><strong>Use of Limited Samples</strong>:</p>
+<ul class="simple">
+<li><p><strong>TD</strong>: TD makes better use of limited samples because it learns continuously during episodes.</p></li>
+<li><p><strong>Monte Carlo</strong>: MC requires running episodes to completion before learning, making it slower when sample size is restricted.</p></li>
+</ul>
+</li>
+</ol>
+<p>Note that overall, when speed of learning is critical, especially with limited samples, TD is more preferable due to its faster learning and lower variance in updates</p>
+</li>
+</ul>
+</li>
+<li><p>Extra lecture video (optional): <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ipyWM/doina-precup-building-knowledge-for-ai-agents-with-reinforcement-learning">Doina Precup: Building Knowledge for AI Agents with Reinforcement Learning</a></p></li>
+</ul>
+</section>
+<section id="linear-models">
+<h2>8.3 Linear Models<a class="headerlink" href="#linear-models" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Linear Methods: methods that approximate the value function $\hat{v}(s, \boldsymbol{w})$ as a linear function, i.e., the inner product between $\boldsymbol{w}$ and $\boldsymbol{x}(s)$ - a feature vector, as follows:</p>
+<p>$$
+\hat{v}(s, \boldsymbol{w}) \dot= \boldsymbol{w}^{\intercal} \boldsymbol{x}(s) \dot= \sum_{i=1}^d w_i x_i(s)
+$$</p>
+<ul class="simple">
+<li><p>In this case the approximate value function is said to be $\textit{linear in the weights}$, or simply $\textit{linear}$.</p></li>
+<li><p>the feature vector $\boldsymbol{x}(s) \dot= (x_1(s), x_2(s), … x_d(s))^{\intercal}$ has the same dimension $d$ as the weight vector $\boldsymbol{w}$. Each feature $x_i: S \rightarrow \mathbb{R}$ is a socalled $\textit{basis function}$ which assigns a value ($x_i(s)$) to the state $s$ (the feature of $s$)</p></li>
+</ul>
+</li>
+<li><p>(Semi-)Gradient methods for linear value function</p>
+<ul>
+<li><p>Update rule:
+$$
+\begin{align*}
+\boldsymbol{w_{t+1}} &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t}) \
+&amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x}(S_t) \
+\end{align*}
+$$</p></li>
+<li><p>$\star$ Convergence</p>
+<ul>
+<li><p>MC method: the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the $\overline{VE}$ under linear function approximation if $\alpha$ is reduced over time according to the usual conditions.</p></li>
+<li><p>TD(0) method: weight vector eventually converges to a point near the local optimum.</p>
+<ul>
+<li><p>update rule:</p>
+<p>$$
+\begin{align*}
+\boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \hat{v}(S_{t+1}, \boldsymbol{w_t}) - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x_t} \
+&amp;= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t+1}} - \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t}}]\boldsymbol{x_t} \
+&amp;= \boldsymbol{w_t} + \alpha [R_{t+1}\boldsymbol{x_{t}} - \boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}\boldsymbol{w_{t}}]\
+\end{align*}
+$$</p>
+<ul class="simple">
+<li><p>Note: $\boldsymbol{x_t}$ is used to represent $\boldsymbol{x}(S_t)$ for simplicity</p></li>
+</ul>
+</li>
+<li><p>in steady state (convergence):
+$$
+E[\boldsymbol{w_{t+1}}|\boldsymbol{w_{t}}] = \boldsymbol{w_{t}} + \alpha(\boldsymbol{b - Aw_{t+1}})
+$$</p>
+<p>with  $\boldsymbol{b} \dot= E[R_{t+1}\boldsymbol{x_{t}}] \in \mathbb{R}^d$ and $\boldsymbol{A} \dot= E[\boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}] \in \mathbb{R}^d \times \mathbb{R}^d$</p>
+<p>And at converge:
+$$
+\begin{align*}
+&amp; \Rightarrow \quad \mathbf{b} - \mathbf{A}\mathbf{w}<em>{\text{TD}} = \mathbf{0} \
+&amp; \Rightarrow \quad \mathbf{b} = \mathbf{A}\mathbf{w}</em>{\text{TD}} \
+&amp; \Rightarrow \quad \mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}.
+\end{align*}
+$$</p>
+</li>
+<li><p>Notes:</p>
+<ul>
+<li><p>The quantity $\mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}$ is called the $\textit{TD fixed point}$. Linear semi-gradient TD(0) converges to this point.</p></li>
+<li><p>At the TD fixed point, it has also been proven (in the continuing case) that the $\overline{VE}$ is within a bounded expansion of the lowest possible error:</p>
+<p>$$
+\overline{VE}(\mathbf{w}_{\text{TD}}) \le \frac{1}{1-\gamma} \underset{w}{min}\overline{VE}(\mathbf{w})
+$$
+Because $\gamma$ is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="feature-construction-for-linear-methods">
+<h2>8.4 Feature Construction for Linear Methods<a class="headerlink" href="#feature-construction-for-linear-methods" title="Link to this heading">#</a></h2>
+<p>Choosing features appropriate to the task is an important way of adding prior domain knowledge to reinforcement learning systems. Intuitively, the features should correspond to the aspects of the state space along which generalization may be appropriate.</p>
+<p>A limitation of the linear form is that it cannot take into account any interactions between features, such as the presence of feature $i$ being good only in the absence of feature $j$, or to put it in another word, we need features that can take the combinations of different states or state dimensions into consideration.</p>
+<p>In this last section we study <strong>how to construct such $x(s)$</strong> for approximating the value function and balancing between generalization and discrimination.</p>
+<section id="coarse-coding">
+<h3>8.4.1 Coarse Coding<a class="headerlink" href="#coarse-coding" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Introduction:</p>
+<ul>
+<li><p>Scenario: assume the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be $\textit{circles}$ in state space.</p></li>
+<li><p>Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a $\textit{binary feature}$.)</p>
+  <img src="../img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
+<p>Corresponding to each circle / feature is a single weight (a component of $\boldsymbol{w}$) that is affected by learning.</p>
+<p>Performing an update to the weights in one state changes the value estimate for all states within the $\textit{receptive fields}$ (in this case, circles) of the active features. In the above image, update for state $s$ also changes the value estimate for state $s\prime$</p>
+</li>
+<li><p>Definition: Representing a state with features that overlap in the above way (although they need not be circles or binary) is known as <strong>coarse coding</strong>.</p></li>
+</ul>
+</li>
+<li><p>Generalization and Discrimination</p>
+<ul>
+<li><p>You may choose to watch this <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/JnNF5/generalization-properties-of-coarse-coding">lecture video</a> instead, since the following content is well covered in it and if you prefer visual&amp;audio contents over texts.</p></li>
+<li><p>Demostration:</p>
+<p>Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).</p>
+  <img src="../img/chapter8/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
+<p>As above, features with large $\textit{receptive fields}$ give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the $\textit{receptive fields}$, but finest discrimination is ultimately  controlled more <strong>by the total number of features</strong>, as shown by the next example.</p>
+</li>
+<li><p>Example: Coarseness of Coarse Coding</p>
+<ul>
+<li><p>Setup: Linear function approximation based on coarse coding and Semi-Gradient method was used to learn a one-dimensional square-wave function, the values of this function were used as the targets, $U_t$.</p></li>
+<li><p>Results: as below, the width of the features had a strong e↵ect early in learning. However, the final function learned was a↵ected only slightly by the width of the features</p>
+  <img src="../img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="tile-coding">
+<h3>8.4.2 Tile Coding<a class="headerlink" href="#tile-coding" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Introduction</p>
+<ul>
+<li><p>Tile coding is <strong>a form of coarse coding</strong> for multi-dimensional continuous spaces</p></li>
+<li><p>In tile coding the $\textit{receptive fields}$ of the features are grouped into partitions of the state space. Each such partition is called a $\textit{tiling}$, and each element of the partition is called a $\textit{tile}$.</p></li>
+<li><p>Demonstration:</p>
+  <img src="../img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:85%;">
+<ul class="simple">
+<li><p>The simplest tiling of a two-dimensional state space is a uniform grid such as that shown on the left side of figure above. Note that with just one tiling, we would not have coarse coding but just a case of state aggregation.</p></li>
+<li><p>To get true coarse coding with tile coding, multiple tilings are used, each offset by a fraction of a tile width (shown on the right side of the figure). Every state (indicated by the white spot) falls in exactly one tile in each of the four tilings. These four tiles correspond to four features that become active when the state occurs. In this example there are $4 \times 4 \times 4 = 64$ components, all of which will be 0 except for the four corresponding to the tiles that the state $s$ falls within.</p></li>
+</ul>
+</li>
+<li><p>Advantages:</p>
+<ul class="simple">
+<li><p>Allowing for the learning rate $\alpha$ to be set in an easy, intuitive way: The overall number of features that are active at one time is the same for any state, so the total number of features present is always the same as the number of tilings. This allows the step-size parameter, $\alpha$ ,to be set in an easy, intuitive way, for example, choosing $\alpha = \frac{1}{n}$, where $n$ is the number of tilings, results in exact one-trial learning.</p></li>
+<li><p>Computational advantages: during computation of $\sum_{i=1}^d w_i x_i(s)$ one simply computes the indices of the $n \ll d$ active features (n is equal to the number of tilings) and then adds up the n corresponding components of the weight vector.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>How it works: It is recommended to watch the lecture video below since it offers a more comprehensive explanation of how tile code works with TD.</p>
+  <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td">
+  <img src="../img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
+  </a>
+</li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h2>8.5 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>In this chapter, we focused on extending reinforcement learning (RL) from the tabular case to function approximation, a crucial step for handling large state spaces in real-world problems. A quick summary:</p>
+<ul>
+<li><p>Mindmap of where we are now</p>
+  <img src="../img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
+</li>
+<li><p>Key Takeaways</p>
+<ol class="arabic simple">
+<li><p>Transition to Function Approximation:</p>
+<ul class="simple">
+<li><p>Moving away from tabular methods allows RL to be applied in more complex problems where it’s impractical to enumerate every state.</p></li>
+<li><p>The conceptual shift involves parameterized function approximation, where we no longer store state values in a table.</p></li>
+<li><p>We aim to minimize the <strong>Mean Squared Value Error</strong>, which measures the difference between the true state values and our approximations, weighted by visitation frequency $u(s)$.</p></li>
+</ul>
+</li>
+<li><p>Gradient Methods:</p>
+<ul class="simple">
+<li><p><strong>Gradient Monte Carlo</strong>: Updates are made at the end of each episode using the sampled returns.</p></li>
+<li><p><strong>Semi-Gradient TD</strong>: Uses bootstrapping with value estimates at the next time step, enabling updates during episodes and faster learning.</p>
+<ul>
+<li><p>We also introduced <strong>Linear TD</strong> with function approximation, which provably converges to a well-understood solution.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Generalization and Discrimination:</p>
+<ul class="simple">
+<li><p><strong>Generalization</strong> allows updates for one state to improve value estimates for other similar states, speeding up learning.</p></li>
+<li><p><strong>Discrimination</strong> ensures that distinct states are assigned different values, preventing overgeneralization.</p></li>
+</ul>
+</li>
+<li><p>Feature Construction and Representation:</p>
+<ul class="simple">
+<li><p><strong>Coarse coding</strong> groups neighboring states into arbitrary-shaped features, such as overlapping circles where each circle is active (1) if the state is inside it and inactive (0) otherwise.</p></li>
+<li><p><strong>Tile Coding</strong>:</p>
+<ul>
+<li><p>A specialized form of coarse coding that uses <strong>overlapping grids (tilings)</strong>.</p></li>
+<li><p>Each tiling is non-overlapping, with one active feature per grid, but multiple offset tilings allow for finer state discrimination.</p></li>
+<li><p>The design of tilings balances generalization, discrimination, and efficiency.</p></li>
+</ul>
+</li>
+<li><p><strong>Neural Network-based Representations</strong>:</p>
+<ul>
+<li><p>Unlike fixed representations (e.g., coarse coding), neural networks learn representations <strong>online</strong>.</p></li>
+<li><p>Networks use layers of neurons to transform inputs into outputs, with weights updated through <strong>gradient descent</strong> based on a <strong>loss function</strong>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Extra Lecture Video (optional): <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/xZuSl/david-silver-on-deep-learning-rl-ai">David Silver on Deep Learning + RL = AI?</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="7_planning_learning_acting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 7. Planning and Learning with Tabular Methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="9_on_policy_control_with_approximation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 9. On-policy Control with Approximation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#value-function-approximation">8.1 Value-function Approximation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-and-semi-gradient-methods">8.2 Stochastic-gradient and Semi-gradient Methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-models">8.3 Linear Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-construction-for-linear-methods">8.4 Feature Construction for Linear Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coarse-coding">8.4.1 Coarse Coding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tile-coding">8.4.2 Tile Coding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">8.5 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

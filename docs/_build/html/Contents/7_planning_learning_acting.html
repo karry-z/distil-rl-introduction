@@ -1,0 +1,742 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 7. Planning and Learning with Tabular Methods &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/7_planning_learning_acting';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 8. On-policy Prediction with Approximation" href="8_on_policy_prediction_with_approximation.html" />
+    <link rel="prev" title="Chapter 6. Temporal-Difference Learning" href="6_temporal_difference_learning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DistilRLIntro 0.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/7_planning_learning_acting.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 7. Planning and Learning with Tabular Methods</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models-and-planning">7.1 Models and Planning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dyna-integrated-planning-acting-and-learning">7.2 Dyna: Integrated Planning, Acting, and Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-the-model-is-wrong">7.3 When the model is wrong</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">7.4 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="chapter-7-planning-and-learning-with-tabular-methods">
+<h1>Chapter 7. Planning and Learning with Tabular Methods<a class="headerlink" href="#chapter-7-planning-and-learning-with-tabular-methods" title="Link to this heading">#</a></h1>
+<p>In this chapter we develop a unified view of reinforcement learning methods that require a model of the environment ($\textit{model-based}$ RL methods), such as dynamic programming, and methods that can be used without a model ($\textit{model-free}$ RL methods), such as Monte Carlo and temporal-difference methods.</p>
+<p><strong>Model-based methods rely on $\textit{planning}$</strong> as their primary component, while <strong>model-free methods primarily rely on $\textit{learning}$</strong>. Although there are real differences between these two kinds of methods, there are also great similarities:</p>
+<ul class="simple">
+<li><p>The heart of both kinds of methods is the computation of value functions.</p></li>
+<li><p>All the methods are based on looking ahead to future events, computing a backed-up value, and then using it as an update target for an approximate value function.</p></li>
+</ul>
+<p>In addition to the unified view of planning and learning methods, a second theme in this chapter is the benefits of planning in small, incremental steps. This enables planning to be interrupted or redirected at any time with little wasted computation, which appears to be a key requirement for effciently intermixing planning with acting and with learning of the model.</p>
+<section id="models-and-planning">
+<h2>7.1 Models and Planning<a class="headerlink" href="#models-and-planning" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>$\textit{Model}$ (of the environment): anything that an agent can use to predict how the environment will respond to its actions,</p>
+<ul class="simple">
+<li><p>$\textit{Distribution models}$: produce a descriptioin of all possibilities and their probabilities. E.g., the model used in DP (i.e., the dynamics of the environment: $p(r, s’ | s, a)$)</p></li>
+<li><p>$\textit{Sample models}$: produce just one of the possibilities, sampled according to the probabilities.</p></li>
+<li><p>Both kinds of models are used to $\textit{simulate}$ the environment and produce $\textit{simulated experience}$. Given a starting state and a policy, a sample model could produce an entire episode, and a distribution model could generate all possible episodes and their probabilities.</p></li>
+</ul>
+</li>
+<li><p>$\textit{Planning}$: any computational process that takes a $\textit{model}$ as input and produces or improves a policy for interacting with the modeled environment, illustrated as:
+$$
+model \xrightarrow{\text{planning}} policy
+$$</p>
+<p>there are two distinct approaches to planning:</p>
+<ul class="simple">
+<li><p>$\textit{state-space planning}$: a search through the state space for an optimal policy or an optimal path to a goal. Actions cause transitions from state to state, and value functions are computed over states.</p></li>
+<li><p>$\star\textit{plan-space planning}$: search through the space of plans. Operators transform one plan into another, and value functions, if any, are defined over the space of plans. Plan-space methods are diffcult to apply effciently to the stochastic sequential decision problems that are the focus in reinforcement learning, and we do not consider them further</p></li>
+</ul>
+</li>
+<li><p>Unifying model-based and model-free RL methods: the heart of both learning and planning (state-space planning) methods is the <strong>1) estimation of value functions by 2) backing-up update operations</strong>. The difference is that whereas planning uses simulated experience generated by a model, learning methods use real experience generated by the environment.</p>
+<ul class="simple">
+<li><p>The common structure between planning and learning can be diagrammed as follows:</p></li>
+</ul>
+<p>$$
+\text{model} \rightarrow \text{simulated experience} \xrightarrow{\text{backups}} \text{values} \rightarrow \text{policy}
+$$</p>
+<ul class="simple">
+<li><p>Example of planning: $\textit{random-sample one-step tabular}$ <strong>Q-planning</strong></p>
+<ul>
+<li><p>Loop forever:</p>
+<ul>
+<li><ol class="arabic simple">
+<li><p>Select a state, $S$ and $A$ at random.</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Send $S, A$ to a sample model, and obtain a sample next reward $R$, and a sample next state, $S’$</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>Apply <strong>one-step tabular Q-learning</strong> to $S, A, R, S’$:
+$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S’, a) - Q(S, A)]$</p></li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="dyna-integrated-planning-acting-and-learning">
+<h2>7.2 Dyna: Integrated Planning, Acting, and Learning<a class="headerlink" href="#dyna-integrated-planning-acting-and-learning" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>An online planning agent: interacts with the environment in real time and updates the model based on the newly gained information.</p>
+<ul>
+<li><p>The possible relationships between experience, model, values, and policy are summarized in the following diagram:</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../img/chapter7/planning_agent.png" alt="Architecture of a planning agent" style="width: 39%;">        
+  </div>
+</li>
+<li><p>Depending on how the real experience is used, the reinforcement learning process can be divided into direct and indirect RL:</p>
+<ul class="simple">
+<li><p>$\textit{direct reinforcement learning}$: uses real experience to directly improve the value function and policy.</p></li>
+<li><p>$\textit{indirect reinforcement learning}$ (or $\textit{model-learning}$): uses real experience to improve the model.</p></li>
+<li><p>Note: Indirect methods often make fuller use of a limited amount of experience and thus achieve a better policy with fewer environmental interactions. On the other hand, direct methods are much simpler and are not affected by biases in the design of the model. (Instead of exaggrating the contrast between these two, this book focuses more on discovering the similarities.)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Dyna agent: a type of online planning agent that performs all the above processes — planning, acting, model-learning, and direct RL — all occurring continually.</p>
+<ul>
+<li><p>Architecture:</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../img/chapter7/dyna_agent_architecture.png" alt="Architecture of Dyna agent" style="width: 50%;">        
+  </div>
+</li>
+<li><p>Explanatoin:</p>
+<ul class="simple">
+<li><p>The arrow on the left of the figure represents direct reinforcement learning operating on real experience to improve the value function and the policy.</p></li>
+<li><p>On the right are model-based processes. The model is learned from real experience and gives rise to simulated experience.</p></li>
+<li><p>Typically, the same reinforcement learning method is used both for learning from real experience and for planning from simulated experience.</p></li>
+</ul>
+</li>
+<li><p>Computing time allocation:</p>
+<ul class="simple">
+<li><p>usually the acting, model-learning, and direct RL processes require little computation, and we assum they consume just a fraction of the time.</p></li>
+<li><p>a larger fraction of time in each step can be devoted to the planning process, which is inherently computation-intensive.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>A type of dyna agent: Tabular Dyna-Q for estimating $q_\pi$:</p>
+<ul>
+<li><p>Algorithm</p>
+<ul class="simple">
+<li><p>Initialize $Q(s,a)$ and $Model(s,a)$ for all $s \in S$ and $a \in A$</p></li>
+<li><p>Loop forever:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">(a)</span></code> $S \leftarrow$ current (non-terminal) state</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(b)</span></code> $A \leftarrow \epsilon$-greedy($S, Q$)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(c)</span></code> Take action $A$, observe reward $R$, and the next state $S’$</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(d)</span></code> $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S’, a) - Q(S, A)]$</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(e)</span></code> $Model(S, A)$ $\leftarrow R, S’$  and $S$ $\leftarrow S’$ (assuming deterministic environment)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(f)</span></code> If $S$ is the terminal state, then $S \leftarrow StartingState$ and restart, Else loop repeat $n$ times:</p>
+<ul>
+<li><p>$S \leftarrow$ random <strong>previously observed</strong> state</p></li>
+<li><p>$A \leftarrow$ random action <strong>previously taken in $S$</strong></p></li>
+<li><p>$R, S’ \leftarrow Model(S, A)$</p></li>
+<li><p>$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S’, a) - Q(S, A)]$</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Notes:</p>
+<ul class="simple">
+<li><p>$Model(s, a)$ denotes the contents of the predicted next state and the reward received for state-action pair $(s, a)$.</p></li>
+<li><p>Direct reinforcement learning, model-learning are implemented by steps <code class="docutils literal notranslate"><span class="pre">(d)</span></code> and <code class="docutils literal notranslate"><span class="pre">(e)</span></code>, respectively.</p></li>
+<li><p>The whole step <code class="docutils literal notranslate"><span class="pre">(f)</span></code> performs the planning.</p>
+<ul>
+<li><p>$\textit{Search Control}$: the first two steps in step <code class="docutils literal notranslate"><span class="pre">(f)</span></code> that select the starting states and actions for the simulated experiences generated by the model.</p></li>
+<li><p>Note that the starting state in planning is random selected, it does NOT have to be the real starting state</p></li>
+<li><p><strong>Note that planning only happens for the states with which the agent have made real experience.</strong></p></li>
+</ul>
+</li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">(e)</span></code> and <code class="docutils literal notranslate"><span class="pre">(f)</span></code> are ommited, the remaining algorithm would be one-step tabular Q-learning.</p></li>
+</ul>
+</li>
+<li><p>Lecture video for an illustrative Example (starting from <code class="docutils literal notranslate"><span class="pre">3:13</span></code>): In a gridworld with obstacles, an agent starts from the lower left grid and travels to the end state on the upper right. Initial policy $\pi$ assigns equal probability to all four action: left, right, up and down.</p>
+  <a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/k7Out/the-dyna-algorithm">
+  <img src="../img/chapter7/dyna_q_example.png" alt="Video: The dyna algorithm" style="width:40%;">
+  </a>
+</li>
+</ul>
+</li>
+<li><p>Example: Dyna Maze</p>
+<ul>
+<li><p>An illustratiev example of how exactly a planning agent may learn much fastet than a pure learning agent:</p>
+  <a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/TGSQi/dyna-q-learning-in-a-simple-maze">
+  <img src="../img/chapter7/example_maze.png" alt="Video: The Maze example" style="width:55%;">
+  </a>
+</li>
+<li><p>The agent needs many planning steps because search control samples state action pairs randomly. The planning update will not have any effect if the sample state action pair produces a 0 TD error. This happened a lot in this environment because all the rewards are 0, and so are the initial values.</p></li>
+<li><p>In larger environments random search control becomes even more problematic. But in this example, the more planning we did the better the agent performed</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="when-the-model-is-wrong">
+<h2>7.3 When the model is wrong<a class="headerlink" href="#when-the-model-is-wrong" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>An inaccurate model: model is either incomplete (does not contain some transition information) or the environment has changed (leads the transition information stored in the model become inaccurate).</p>
+<ul class="simple">
+<li><p>When the model is wrong: we face the trade-off between exploration vs. exploitation (in the planning context):</p>
+<ul>
+<li><p>exploration means trying actions that improve the model</p></li>
+<li><p>exploitation means behaving in the optimal way given the current model</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example: Blocking Maze - when the environment become “worse”</p>
+<ul>
+<li><p>Description: initially, there is a short path from start to goal, to the right of the barrier, as shown in the upper left of the figure. After 1000 time steps, the short path is “blocked,” and a longer path is opened up along the left-hand side of the barrier</p>
+  <img src="../img/chapter7/example_blocking_maze.png" alt="The blocking maze example" style="width:50%;">
+</li>
+<li><p>Notes</p>
+<ul class="simple">
+<li><p>The first part of the graph shows that both Dyna agents found the short path within 1000 steps.</p></li>
+<li><p>When the environment changed, the graphs become flat, indicating a period during which the agents obtained no reward because they were wandering around behind the barrier.</p></li>
+<li><p>After a while, however, they were able to find the new opening and the new optimal behavior.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Example: Shortcut Maze - when the environment become “better”</p>
+<ul>
+<li><p>Description: initially, the optimal path is to go around the left side of the barrier (upper left). After 3000 steps, however, a shorter path is opened up along the right side, without disturbing the longer path</p>
+  <img src="../img/chapter7/example_shortcut_maze.png" alt="The shortcut maze example" style="width:50%;">
+</li>
+<li><p>Notes:</p>
+<ul class="simple">
+<li><p>It is harder to detect modeling error in the case where the environment changes to become “better” (better solutions emerge), this is where more thoughts on exploration (during planning) are need to keep the model up-to-date.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Dyna-Q+ agent - encourages exploration during planning</p>
+<ul class="simple">
+<li><p>Algorithm</p>
+<ul>
+<li><p>Initialize $Q(s,a)$ and $Model(s,a)$ for all $s \in S$ and $a \in A$</p></li>
+<li><p>Loop forever:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">(a)</span></code> $S \leftarrow$ current (non-terminal) state</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(b)</span></code> $A \leftarrow \epsilon$-greedy($S, Q$)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(c)</span></code> Take action $A$, observe reward $R$, and the next state $S’$</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(d)</span></code> $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S’, a) - Q(S, A)]$</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(e)</span></code> $Model(S, A)$ $\leftarrow R, S’$  and $S$ $\leftarrow S’$ (assuming deterministic environment)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(f)</span></code> If $S$ is the terminal state, then $S \leftarrow StartingState$ and restart, Else loop repeat $n$ times:</p>
+<ul>
+<li><p>$S \leftarrow$ random <strong>previously observed</strong> state</p></li>
+<li><p>$A \leftarrow$ random action <strong>available (doen not have to be taken before)</strong> in $S$</p></li>
+<li><p>$R, S’ \leftarrow Model(S, A)$</p></li>
+<li><p>$R = R + \kappa \sqrt \tau_{S,A,R,S’}$</p></li>
+<li><p>$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S’, a) - Q(S, A)]$</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Notes</p>
+<ul>
+<li><p>Modification 1: the reward is now $R + \kappa \sqrt \tau$, where $\kappa$ is a constant and $\tau$ indicates the amount of time steps that the transition $(S,A) \rightarrow (R, S’)$ has not been tried during real experience.</p>
+<ul>
+<li><p>The more time that has elapsed, the greater (we might presume) the chance that the dynamics of this pair has changed and that the model of it is incorrect.</p></li>
+<li><p>Note that $\tau$ will not be updated in the planning process, but only in real interactions.</p></li>
+<li><p>This type of way to encourage exploration is similar to Upper-Confidence-Bound Action Selection descibed in <a class="reference internal" href="2_multi_armed_bandits.html"><span class="std std-doc">Chapter 2</span></a> which both measure the uncertainty in a way.</p></li>
+</ul>
+</li>
+<li><p>Modification 2: actions that had never been tried before from a state were allowed to be considered in the planning step <code class="docutils literal notranslate"><span class="pre">(f)</span></code>. The initial model for such actions was that they would lead back to the same state with a reward of zero.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="summary">
+<h2>7.4 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Mindmap of where we are now</p>
+  <img src="../img/chapter7/chapter7_mindmap.png" alt="Mindmap" style="width: 100%;"> 
+</li>
+<li><p>Key Takeaways</p>
+<ol class="arabic simple">
+<li><p>Model-Based vs. Model-Free Methods</p>
+<ul class="simple">
+<li><p>Model-based methods (e.g., Dynamic Programming) use planning with a model.</p></li>
+<li><p>Model-free methods (e.g., Monte Carlo, TD) learn directly from experience.</p></li>
+<li><p>Both compute value functions using backup operations but differ in the source of experience (simulated vs. real).</p></li>
+</ul>
+</li>
+<li><p>Models and Planning</p>
+<ul class="simple">
+<li><p>A model predicts the environment’s response to actions.</p>
+<ul>
+<li><p>Distribution models provide all outcomes and probabilities.</p></li>
+<li><p>Sample models provide a single sampled outcome.</p></li>
+</ul>
+</li>
+<li><p>Planning improves policies using models.</p>
+<ul>
+<li><p>State-space planning searches state transitions for optimal policies.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Dyna: Integrated Planning, Acting, and Learning</p>
+<ul class="simple">
+<li><p>Dyna architecture combines direct reinforcement learning, model learning, and planning.</p>
+<ul>
+<li><p>Direct RL updates value functions from real experiences.</p></li>
+<li><p>Model learning updates the model from real experiences.</p></li>
+<li><p>Planning uses the model for simulated experiences to refine learning.</p></li>
+</ul>
+</li>
+<li><p>Tabular Dyna-Q alternates between real and simulated experiences to accelerate learning.</p></li>
+</ul>
+</li>
+<li><p>Handling Inaccurate Models</p>
+<ul class="simple">
+<li><p>Model inaccuracies occur when the environment changes or the model lacks information.</p></li>
+<li><p>Planning faces a trade-off between exploration (improving the model) and exploitation (using the current model).</p></li>
+</ul>
+</li>
+<li><p>Dyna-Q+ for Encouraging Exploration</p>
+<ul class="simple">
+<li><p>Dyna-Q+ adds exploration bonuses to rewards based on how long actions remain unvisited.</p></li>
+<li><p>Untried actions are included in planning to promote broader exploration.</p></li>
+<li><p>Helps agents adapt to dynamic environments by detecting changes faster.</p></li>
+</ul>
+</li>
+<li><p>Practical Insights</p>
+<ul class="simple">
+<li><p>Incremental planning allows flexible adaptation to changes.</p></li>
+<li><p>Model-based methods learn faster with fewer interactions, while model-free methods are simpler and avoid model bias.</p></li>
+<li><p>Effective planning requires prioritizing useful simulated experiences through search control.</p></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Extra lecture video (optional): <a class="reference external" href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/pvjdV/drew-bagnell-self-driving-robotics-and-model-based-rl">Drew Bagnell: self-driving, robotics, and Model Based RL</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="6_temporal_difference_learning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 6. Temporal-Difference Learning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="8_on_policy_prediction_with_approximation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 8. On-policy Prediction with Approximation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models-and-planning">7.1 Models and Planning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dyna-integrated-planning-acting-and-learning">7.2 Dyna: Integrated Planning, Acting, and Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-the-model-is-wrong">7.3 When the model is wrong</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">7.4 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
