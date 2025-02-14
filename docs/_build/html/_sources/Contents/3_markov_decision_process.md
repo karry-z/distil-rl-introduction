@@ -9,7 +9,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 - Illustration of a MDP: MDPs are meant to be a straightforward framing of the problem of learning from interaction between a learner and the environment to achieve a goal, illustrated as follows:
 
     <div style="display: flex; justify-content: center;">
-    <img src="../img/chapter3/agent_env_interaction.png" alt="Agent Environment Interaction" style="width: 70%;">
+    <img src="../_static/img/chapter3/agent_env_interaction.png" alt="Agent Environment Interaction" style="width: 70%;">
     </div>
 
     - Explanation:
@@ -25,20 +25,22 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 - Dynamics of MDP: in a $\textit{finite MDP}$ - the sets of $S, A, R$ all have finite elements, so $S_t, R_t$ have well defined discrete probability distributions that are dependent only on the preceding state and action ($\textit{Markov property}$) - the dynamics of a finite MDP can be represented in this form as follows:
 
     $$
-        p(s\prime, r | s, a) \dot= Pr(S_{t+1}=s\prime, R_{t+1}=r | A_t=a, S_t=s) \\
-        \text{with} \sum_{s\prime \in S} \sum_{ r\in R} p(s\prime, r | s, a) = 1, \text{for all} \ s \in S, a \in A(s)
+        p(s', r | s, a) \dot= Pr(S_{t+1}=s', R_{t+1}=r | A_t=a, S_t=s) \\
+        \text{with} \sum_{s' \in S} \sum_{ r\in R} p(s', r | s, a) = 1, \text{for all} \ s \in S, a \in A(s)
     $$
 
 - Useful derivations: with the dynamics of a MDP known, one can compute anything one might want to know about the envrionment:
 
     - State-transition probability:
+
         $$
-            p(s\prime | s, a) \doteq Pr(S_{t+1}=s\prime | A_t=a, S_t=s) = \sum_{r \in R}p(s\prime, r | s, a)
+            p(s' | s, a) \doteq Pr(S_{t+1}=s' | A_t=a, S_t=s) = \sum_{r \in R}p(s', r | s, a)
         $$
 
     - Expected reward for state-action pairs:
+
         $$
-            r(s,a) \doteq E[R_{t+1}|S_t=s, A_t=a] = \sum_{r \in R} r \sum_{s\prime \in S}p(s\prime, r|s, a) 
+            r(s,a) \doteq E[R_{t+1}|S_t=s, A_t=a] = \sum_{r \in R} r \sum_{s' \in S}p(s', r|s, a) 
         $$
 
     - Expected reward for state-action-next-state triples:
@@ -63,11 +65,13 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 - Goal: In general, we seek to maximize the $\textit{expected return} \ G_t$ of a sequence of rewards: 
 
     - for episodic tasks:
+
         $$
         G_t \dot= R_{t+1} + R_{t+2} + ... + R_{T} 
         $$
 
     - for continuing tasks:
+
         $$
         \begin{align*}
         G_t \ &\dot= \ R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... \\
@@ -93,6 +97,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
         - though $G_t$ is a sum of an infinite number of terms, it is still finite if the reward is nonzero and constant and $\gamma \in (0,1)$.
 
         - special case for continuing tasks: if reward signal is +1 all the time, then:
+
             $$
             G_t = \sum_{k=0}^{\infty} \gamma^k = \frac{1}{1 - \gamma}
             $$
@@ -102,7 +107,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 - Example of the two type of tasks: Pole-Balancing (could be episode or continuing)
 
     <div style="display: flex; justify-content: center;">
-    <img src="../img/chapter3/cart_pole.png" alt="Example of Cart-Pole" style="width: 50%;">
+    <img src="../_static/img/chapter3/cart_pole.png" alt="Example of Cart-Pole" style="width: 50%;">
     </div>
 
     - Objective: to apply forces to a cart moving along a track so as to keep a pole hinged to the cart from falling over. The pole is reset to vertical after each failure.
@@ -128,7 +133,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 In practice, it turns out that when we discuss episodic tasks we almost never have to distinguish between different episodes. The two types of tasks can be unified by considering episode termination to be the entering of a special $\textit{absorbing state}$ that transitions only to itself and that generates only rewards of zero.
 
 <div style="display: flex; justify-content: center;">
-<img src="../img/chapter3/absorbing_state.png" alt="Absorbing State" style="width: 60%;">
+<img src="../_static/img/chapter3/absorbing_state.png" alt="Absorbing State" style="width: 60%;">
 </div>
 
 So the expected return of both episodic and continuing tasks can now be written as $G_t=\sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$
@@ -167,7 +172,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     - The final equation above is called $\textit{Bellman Equation}$ for $v_{\pi}$, which expresses a relationship between the value of a state and the values of its successor states. The bellman equation can be understood with help of the following backup diagram for $v_{\pi}$:
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 28%;">
+        <img src="../_static/img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 28%;">
         </div>
 
         The backup operations (from bottom $s'$ to top $s$) transfer value information back to a state from its successor states.
@@ -178,7 +183,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
         \begin{align*}
         q_{\pi}(s,a) \ &\dot= \ \mathbb{E}_{\pi}[G_t|S_t=s, A_t=a] \\
         &= \mathbb{E}_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1} | S_t=s, A_t=a\right] \\
-        &= \colorbox{lightyellow}{$\sum_{s', r} p(s', r|s, a) (r + \gamma v(s'))$}\\
+        &= \colorbox{lightyellow}{$\sum_{s', r} p(s', r|s, a) (r + \gamma v(s'))$} \\
         &= \sum_{s', r} p(s', r|s, a) (r + \gamma \sum_{a'} \pi(a'|s')\mathbb{E}_{\pi}[G_{t+1}|S_{t+1}=s', A_{t+1}=a']) \\
         &= \colorbox{lightyellow}{$\sum_{s', r} p(s', r|s, a) [r+ \gamma \sum_{a'} \pi(a'|s') q(s', a')]$} \quad (\text{Bellman equation for} \ q_\pi)
         \end{align*}
@@ -188,7 +193,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
     - The bellman equation for $q_{\pi}(s,a)$ can be understood with help of the following backup diagram:
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter3/backup_diagram_q.png" alt="Backup diagram for 1" style="width: 25%;">
+        <img src="../_static/img/chapter3/backup_diagram_q.png" alt="Backup diagram for 1" style="width: 25%;">
         </div>
 
 
@@ -197,7 +202,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     Watch this lecture video linked to the following image, which gives a vivid example of how Bellman equation is computed in a gridworld environment. If the image is not clickable, try [this link](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations)
 
 	<a href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations">
-	<img src="../img/chapter3/gridworld_example.png" alt="Video: Gridworld Example" style="width:70%;">
+	<img src="../_static/img/chapter3/gridworld_example.png" alt="Video: Gridworld Example" style="width:70%;">
 	</a>
 
 
@@ -206,6 +211,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 - Optimal Policy: This [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/AjTR1/optimal-policies) introduces optimal policy in depth if you find the textual definition too abstract.
 
     - Better or Equal Policy: A policy $\pi$ is defined to be **better or equal** to another policy $\pi'$ if:
+
     $$ v_{\pi}(s) \ge v_{\pi'}(s) \quad \text{for all } s \in S $$
 
     - Optimal Policy ($\pi_{\star}$): An **optimal policy** $\pi_{\star}$ is a policy that is better or equal to any other policy. Formally:
@@ -215,9 +221,11 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 - Optimal value functions:
 
     - Optimal State-Value Function: The **optimal state-value function** is defined as:
+
     $$ v_{\star}(s) \doteq \max_{\pi} v_{\pi}(s) \text{ for all } s \in S$$
 
     - Optimal Action-Value Function: The **optimal action-value function** is defined as:
+
     $$ q_{\star}(s, a) \doteq \max_{\pi} q_{\pi}(s, a) \text{ for all } s \in S, a \in A(s) $$
 
 
@@ -229,8 +237,8 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     \begin{align*}
 	  v_{\star}(s) &= \colorbox{lightyellow}{$ \underset{a \in A(s)}{\max} q_{\star}(s,a)$} \\
       &= \underset{a}{\max} E_{\pi_{\star}}[R_{t+1} + \gamma G_{t+1} | S_t=s, A_t=a] \\
-      &= \underset{a}{\max} E_{\pi_{\star}}[R_{t+1} + \gamma v_{\star}(s\prime) | S_t=s, A_t=a] \\
-	  &= \colorbox{lightyellow}{$ \underset{a}{\max} \sum_{s\prime, r}p(s\prime,r|s,a) (r+\gamma v_{\star}(s\prime))$}
+      &= \underset{a}{\max} E_{\pi_{\star}}[R_{t+1} + \gamma v_{\star}(s') | S_t=s, A_t=a] \\
+	  &= \colorbox{lightyellow}{$ \underset{a}{\max} \sum_{s', r}p(s',r|s,a) (r+\gamma v_{\star}(s'))$}
     \end{align*}
     $$
 
@@ -238,16 +246,16 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
 	$$
     \begin{align*}
-	  q_{\star}(s,a) &= E_{\pi_{\star}}[R_{t+1} + \gamma v_{\star}(s\prime) | S_t=s, A_t=a] \\
-      &= \colorbox{lightyellow}{$ \underset{s\prime, r}{\sum} p(s\prime, r|s,a) [r+\gamma v_{\star}(s\prime)] $}\\
-	  &= \colorbox{lightyellow}{$ \underset{s\prime, r}{\sum} p(s\prime, r|s,a) [r+ \gamma \ \max_a q_{\star}(s\prime,a\prime)]$}
+	  q_{\star}(s,a) &= E_{\pi_{\star}}[R_{t+1} + \gamma v_{\star}(s') | S_t=s, A_t=a] \\
+      &= \colorbox{lightyellow}{$ \underset{s', r}{\sum} p(s', r|s,a) [r+\gamma v_{\star}(s')] $}\\
+	  &= \colorbox{lightyellow}{$ \underset{s', r}{\sum} p(s', r|s,a) [r+ \gamma \ \max_a q_{\star}(s',a')]$}
     \end{align*}
     $$
 
     - Similarly, the bellman optimality equation can be easily memorized with help of these two backup diagrams:
         
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter3/backup_diagam_optimality.png" alt="Backup diagram for $v_{\star}$ and $q_{\star}$" style="width: 70%;">
+        <img src="../_static/img/chapter3/backup_diagam_optimality.png" alt="Backup diagram for $v_{\star}$ and $q_{\star}$" style="width: 70%;">
         </div>
 
         - Keep in mind that **$v_{\star}(s) =  \underset{a \in A(s)}{\max} q_{\star}(s,a)$ is the key of deriving both bellmann optimality equations.**
@@ -276,7 +284,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
         - A trajectory is a sequence of states, actions, and rewards:  $(s_0, a_0, r_1, s_1, a_1, r_2, \ldots)$.
 
     3. MDP Dynamics:
-        - Transition probability:      $p(s', r | s, a) = \Pr(S_{t+1} = s', R_{t+1} = r | S_t = s, A_t = a)$.
+        - Transition probability: $p(s', r | s, a) = \Pr(S_{t+1} = s', R_{t+1} = r | S_t = s, A_t = a)$.
         - Expected reward:  $r(s, a) = \mathbb{E}[R_{t+1} | S_t = s, A_t = a]$.
 
     4. Rewards and Returns:

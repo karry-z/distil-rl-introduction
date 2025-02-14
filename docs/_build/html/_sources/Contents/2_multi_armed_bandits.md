@@ -4,7 +4,7 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
 
 ## 2.1 A k-armed Bandit Problem
 
-- Setting: In one single state, you are given $k$ different options, or actions. With each action taken, a random numerical reward chosen from a stationary probability distribution will be given. **The objective is to maximize the expected total reward over some time period.**
+- **Setting**: In one single state, you are given $k$ different options, or actions. With each action taken, a random numerical reward chosen from a stationary probability distribution will be given. **The objective is to maximize the expected total reward over some time period.**
 
     - Time steps: time steps describe the number of times actions being taken.
 
@@ -18,7 +18,7 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
 
     - For beginners who find this setting abstract, feel free to watch this [optional lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/PtVBs/sequential-decision-making-with-evaluative-feedback), in which the lecturer motivates this problem with a small example of a doctor choosing medicines.
 
-- To explore or to exploit: In any RL problem, we are always forced to trade-off between the two options: exploration or exploitation. explained in this setting as follows:
+- **To explore or to exploit**: In any RL problem, we are always forced to trade-off between the two options: exploration or exploitation. explained in this setting as follows:
 
     - Exploitation: to exploit your current knowledge of the values of the actions, i.e., to always choose that one action whose estimated value is the greatest. This action is also called the $\textit{greedy action.}$  
 
@@ -36,7 +36,7 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
 
     $$
         \begin{align*}
-        Q_{t}(a) \ &\dot= \ \frac{\text{sum of reward when \textit{a} taken prior to t}}{\text{number of times \textit{a} taken prior to t}} \\
+        Q_{t}(a) \ &\dot= \ \frac{\text{sum of reward when $a$ taken prior to t}}{\text{number of times $a$ taken prior to t}} \\
         &= \frac{\sum_{i=1}^{t-1}R_{i} \cdot \mathbb{1}_{A_{i}=a}}{\sum_{i=1}^{t-1} \mathbb{1}_{A_{i}=a}}
         \end{align*}
     $$
@@ -44,6 +44,7 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
 - Action selection methods: there are two natural ways when selecting actions based on estimates, one maximizes exploitation and the other takes exploration into account based on that:
 
     - Greedy action selection: always exploits current knowledge to maximize immediate reward
+    
     $$
     A_t \dot= \underset{a}{\arg\max} Q_{t}(a)
     $$
@@ -57,13 +58,13 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
     - Design the reward distribution of each action to follow a standard normal distribution ($\mu=0 \text{ and } \sigma=1$) 
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter2/reward_distribution.png" alt="Reward Distribution" style="width:70%;">
+        <img src="../_static/img/chapter2/reward_distribution.png" alt="Reward Distribution" style="width:70%;">
         </div>
 
 - Performance: The performance of each action selection method is measured by averaging the results from 2000 independent $\textit{runs}$, with each $\textit{run}$ containing 1000 time steps (recall that time steps describe the number of times actions being taken.)
 
     <div style="display: flex; justify-content: center;">
-    <img src="../img/chapter2/running_results.png" alt="Results of running" style="width:70%;">
+    <img src="../_static/img/chapter2/running_results.png" alt="Results of running" style="width:70%;">
     </div>
 
     With greater $\epsilon$ value indicating more exploration and all selection methods used sample averages as their action-value estimates, conclusions from above the above figure are: 
@@ -108,11 +109,14 @@ We now take another look at sample-average method mentioned in [section 2.2](#22
 
     - With this incremental implementation, we now can write a pseudocode for solving **stationary** bandit problem as below.
 
-- Algorithm: A simple bandit algorithm  
+- Algorithm: A simple bandit algorithm 
+
   - **Initialization**:  
-    - For each action $a = 1$ to $k, initialize $Q(a) \leftarrow 0$, $N(a) \leftarrow 0$
+    - For each action $a = 1$ to $k$, initialize $Q(a) \leftarrow 0$ and $N(a) \leftarrow 0$.
+
   - **Loop** (forever):  
     - Select Action
+
         $$
         A \leftarrow 
         \begin{cases} 
@@ -120,11 +124,17 @@ We now take another look at sample-average method mentioned in [section 2.2](#22
         \text{a random action} & \text{with probability } \epsilon 
         \end{cases}
         $$
+
     - Get reward: 
+
         $$R \leftarrow \text{bandit}(A)$$
+
     - Update the selection count: 
+
         $$N(A) \leftarrow N(A) + 1$$
-    - Update the estimated value:  
+
+    - Update the estimated value: 
+ 
         $$Q(A) \leftarrow Q(A) + \frac{1}{N(A)} \left[ R - Q(A) \right]$$  
 
 
@@ -170,7 +180,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 - Performance: As an example, in 10-armed bandit testbed introduced in [section 2.3](#23-the-10-armed-testbed), we now set $Q_1(a)=+5$ for all $a$ (which is wildly optimistic since action values are given by standard normal distribution). Perform the experiment again use the same setting as before, i.e., averaging 2000 runs with each run up to 1000 time steps
 
     <div style="display: flex; justify-content: center;">
-    <img src="../img/chapter2/optimistic_initial_value.png" alt="Optimistic initial value" style="width:70%;">
+    <img src="../_static/img/chapter2/optimistic_initial_value.png" alt="Optimistic initial value" style="width:70%;">
     </div>
 
     - Initially, the optimistic method performs worse because it explores more, but eventually it performs better because its exploration decreases with time.
@@ -192,7 +202,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
     $$
 
     - $t$ denotes the current time step
-    - $N_t(A)$ denotes the number of action $A$ being selected up to time step $t§
+    - $N_t(A)$ denotes the number of action $A$ being selected up to time step $t$
     - $c>0$ controls the degree of exploration 
 
 - Intuition:
@@ -210,7 +220,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 - Performance:
 
     <div style="display: flex; justify-content: center;">
-    <img src="../img/chapter2/ucb.png" alt="Upper-Confidence-Bound result" style="width:65%;">
+    <img src="../_static/img/chapter2/ucb.png" alt="Upper-Confidence-Bound result" style="width:65%;">
     </div>
 
     - UCB generally performs better than $\epsilon$-greedy action selection, except in the first $k$ steps, when it selects randomly among the as-yet-untried actions.

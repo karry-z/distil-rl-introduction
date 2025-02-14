@@ -43,6 +43,8 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/8_on_policy_prediction_with_approximation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -137,32 +139,27 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="nav bd-sidenav">
+        <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 8. On-policy Prediction with Approximation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
 </ul>
@@ -330,45 +327,46 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="chapter-8-on-policy-prediction-with-approximation">
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-8-on-policy-prediction-with-approximation">
 <h1>Chapter 8. On-policy Prediction with Approximation<a class="headerlink" href="#chapter-8-on-policy-prediction-with-approximation" title="Link to this heading">#</a></h1>
-<p>In this chapter, we now focus on estimating the state-value function from on-policy data. The approximate value function will be represented not as a table but as a parameterized functional form, written as $\hat{v}(s, w) \approx v_\pi(s)$, with weight vector $w \in \mathbb{R}^d$.</p>
-<p>For example, $\hat{v}$ might be a linear function in features of the state, with $w$ being the vector of feature weights. More generally, $\hat{v}$ might be the function computed by a multi-layer artificial neural network, with $w$ the vector of connection weights in all the layers.</p>
-<p>Typically, the number of weights (the dimensionality of $w$) is much less than the number of states ($d &lt;&lt; |S|$), and changing one weight changes the estimated value of many states. Consequently, when a single state is updated, the change generalizes from that state to affect the values of many other states. Such generalization makes the learning potentially more powerful but also potentially more diffcult to manage and understand.</p>
+<p>In this chapter, we now focus on estimating the state-value function from on-policy data. The approximate value function will be represented not as a table but as a parameterized functional form, written as <span class="math notranslate nohighlight">\(\hat{v}(s, w) \approx v_\pi(s)\)</span>, with weight vector <span class="math notranslate nohighlight">\(w \in \mathbb{R}^d\)</span>.</p>
+<p>For example, <span class="math notranslate nohighlight">\(\hat{v}\)</span> might be a linear function in features of the state, with <span class="math notranslate nohighlight">\(w\)</span> being the vector of feature weights. More generally, <span class="math notranslate nohighlight">\(\hat{v}\)</span> might be the function computed by a multi-layer artificial neural network, with <span class="math notranslate nohighlight">\(w\)</span> the vector of connection weights in all the layers.</p>
+<p>Typically, the number of weights (the dimensionality of <span class="math notranslate nohighlight">\(w\)</span>) is much less than the number of states (<span class="math notranslate nohighlight">\(d &lt;&lt; |S|\)</span>), and changing one weight changes the estimated value of many states. Consequently, when a single state is updated, the change generalizes from that state to affect the values of many other states. Such generalization makes the learning potentially more powerful but also potentially more diffcult to manage and understand.</p>
 <section id="value-function-approximation">
 <h2>8.1 Value-function Approximation<a class="headerlink" href="#value-function-approximation" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Update rules recap:</p>
 <ul>
+<li><p>Update rules recap:</p>
+<ul class="simple">
 <li><p>Dynamic programming:
-$s \rightarrow E_\pi[R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)|S_t = s]$</p></li>
+<span class="math notranslate nohighlight">\(s \rightarrow E_\pi[R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)|S_t = s]\)</span></p></li>
 <li><p>Monte Carlo:
-$s \rightarrow G_t$</p></li>
+<span class="math notranslate nohighlight">\(s \rightarrow G_t\)</span></p></li>
 <li><p>Temperal Difference:
-$s \rightarrow R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)$</p></li>
+<span class="math notranslate nohighlight">\(s \rightarrow R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)\)</span></p></li>
 </ul>
 </li>
 <li><p>Supervised learning for function approximation</p>
-<ul>
-<li><p>We interpret each update as specifying an example of the desired input-output ($s\rightarrow u$) behavior of the value function, with $u$ indicating the $\textit{udpate target}$.</p></li>
-<li><p>In function approximation, we pass the input–output behavior $s\rightarrow u$ of each update as a training example, then interpret the approximate function they produce (after training) as an estimated value function</p></li>
+<ul class="simple">
+<li><p>We interpret each update as specifying an example of the desired input-output (<span class="math notranslate nohighlight">\(s\rightarrow u\)</span>) behavior of the value function, with <span class="math notranslate nohighlight">\(u\)</span> indicating the <span class="math notranslate nohighlight">\(\textit{udpate target}\)</span>.</p></li>
+<li><p>In function approximation, we pass the input–output behavior <span class="math notranslate nohighlight">\(s\rightarrow u\)</span> of each update as a training example, then interpret the approximate function they produce (after training) as an estimated value function</p></li>
 </ul>
 </li>
-<li><p>The Prediction Objective ($\overline{VE}$)</p>
+<li><p>The Prediction Objective (<span class="math notranslate nohighlight">\(\overline{VE}\)</span>)</p>
 <ul>
 <li><p>Motivation: by assumption we have far more states than weights, so making one state’s estimate more accurate invariably means making others’ less accurate. We are obligated then to say which states we care most about.</p></li>
-<li><p>Measure: Mean Squared Value Error ($\overline{VE}$)
-$$
-\overline{VE}(w) = \sum_{s \in S} u(s)[v_\pi(s) - \hat{v}(s,w)]^2
-$$</p>
-<ul>
-<li><p>The state distribution $u(s) \ge 0, \sum_s u(s)=1$ is called $\textit{on-policy distribution}$, and denotes how much we care about the error in each state $s$. “Often $μ(s)$ is chosen to be the fraction of time spent in $s$.</p></li>
+<li><p>Measure: Mean Squared Value Error (<span class="math notranslate nohighlight">\(\overline{VE}\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[
+        \overline{VE}(w) = \sum_{s \in S} u(s)[v_\pi(s) - \hat{v}(s,w)]^2
+        \]</div>
+<ul class="simple">
+<li><p>The state distribution <span class="math notranslate nohighlight">\(u(s) \ge 0, \sum_s u(s)=1\)</span> is called <span class="math notranslate nohighlight">\(\textit{on-policy distribution}\)</span>, and denotes how much we care about the error in each state <span class="math notranslate nohighlight">\(s\)</span>. “Often <span class="math notranslate nohighlight">\(μ(s)\)</span> is chosen to be the fraction of time spent in <span class="math notranslate nohighlight">\(s\)</span>.</p></li>
 </ul>
 </li>
 <li><p>Notes:</p>
-<ul>
-<li><p>The best value function for finding a better policy in control is not necessarily the best for minimizing $\overline{VE}$. Nevertheless, it is not yet clear what a more useful alternative goal for value prediction might be. For now, we will focus on $\overline{VE}$.</p></li>
-<li><p>Often times, for complex function approximators such as Neural Networks, we can not find a global optimum of $w_\star$, for which  $\overline{VE}(w_\star) \le \overline{VE}(w)$ for all $w$. Rather, we can only find a local optimum for which  $\overline{VE}(w_\star) \le \overline{VE}(w)$ for all $w$ in some neighborhood of $w_\star$, but oftern this is enough.</p></li>
+<ul class="simple">
+<li><p>The best value function for finding a better policy in control is not necessarily the best for minimizing <span class="math notranslate nohighlight">\(\overline{VE}\)</span>. Nevertheless, it is not yet clear what a more useful alternative goal for value prediction might be. For now, we will focus on <span class="math notranslate nohighlight">\(\overline{VE}\)</span>.</p></li>
+<li><p>Often times, for complex function approximators such as Neural Networks, we can not find a global optimum of <span class="math notranslate nohighlight">\(w_\star\)</span>, for which  <span class="math notranslate nohighlight">\(\overline{VE}(w_\star) \le \overline{VE}(w)\)</span> for all <span class="math notranslate nohighlight">\(w\)</span>. Rather, we can only find a local optimum for which  <span class="math notranslate nohighlight">\(\overline{VE}(w_\star) \le \overline{VE}(w)\)</span> for all <span class="math notranslate nohighlight">\(w\)</span> in some neighborhood of <span class="math notranslate nohighlight">\(w_\star\)</span>, but oftern this is enough.</p></li>
 </ul>
 </li>
 </ul>
@@ -380,43 +378,47 @@ $$</p>
 <ul>
 <li><p>Setup for gradient descent methods:</p>
 <ul class="simple">
-<li><p>the weight vector is a column vector with a fixed number of real valued components, $w \dot= (w_1,w_2,…,w_d)^T$. (Note that in this book vectors are generally taken to be column vectors unless explicitly written out horizontally or transposed.)</p></li>
-<li><p>the approximate value function $v(s,w)$ is a differentiable function of $w$ for all $s \in S$.</p></li>
+<li><p>the weight vector is a column vector with a fixed number of real valued components, <span class="math notranslate nohighlight">\(w \dot= (w_1,w_2,...,w_d)^T\)</span>. (Note that in this book vectors are generally taken to be column vectors unless explicitly written out horizontally or transposed.)</p></li>
+<li><p>the approximate value function <span class="math notranslate nohighlight">\(v(s,w)\)</span> is a differentiable function of <span class="math notranslate nohighlight">\(w\)</span> for all <span class="math notranslate nohighlight">\(s \in S\)</span>.</p></li>
 </ul>
 </li>
 <li><p>Sotchastic gradient method (SGD)</p>
-<ul class="simple">
-<li><p>Setup: assume that on each step, we observe a new example $S_t \rightarrow v_\pi(S_t)$ consisting of a (possibly randomly selected) state $S_t$ and its true value under the policy.</p></li>
+<ul>
+<li><p>Setup: assume that on each step, we observe a new example <span class="math notranslate nohighlight">\(S_t \rightarrow v_\pi(S_t)\)</span> consisting of a (possibly randomly selected) state <span class="math notranslate nohighlight">\(S_t\)</span> and its true value under the policy.</p></li>
 <li><p>SGD method:</p>
 <ul>
-<li><p>update rule:
-$$
-\begin{align}
-\boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \
-&amp;= \boldsymbol{w_t} + \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
-\end{align}
-$$</p></li>
+<li><p>update rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+            \begin{align}
+            \boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
+            &amp;= \boldsymbol{w_t} + \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            \end{align}
+            \end{split}\]</div>
+</li>
 <li><p>Notes:</p>
-<ul>
-<li><p>The assumption of available $v_\pi(S_t)$ is clearly impossible in practice. In fact, as long as the target is an unbiased estimate of $v_\pi(S_t)$, i.e., $E[Target | S_t=s] = v_\pi(S_t)$, then $\boldsymbol{w_t}$ is guaranteed to converge to a local optimum under the usual stochastic approximation condition for decreasing $\alpha$ (topics of convergence are not included in DistilRL, please refer to the book chapter 2.7 for details.)</p></li>
-<li><p>By definition, the Monte Carlo target $G_t$ is an unbiased estimator of $v_\pi(S_t)$.</p></li>
+<ul class="simple">
+<li><p>The assumption of available <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span> is clearly impossible in practice. In fact, as long as the target is an unbiased estimate of <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span>, i.e., <span class="math notranslate nohighlight">\(E[Target | S_t=s] = v_\pi(S_t)\)</span>, then <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span> is guaranteed to converge to a local optimum under the usual stochastic approximation condition for decreasing <span class="math notranslate nohighlight">\(\alpha\)</span> (topics of convergence are not included in DistilRL, please refer to the book chapter 2.7 for details.)</p></li>
+<li><p>By definition, the Monte Carlo target <span class="math notranslate nohighlight">\(G_t\)</span> is an unbiased estimator of <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span>.</p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Gradient Monte Carlo Algorithm for estimating $\hat{v} \approx v_\pi$</p>
+<li><p>Gradient Monte Carlo Algorithm for estimating <span class="math notranslate nohighlight">\(\hat{v} \approx v_\pi\)</span></p>
 <ul>
-<li><p>Input: the policy $\pi$ to be evaluated,</p></li>
-<li><p>Input: a differentiable function $\hat{v}: S \times \mathbb{R}^d \rightarrow \mathbb{R}$</p></li>
-<li><p>Algorithm parameter: step size $\alpha &gt; 0$</p></li>
-<li><p>Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w=0}$)</p></li>
+<li><p>Input: the policy <span class="math notranslate nohighlight">\(\pi\)</span> to be evaluated,</p></li>
+<li><p>Input: a differentiable function <span class="math notranslate nohighlight">\(\hat{v}: S \times \mathbb{R}^d \rightarrow \mathbb{R}\)</span></p></li>
+<li><p>Algorithm parameter: step size <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span></p></li>
+<li><p>Initialize value function weights <span class="math notranslate nohighlight">\(\boldsymbol{w} \in \mathbb{R}^d\)</span> arbitrarily (e.g., <span class="math notranslate nohighlight">\(\boldsymbol{w=0}\)</span>)</p></li>
 <li><p>Loop forever (for each episode):</p>
 <ul>
-<li><p>Generate an episode $S_0, A_0, R_1, … S_{T-1}, A_{T-1}, R_T, S_T$ using $\pi$.</p></li>
-<li><p>$ \text{for } t \text{ in } {T-1, T-2, …, 0}$:
-$$
-\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
-$$</p></li>
+<li><p>Generate an episode <span class="math notranslate nohighlight">\(S_0, A_0, R_1, ... S_{T-1}, A_{T-1}, R_T, S_T\)</span> using <span class="math notranslate nohighlight">\(\pi\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\( \text{for } t \text{ in } \{T-1, T-2, ..., 0\}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+                \boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
+                \]</div>
+</li>
 </ul>
 </li>
 </ul>
@@ -425,44 +427,46 @@ $$</p></li>
 </li>
 <li><p>Semi-gradient method:</p>
 <ul>
-<li><p>Setup: the training example $S_t \rightarrow U_t$ with $U_t \in \mathbb{R}$ is not the true value $v_\pi(S_t)$ but a <strong>boostraping target</strong> using $\hat{v}$</p></li>
+<li><p>Setup: the training example <span class="math notranslate nohighlight">\(S_t \rightarrow U_t\)</span> with <span class="math notranslate nohighlight">\(U_t \in \mathbb{R}\)</span> is not the true value <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span> but a <strong>boostraping target</strong> using <span class="math notranslate nohighlight">\(\hat{v}\)</span></p></li>
 <li><p>Semi-gradient methods:</p>
 <ul>
-<li><p>update rule
-$$
-\begin{align}
-\boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \
-&amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
-\end{align}
-$$</p></li>
+<li><p>update rule</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+            \begin{align}
+            \boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
+            &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            \end{align} 
+            \end{split}\]</div>
+</li>
 <li><p>Notes:</p>
 <ul>
-<li><p>There is no guarantees for convergence as for stochastic gradient methods if a bootstrapping estimate of $v(S_t)$ is used as the target $U­_t$. Boostrapping methods use $\hat{v}(S_{t+1}, \boldsymbol{w_t})$ as the target, which depends on the current $\boldsymbol{w_t}$. Yet the derivation from equation $(1)$ to $(2)$ requires independence regarding $\boldsymbol{w_t}$.</p>
-<p>In other words, bootstrapping methods take into account the effect of changing the weight vector $\boldsymbol{w_t}$ on the estimate, but ignore its effect on the target. They include only a part of the gradient and, accordingly, we call them $\textit{semi-gradient methods}$.</p>
+<li><p>There is no guarantees for convergence as for stochastic gradient methods if a bootstrapping estimate of <span class="math notranslate nohighlight">\(v(S_t)\)</span> is used as the target <span class="math notranslate nohighlight">\(U­_t\)</span>. Boostrapping methods use <span class="math notranslate nohighlight">\(\hat{v}(S_{t+1}, \boldsymbol{w_t})\)</span> as the target, which depends on the current <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span>. Yet the derivation from equation <span class="math notranslate nohighlight">\((1)\)</span> to <span class="math notranslate nohighlight">\((2)\)</span> requires independence regarding <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span>.</p>
+<p>In other words, bootstrapping methods take into account the effect of changing the weight vector <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span> on the estimate, but ignore its effect on the target. They include only a part of the gradient and, accordingly, we call them <span class="math notranslate nohighlight">\(\textit{semi-gradient methods}\)</span>.</p>
 </li>
 <li><p>Although semi-gradient (bootstrapping) methods do not converge as robustly as gradient methods, they do converge reliably in important cases such as the linear case, and they are usually preferred in practice due to the boostrapping advantage against monte carlo methods.</p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Semi-gradient TD(0) for estimating $\hat{v} \approx v_\pi$</p>
+<li><p>Semi-gradient TD(0) for estimating <span class="math notranslate nohighlight">\(\hat{v} \approx v_\pi\)</span></p>
 <ul class="simple">
-<li><p>Input: the policy $\pi$ to be evaluated,</p></li>
-<li><p>Input: a differentiable function $\hat{v}: S^{+} \times \mathbb{R}^d \rightarrow \mathbb{R}$ such that $\hat{v}(terminal, a)=0$</p></li>
-<li><p>Algorithm parameter: step size $\alpha &gt; 0$</p></li>
-<li><p>Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w=0}$)</p></li>
+<li><p>Input: the policy <span class="math notranslate nohighlight">\(\pi\)</span> to be evaluated,</p></li>
+<li><p>Input: a differentiable function <span class="math notranslate nohighlight">\(\hat{v}: S^{+} \times \mathbb{R}^d \rightarrow \mathbb{R}\)</span> such that <span class="math notranslate nohighlight">\(\hat{v}(terminal, a)=0\)</span></p></li>
+<li><p>Algorithm parameter: step size <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span></p></li>
+<li><p>Initialize value function weights <span class="math notranslate nohighlight">\(\boldsymbol{w} \in \mathbb{R}^d\)</span> arbitrarily (e.g., <span class="math notranslate nohighlight">\(\boldsymbol{w=0}\)</span>)</p></li>
 <li><p>Loop forever (for each episode):</p>
 <ul>
-<li><p>Initialize $S$</p></li>
+<li><p>Initialize <span class="math notranslate nohighlight">\(S\)</span></p></li>
 <li><p>Loop for each step of episode:</p>
 <ul>
-<li><p>Choose $A \sim \pi(a|s)$</p></li>
-<li><p>Take action $A$, observe $R, S\prime$</p></li>
-<li><p>$\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})$</p></li>
-<li><p>$S \leftarrow S\prime$</p></li>
+<li><p>Choose <span class="math notranslate nohighlight">\(A \sim \pi(a|s)\)</span></p></li>
+<li><p>Take action <span class="math notranslate nohighlight">\(A\)</span>, observe <span class="math notranslate nohighlight">\(R, S\prime\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [R + \gamma \hat{v}(S\prime, \boldsymbol{w}) - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S \leftarrow S\prime\)</span></p></li>
 </ul>
 </li>
-<li><p>until $S$ is terminal</p></li>
+<li><p>until <span class="math notranslate nohighlight">\(S\)</span> is terminal</p></li>
 </ul>
 </li>
 </ul>
@@ -474,12 +478,12 @@ $$</p></li>
 <li><p>State Aggregation: a method for generalizing function approximation by grouping states together, each group of states share one estimated value.</p></li>
 <li><p>Using state aggregation for gradent MC (Lecture video):</p>
   <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/aJ9j6/state-aggregation-with-monte-carlo">
-  <img src="../img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:60%;">
+  <img src="../_static/img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:60%;">
   </a>
 </li>
 <li><p>Using state aggregation for semi-gradient TD (Lecture video):</p>
   <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
-  <img src="../img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:60%;">
+  <img src="../_static/img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:60%;">
   </a>
 </li>
 <li><p>Comparison between MC and TD: as already described in the above lecture video, the main differences between Temporal Difference (TD) and Monte Carlo (MC) methods in the context of function approximation are as follows:</p>
@@ -519,63 +523,70 @@ $$</p></li>
 <section id="linear-models">
 <h2>8.3 Linear Models<a class="headerlink" href="#linear-models" title="Link to this heading">#</a></h2>
 <ul>
-<li><p>Linear Methods: methods that approximate the value function $\hat{v}(s, \boldsymbol{w})$ as a linear function, i.e., the inner product between $\boldsymbol{w}$ and $\boldsymbol{x}(s)$ - a feature vector, as follows:</p>
-<p>$$
-\hat{v}(s, \boldsymbol{w}) \dot= \boldsymbol{w}^{\intercal} \boldsymbol{x}(s) \dot= \sum_{i=1}^d w_i x_i(s)
-$$</p>
+<li><p>Linear Methods: methods that approximate the value function <span class="math notranslate nohighlight">\(\hat{v}(s, \boldsymbol{w})\)</span> as a linear function, i.e., the inner product between <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{x}(s)\)</span> - a feature vector, as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+    \hat{v}(s, \boldsymbol{w}) \dot= \boldsymbol{w}^{\intercal} \boldsymbol{x}(s) \dot= \sum_{i=1}^d w_i x_i(s)
+    \]</div>
 <ul class="simple">
-<li><p>In this case the approximate value function is said to be $\textit{linear in the weights}$, or simply $\textit{linear}$.</p></li>
-<li><p>the feature vector $\boldsymbol{x}(s) \dot= (x_1(s), x_2(s), … x_d(s))^{\intercal}$ has the same dimension $d$ as the weight vector $\boldsymbol{w}$. Each feature $x_i: S \rightarrow \mathbb{R}$ is a socalled $\textit{basis function}$ which assigns a value ($x_i(s)$) to the state $s$ (the feature of $s$)</p></li>
+<li><p>In this case the approximate value function is said to be <span class="math notranslate nohighlight">\(\textit{linear in the weights}\)</span>, or simply <span class="math notranslate nohighlight">\(\textit{linear}\)</span>.</p></li>
+<li><p>the feature vector <span class="math notranslate nohighlight">\(\boldsymbol{x}(s) \dot= (x_1(s), x_2(s), ... x_d(s))^{\intercal}\)</span> has the same dimension <span class="math notranslate nohighlight">\(d\)</span> as the weight vector <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>. Each feature <span class="math notranslate nohighlight">\(x_i: S \rightarrow \mathbb{R}\)</span> is a socalled <span class="math notranslate nohighlight">\(\textit{basis function}\)</span> which assigns a value (<span class="math notranslate nohighlight">\(x_i(s)\)</span>) to the state <span class="math notranslate nohighlight">\(s\)</span> (the feature of <span class="math notranslate nohighlight">\(s\)</span>)</p></li>
 </ul>
 </li>
 <li><p>(Semi-)Gradient methods for linear value function</p>
 <ul>
-<li><p>Update rule:
-$$
-\begin{align*}
-\boldsymbol{w_{t+1}} &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t}) \
-&amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x}(S_t) \
-\end{align*}
-$$</p></li>
-<li><p>$\star$ Convergence</p>
+<li><p>Update rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \boldsymbol{w_{t+1}} &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t}) \\
+        &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x}(S_t) \\
+        \end{align*} 
+        \end{split}\]</div>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\star\)</span> Convergence</p>
 <ul>
-<li><p>MC method: the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the $\overline{VE}$ under linear function approximation if $\alpha$ is reduced over time according to the usual conditions.</p></li>
+<li><p>MC method: the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the <span class="math notranslate nohighlight">\(\overline{VE}\)</span> under linear function approximation if <span class="math notranslate nohighlight">\(\alpha\)</span> is reduced over time according to the usual conditions.</p></li>
 <li><p>TD(0) method: weight vector eventually converges to a point near the local optimum.</p>
 <ul>
 <li><p>update rule:</p>
-<p>$$
-\begin{align*}
-\boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \hat{v}(S_{t+1}, \boldsymbol{w_t}) - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x_t} \
-&amp;= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t+1}} - \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t}}]\boldsymbol{x_t} \
-&amp;= \boldsymbol{w_t} + \alpha [R_{t+1}\boldsymbol{x_{t}} - \boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}\boldsymbol{w_{t}}]\
-\end{align*}
-$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+                \begin{align*}
+                \boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \hat{v}(S_{t+1}, \boldsymbol{w_t}) - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x_t} \\
+                &amp;= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t+1}} - \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t}}]\boldsymbol{x_t} \\
+                &amp;= \boldsymbol{w_t} + \alpha [R_{t+1}\boldsymbol{x_{t}} - \boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}\boldsymbol{w_{t}}]\\
+                \end{align*} 
+                \end{split}\]</div>
 <ul class="simple">
-<li><p>Note: $\boldsymbol{x_t}$ is used to represent $\boldsymbol{x}(S_t)$ for simplicity</p></li>
+<li><p>Note: <span class="math notranslate nohighlight">\(\boldsymbol{x_t}\)</span> is used to represent <span class="math notranslate nohighlight">\(\boldsymbol{x}(S_t)\)</span> for simplicity</p></li>
 </ul>
 </li>
-<li><p>in steady state (convergence):
-$$
-E[\boldsymbol{w_{t+1}}|\boldsymbol{w_{t}}] = \boldsymbol{w_{t}} + \alpha(\boldsymbol{b - Aw_{t+1}})
-$$</p>
-<p>with  $\boldsymbol{b} \dot= E[R_{t+1}\boldsymbol{x_{t}}] \in \mathbb{R}^d$ and $\boldsymbol{A} \dot= E[\boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}] \in \mathbb{R}^d \times \mathbb{R}^d$</p>
-<p>And at converge:
-$$
-\begin{align*}
-&amp; \Rightarrow \quad \mathbf{b} - \mathbf{A}\mathbf{w}<em>{\text{TD}} = \mathbf{0} \
-&amp; \Rightarrow \quad \mathbf{b} = \mathbf{A}\mathbf{w}</em>{\text{TD}} \
-&amp; \Rightarrow \quad \mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}.
-\end{align*}
-$$</p>
+<li><p>in steady state (convergence):</p>
+<div class="math notranslate nohighlight">
+\[
+                E[\boldsymbol{w_{t+1}}|\boldsymbol{w_{t}}] = \boldsymbol{w_{t}} + \alpha(\boldsymbol{b - Aw_{t+1}})
+                \]</div>
+<p>with  <span class="math notranslate nohighlight">\(\boldsymbol{b} \dot= E[R_{t+1}\boldsymbol{x_{t}}] \in \mathbb{R}^d\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{A} \dot= E[\boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}] \in \mathbb{R}^d \times \mathbb{R}^d\)</span></p>
+<p>And at converge:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+                \begin{align*}
+                &amp; \Rightarrow \quad \mathbf{b} - \mathbf{A}\mathbf{w}_{\text{TD}} = \mathbf{0} \\
+                &amp; \Rightarrow \quad \mathbf{b} = \mathbf{A}\mathbf{w}_{\text{TD}} \\
+                &amp; \Rightarrow \quad \mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}.
+                \end{align*}
+                \end{split}\]</div>
 </li>
 <li><p>Notes:</p>
 <ul>
-<li><p>The quantity $\mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}$ is called the $\textit{TD fixed point}$. Linear semi-gradient TD(0) converges to this point.</p></li>
-<li><p>At the TD fixed point, it has also been proven (in the continuing case) that the $\overline{VE}$ is within a bounded expansion of the lowest possible error:</p>
-<p>$$
-\overline{VE}(\mathbf{w}_{\text{TD}}) \le \frac{1}{1-\gamma} \underset{w}{min}\overline{VE}(\mathbf{w})
-$$
-Because $\gamma$ is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.</p>
+<li><p>The quantity <span class="math notranslate nohighlight">\(\mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}\)</span> is called the <span class="math notranslate nohighlight">\(\textit{TD fixed point}\)</span>. Linear semi-gradient TD(0) converges to this point.</p></li>
+<li><p>At the TD fixed point, it has also been proven (in the continuing case) that the <span class="math notranslate nohighlight">\(\overline{VE}\)</span> is within a bounded expansion of the lowest possible error:</p>
+<div class="math notranslate nohighlight">
+\[
+                    \overline{VE}(\mathbf{w}_{\text{TD}}) \le \frac{1}{1-\gamma} \underset{w}{min}\overline{VE}(\mathbf{w})
+                    \]</div>
+<p>Because <span class="math notranslate nohighlight">\(\gamma\)</span> is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.</p>
 </li>
 </ul>
 </li>
@@ -590,18 +601,18 @@ Because $\gamma$ is often near one, this expansion factor can be quite large, so
 <section id="feature-construction-for-linear-methods">
 <h2>8.4 Feature Construction for Linear Methods<a class="headerlink" href="#feature-construction-for-linear-methods" title="Link to this heading">#</a></h2>
 <p>Choosing features appropriate to the task is an important way of adding prior domain knowledge to reinforcement learning systems. Intuitively, the features should correspond to the aspects of the state space along which generalization may be appropriate.</p>
-<p>A limitation of the linear form is that it cannot take into account any interactions between features, such as the presence of feature $i$ being good only in the absence of feature $j$, or to put it in another word, we need features that can take the combinations of different states or state dimensions into consideration.</p>
-<p>In this last section we study <strong>how to construct such $x(s)$</strong> for approximating the value function and balancing between generalization and discrimination.</p>
+<p>A limitation of the linear form is that it cannot take into account any interactions between features, such as the presence of feature <span class="math notranslate nohighlight">\(i\)</span> being good only in the absence of feature <span class="math notranslate nohighlight">\(j\)</span>, or to put it in another word, we need features that can take the combinations of different states or state dimensions into consideration.</p>
+<p>In this last section we study <strong>how to construct such <span class="math notranslate nohighlight">\(x(s)\)</span></strong> for approximating the value function and balancing between generalization and discrimination.</p>
 <section id="coarse-coding">
 <h3>8.4.1 Coarse Coding<a class="headerlink" href="#coarse-coding" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Introduction:</p>
 <ul>
-<li><p>Scenario: assume the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be $\textit{circles}$ in state space.</p></li>
-<li><p>Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a $\textit{binary feature}$.)</p>
-  <img src="../img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
-<p>Corresponding to each circle / feature is a single weight (a component of $\boldsymbol{w}$) that is affected by learning.</p>
-<p>Performing an update to the weights in one state changes the value estimate for all states within the $\textit{receptive fields}$ (in this case, circles) of the active features. In the above image, update for state $s$ also changes the value estimate for state $s\prime$</p>
+<li><p>Scenario: assume the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be <span class="math notranslate nohighlight">\(\textit{circles}\)</span> in state space.</p></li>
+<li><p>Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a <span class="math notranslate nohighlight">\(\textit{binary feature}\)</span>.)</p>
+  <img src="../_static/img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
+<p>Corresponding to each circle / feature is a single weight (a component of <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>) that is affected by learning.</p>
+<p>Performing an update to the weights in one state changes the value estimate for all states within the <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span> (in this case, circles) of the active features. In the above image, update for state <span class="math notranslate nohighlight">\(s\)</span> also changes the value estimate for state <span class="math notranslate nohighlight">\(s\prime\)</span></p>
 </li>
 <li><p>Definition: Representing a state with features that overlap in the above way (although they need not be circles or binary) is known as <strong>coarse coding</strong>.</p></li>
 </ul>
@@ -611,14 +622,14 @@ Because $\gamma$ is often near one, this expansion factor can be quite large, so
 <li><p>You may choose to watch this <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/JnNF5/generalization-properties-of-coarse-coding">lecture video</a> instead, since the following content is well covered in it and if you prefer visual&amp;audio contents over texts.</p></li>
 <li><p>Demostration:</p>
 <p>Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).</p>
-  <img src="../img/chapter8/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
-<p>As above, features with large $\textit{receptive fields}$ give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the $\textit{receptive fields}$, but finest discrimination is ultimately  controlled more <strong>by the total number of features</strong>, as shown by the next example.</p>
+  <img src="../_static/img/chapter8/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
+<p>As above, features with large <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span> give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span>, but finest discrimination is ultimately  controlled more <strong>by the total number of features</strong>, as shown by the next example.</p>
 </li>
 <li><p>Example: Coarseness of Coarse Coding</p>
 <ul>
-<li><p>Setup: Linear function approximation based on coarse coding and Semi-Gradient method was used to learn a one-dimensional square-wave function, the values of this function were used as the targets, $U_t$.</p></li>
+<li><p>Setup: Linear function approximation based on coarse coding and Semi-Gradient method was used to learn a one-dimensional square-wave function, the values of this function were used as the targets, <span class="math notranslate nohighlight">\(U_t\)</span>.</p></li>
 <li><p>Results: as below, the width of the features had a strong e↵ect early in learning. However, the final function learned was a↵ected only slightly by the width of the features</p>
-  <img src="../img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
+  <img src="../_static/img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
 </li>
 </ul>
 </li>
@@ -632,25 +643,25 @@ Because $\gamma$ is often near one, this expansion factor can be quite large, so
 <li><p>Introduction</p>
 <ul>
 <li><p>Tile coding is <strong>a form of coarse coding</strong> for multi-dimensional continuous spaces</p></li>
-<li><p>In tile coding the $\textit{receptive fields}$ of the features are grouped into partitions of the state space. Each such partition is called a $\textit{tiling}$, and each element of the partition is called a $\textit{tile}$.</p></li>
+<li><p>In tile coding the <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span> of the features are grouped into partitions of the state space. Each such partition is called a <span class="math notranslate nohighlight">\(\textit{tiling}\)</span>, and each element of the partition is called a <span class="math notranslate nohighlight">\(\textit{tile}\)</span>.</p></li>
 <li><p>Demonstration:</p>
-  <img src="../img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:85%;">
+  <img src="../_static/img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:85%;">
 <ul class="simple">
 <li><p>The simplest tiling of a two-dimensional state space is a uniform grid such as that shown on the left side of figure above. Note that with just one tiling, we would not have coarse coding but just a case of state aggregation.</p></li>
-<li><p>To get true coarse coding with tile coding, multiple tilings are used, each offset by a fraction of a tile width (shown on the right side of the figure). Every state (indicated by the white spot) falls in exactly one tile in each of the four tilings. These four tiles correspond to four features that become active when the state occurs. In this example there are $4 \times 4 \times 4 = 64$ components, all of which will be 0 except for the four corresponding to the tiles that the state $s$ falls within.</p></li>
+<li><p>To get true coarse coding with tile coding, multiple tilings are used, each offset by a fraction of a tile width (shown on the right side of the figure). Every state (indicated by the white spot) falls in exactly one tile in each of the four tilings. These four tiles correspond to four features that become active when the state occurs. In this example there are <span class="math notranslate nohighlight">\(4 \times 4 \times 4 = 64\)</span> components, all of which will be 0 except for the four corresponding to the tiles that the state <span class="math notranslate nohighlight">\(s\)</span> falls within.</p></li>
 </ul>
 </li>
 <li><p>Advantages:</p>
 <ul class="simple">
-<li><p>Allowing for the learning rate $\alpha$ to be set in an easy, intuitive way: The overall number of features that are active at one time is the same for any state, so the total number of features present is always the same as the number of tilings. This allows the step-size parameter, $\alpha$ ,to be set in an easy, intuitive way, for example, choosing $\alpha = \frac{1}{n}$, where $n$ is the number of tilings, results in exact one-trial learning.</p></li>
-<li><p>Computational advantages: during computation of $\sum_{i=1}^d w_i x_i(s)$ one simply computes the indices of the $n \ll d$ active features (n is equal to the number of tilings) and then adds up the n corresponding components of the weight vector.</p></li>
+<li><p>Allowing for the learning rate <span class="math notranslate nohighlight">\(\alpha\)</span> to be set in an easy, intuitive way: The overall number of features that are active at one time is the same for any state, so the total number of features present is always the same as the number of tilings. This allows the step-size parameter, <span class="math notranslate nohighlight">\(\alpha\)</span> ,to be set in an easy, intuitive way, for example, choosing <span class="math notranslate nohighlight">\(\alpha = \frac{1}{n}\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of tilings, results in exact one-trial learning.</p></li>
+<li><p>Computational advantages: during computation of <span class="math notranslate nohighlight">\(\sum_{i=1}^d w_i x_i(s)\)</span> one simply computes the indices of the <span class="math notranslate nohighlight">\(n \ll d\)</span> active features (n is equal to the number of tilings) and then adds up the n corresponding components of the weight vector.</p></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p>How it works: It is recommended to watch the lecture video below since it offers a more comprehensive explanation of how tile code works with TD.</p>
   <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td">
-  <img src="../img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
+  <img src="../_static/img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
   </a>
 </li>
 </ul>
@@ -661,7 +672,7 @@ Because $\gamma$ is often near one, this expansion factor can be quite large, so
 <p>In this chapter, we focused on extending reinforcement learning (RL) from the tabular case to function approximation, a crucial step for handling large state spaces in real-world problems. A quick summary:</p>
 <ul>
 <li><p>Mindmap of where we are now</p>
-  <img src="../img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
+  <img src="../_static/img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
 </li>
 <li><p>Key Takeaways</p>
 <ol class="arabic simple">
@@ -669,7 +680,7 @@ Because $\gamma$ is often near one, this expansion factor can be quite large, so
 <ul class="simple">
 <li><p>Moving away from tabular methods allows RL to be applied in more complex problems where it’s impractical to enumerate every state.</p></li>
 <li><p>The conceptual shift involves parameterized function approximation, where we no longer store state values in a table.</p></li>
-<li><p>We aim to minimize the <strong>Mean Squared Value Error</strong>, which measures the difference between the true state values and our approximations, weighted by visitation frequency $u(s)$.</p></li>
+<li><p>We aim to minimize the <strong>Mean Squared Value Error</strong>, which measures the difference between the true state values and our approximations, weighted by visitation frequency <span class="math notranslate nohighlight">\(u(s)\)</span>.</p></li>
 </ul>
 </li>
 <li><p>Gradient Methods:</p>
@@ -696,12 +707,6 @@ Because $\gamma$ is often near one, this expansion factor can be quite large, so
 <li><p>A specialized form of coarse coding that uses <strong>overlapping grids (tilings)</strong>.</p></li>
 <li><p>Each tiling is non-overlapping, with one active feature per grid, but multiple offset tilings allow for finer state discrimination.</p></li>
 <li><p>The design of tilings balances generalization, discrimination, and efficiency.</p></li>
-</ul>
-</li>
-<li><p><strong>Neural Network-based Representations</strong>:</p>
-<ul>
-<li><p>Unlike fixed representations (e.g., coarse coding), neural networks learn representations <strong>online</strong>.</p></li>
-<li><p>Networks use layers of neurons to transform inputs into outputs, with weights updated through <strong>gradient descent</strong> based on a <strong>loss function</strong>.</p></li>
 </ul>
 </li>
 </ul>

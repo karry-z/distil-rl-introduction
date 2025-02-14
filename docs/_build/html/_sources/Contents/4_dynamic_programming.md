@@ -45,7 +45,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - Description: 
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 70%;">
+        <img src="../_static/img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 70%;">
         </div>
 
         - States: the nonterminal states are $S = {1, 2,...,14}$. 
@@ -60,32 +60,32 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - Policy Evaluation:
         - The first sweep:
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 75%;">        
+            <img src="../_static/img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 75%;">        
             </div>
 
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.3.png" alt="Step1.2" style="width: 75%;">        
+            <img src="../_static/img/chapter4/example4.1.3.png" alt="Step1.2" style="width: 75%;">        
             </div>
 
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.4.png" alt="Step1.3" style="width: 75%;">        
+            <img src="../_static/img/chapter4/example4.1.4.png" alt="Step1.3" style="width: 75%;">        
             </div>
 
         - The second sweep:
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.5.png" alt="Step2" style="width: 75%;">        
+            <img src="../_static/img/chapter4/example4.1.5.png" alt="Step2" style="width: 75%;">        
             </div>
 
         - The third sweep:
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.6.png" alt="Step3" style="width: 75%;">        
+            <img src="../_static/img/chapter4/example4.1.6.png" alt="Step3" style="width: 75%;">        
             </div>
 
         - ...
 
         - The final sweep: $\Delta = 0$ and is finally smaller than $\theta$, $V$ and $V'$ are both $V_\pi$
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.1.7.png" alt="Final Step" style="width: 75%">        
+            <img src="../_static/img/chapter4/example4.1.7.png" alt="Final Step" style="width: 75%">        
             </div>
 
 ## 4.2 Policy Improvement
@@ -95,12 +95,13 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - the intuition of the inequality $q_{\pi}(s, \pi'(s)) \ge v_{\pi}(s)$ is that (recall the backup diagram starting with $v(s)$ shown below) there exists one (or more) explicit action(s) that could bring more return for state $s$ than simply calculating the expectation (since $v(s) = \sum_a \pi(a|s)q(s,a)$)
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 23%;">
+        <img src="../_static/img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 23%;">
         </div>
 
 - $\textit{Policy Improvement}$: the process of making a new policy that improves on an original policy, **by making it greedy** with respect to the value function of the original policy.
 
     - Greedification: with $\pi'$ denoting the greedified policy:
+
         $$
         \begin{align*}
         \pi'(s) &= \arg\max_a q_{\pi}(s, a) \\
@@ -127,7 +128,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - After getting the value function $v_{\pi}$ of the initial random policy $\pi$, we perform greedification to get the new policy $\pi'$ (illustrated by white arrows), which is strictly better than $\pi$ according to the nature of policy improvement. 
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 500px;">        
+        <img src="../_static/img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 500px;">        
         </div>
     
     - In doing so, we now have successfully improved our original policy (for one iteration).
@@ -163,7 +164,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
         - The Gridworld example in [section 4.1](#41-policy-evaluation-prediction-problem) actually reaches the optimal policy after only one iteration, we now make the example a bit more complex by elimating one terminal grid and adding blue states where rewards have much lower value of $-10$.
 
             <div style="display: flex; justify-content: center;">
-            <img src="../img/chapter4/example4.3.1.png" alt="New Gridworld" style="width: 380px;">        
+            <img src="../_static/img/chapter4/example4.3.1.png" alt="New Gridworld" style="width: 380px;">        
             </div>
     
     - Policy iteraton:
@@ -171,11 +172,11 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
             <div style="display: flex; justify-content: center; gap: 20px;">
             <div style="display: flex; flex-direction: column; align-items: center;">
             <h4>Evaluation</h4>
-            <img src="../img/chapter4/example4.3.2.png" alt="Evaluation" style="width: 200px;">
+            <img src="../_static/img/chapter4/example4.3.2.png" alt="Evaluation" style="width: 200px;">
             </div>
             <div style="display: flex; flex-direction: column; align-items: center;">
             <h4>Improvement</h4>
-            <img src="../img/chapter4/example4.3.3.png" alt="Improvement" style="width: 200px;">
+            <img src="../_static/img/chapter4/example4.3.3.png" alt="Improvement" style="width: 200px;">
             </div>
             </div>
 
@@ -187,11 +188,11 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
             <div style="display: flex; justify-content: center; gap: 20px;">
             <div style="display: flex; flex-direction: column; align-items: center;">
             <h4>Evaluation</h4>
-            <img src="../img/chapter4/example4.3.4.png" alt="Evaluation" style="width: 200px;">
+            <img src="../_static/img/chapter4/example4.3.4.png" alt="Evaluation" style="width: 200px;">
             </div>
             <div style="display: flex; flex-direction: column; align-items: center;">
             <h4>Improvement</h4>
-            <img src="../img/chapter4/example4.3.5.png" alt="Improvement" style="width: 200px;">
+            <img src="../_static/img/chapter4/example4.3.5.png" alt="Improvement" style="width: 200px;">
             </div>
             </div>
             
@@ -203,11 +204,11 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
             <div style="display: flex; justify-content: center; gap: 20px;">
             <div style="display: flex; flex-direction: column; align-items: center;">
             <h4>Evaluation</h4>
-            <img src="../img/chapter4/example4.3.6.png" alt="Evaluation" style="width: 200px;">
+            <img src="../_static/img/chapter4/example4.3.6.png" alt="Evaluation" style="width: 200px;">
             </div>
             <div style="display: flex; flex-direction: column; align-items: center;">
             <h4>Improvement</h4>
-            <img src="../img/chapter4/example4.3.7.png" alt="Improvement" style="width: 200px;">
+            <img src="../_static/img/chapter4/example4.3.7.png" alt="Improvement" style="width: 200px;">
             </div>
             </div>
 
@@ -247,6 +248,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
         - until $\Delta < \theta$
     
     - Output a deterministic policy, $\pi \approx \pi_{\star}$, such that
+
         $$\pi(s) = \arg \underset{a}{\max}  \underset{s', r}{\sum} p(s', r|s,a) [r + \gamma V(s')]$$
 
 ## 4.5 Generalized Policy Iteration (GPI) 
@@ -261,7 +263,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - Almost all reinforcement learning methods are well described as GPI. That is, all have identifiable policies and value functions, with the policy always being improved with respect to the value function and the value function always being driven toward the value function for the policy:
 
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter4/gpi2.png" alt="Generalized policy iteration" style="width: 280px;">
+        <img src="../_static/img/chapter4/gpi2.png" alt="Generalized policy iteration" style="width: 280px;">
         </div>
 
         Both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function (when $\pi$ itself is the greedy policy of $v_{\pi}$). This implies that the Bellman optimality equation for state-value function holds, and thus that the policy and the value function are optimal.
@@ -273,7 +275,7 @@ Classical DP methods operate in sweeps through the state set, performing an $\te
 In the next chapter we explore Monte Carlo method - a reinforcement learning method that do not require a model and do not bootstrap. But for now, a quick summary:
 
 - Mindmap of where we are now
-    <img src="../img/chapter4/chapter4_mindmap.png" alt="Mindmap" style="width:100%;">
+    <img src="../_static/img/chapter4/chapter4_mindmap.png" alt="Mindmap" style="width:100%;">
 
 - Key Takeaways:
 
@@ -284,6 +286,7 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
 
     2. Policy Evaluation (Prediction):
         - Iteratively estimate $v_\pi$ for a given policy $\pi$:
+
             $$
             v_{k+1}(s) = \sum_a \pi(a|s) \sum_{s', r} p(s', r | s, a) [r + \gamma v_k(s')]
             $$
@@ -291,6 +294,7 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
 
     3. Policy Improvement:
         - Create a greedy policy $\pi'$ with respect to $v_\pi$:
+
             $$
             \pi'(s) = \arg\max_a \sum_{s', r} p(s', r | s, a) [r + \gamma v_\pi(s')]
             $$
@@ -298,12 +302,14 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
 
     4. Policy Iteration:
         - Alternate between policy evaluation and improvement until convergence:
+
             $$
             \pi_0 \rightarrow v_{\pi_0} \rightarrow \pi_1 \rightarrow v_{\pi_1} \rightarrow \ldots \rightarrow \pi_* \rightarrow v_*
             $$
 
     5. Value Iteration:
         - Simplified policy iteration with one sweep per iteration:
+
             $$
             V_{k+1}(s) = \max_a \sum_{s', r} p(s', r | s, a) [r + \gamma V_k(s')]
             $$

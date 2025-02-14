@@ -63,7 +63,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 - Example of Driving Home (Click to watch the lecture video)
 
 	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/9Dxlq/the-advantages-of-temporal-difference-learning">
-	<img src="../img/chapter6/driving_home.png" alt="Video: TD prediction on Driving Home Example" style="width:70%;">
+	<img src="../_static/img/chapter6/driving_home.png" alt="Video: TD prediction on Driving Home Example" style="width:70%;">
 	</a>
 
 - Advantages of TD prediction:
@@ -75,7 +75,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	- In practice, TD methods have usually been found to  converge faster than constant-$\alpha$ MC methods on stochastic tasks. A demonstrative example is given in the following video:
 
 		<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/CEzFc/comparing-td-and-monte-carlo">
-		<img src="../img/chapter6/random_walk.png" alt="Video: Comparing TD and MC" style="width:70%;">
+		<img src="../_static/img/chapter6/random_walk.png" alt="Video: Comparing TD and MC" style="width:70%;">
 		</a>			
 
 ## 6.2 TD Control
@@ -123,7 +123,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 - Example: Sarsa in the Windy Gridworld:
 
 	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/RZeRQ/sarsa-in-the-windy-grid-world">
-	<img src="../img/chapter6/windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
+	<img src="../_static/img/chapter6/windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
 	</a>
 
 	- Notice that the first few episodes take a couple thousand steps to complete. The curve gradually gets steeper indicating that episodes are completed more quickly.
@@ -135,7 +135,9 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 - Backgound for Q-learning:
 	- The update rule for Q-learning is: 
+
 		$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$$
+
 	- This way of directly approximating $q_\star$ dramatically simplifies the analysis of the algorithm and enabled early convergence proofs. All that is required for correct convergence is that all pairs continue to be updated (exploration).
 
 - $Q$-learning (off-policy TD control) for estimating $\pi \approx \pi_{\star}$
@@ -158,7 +160,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 - Example: Q-learning in the Windy Gridworld:
 
 	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/BZbSy/q-learning-in-the-windy-grid-world">
-	<img src="../img/chapter6/q_learning_windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
+	<img src="../_static/img/chapter6/q_learning_windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
 	</a>
 
 	- In the beginning, the two algorithms learn at a similar pace. Towards the end, Q-Learning seems to learn a better final policy. 
@@ -167,11 +169,11 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 - Example of Cliff Walking - Another comparison between Sarsa and Q-learning
 
-	<img src="../img/chapter6/cliff_walking.png" alt="Video: Sarsa in the Windy Gridworld" style="width:95%;">
+	<img src="../_static/img/chapter6/cliff_walking.png" alt="Video: Sarsa in the Windy Gridworld" style="width:95%;">
 
 	- Description:
 
-		- States and goal: the agent start at state S on the lower left and tries to reach the goal G on the lower right.
+		- States and goal: the agent start at state $S$ on the lower left and tries to reach the goal G on the lower right.
 
 		- Actions: up, down, right, and left.
 
@@ -189,6 +191,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 - Backgound for expected Sarsa:
 	- update rule: 
+
 	$$
 		\begin{align*}
 		Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma E_{\pi}[Q(S_{t+1}, A_{t+1})|S_{t+1})] - Q(S_t, A_t)] \\
@@ -227,7 +230,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	- Asymptotic performance is an average over 100,000 episodes, then averaged over 10 runs.
 	- Interim performance is an average over the first 100 episodes, then averaged over 50,000 runs.
 
-		<img src="../img/chapter6/comparison_cliff_walking.png" alt="Comparison of three TD control methods on cliff walking task" style="width: 60%;">
+		<img src="../_static/img/chapter6/comparison_cliff_walking.png" alt="Comparison of three TD control methods on cliff walking task" style="width: 60%;">
     
 	Expected Sarsa retains the significant advantage of Sarsa over Q-learning on this problem. In cliff walking the state transitions are all deterministic and all randomness comes from the policy. In such cases, Expected Sarsa can safely set $\alpha$ = 1 without suffering any degradation of asymptotic performance, whereas Sarsa can only perform well in the long run at a small value of $\alpha$, at which short-term performance is poor.
 
@@ -239,27 +242,31 @@ The special cases of TD methods introduced in the present chapter should rightly
 
 - Mindmap of where we are now
 
-	<img src="../img/chapter6/chapter6_mindmap.png" alt="Mindmap" style="width:100%;">
+	<img src="../_static/img/chapter6/chapter6_mindmap.png" alt="Mindmap" style="width:100%;">
 
 - Key Takeaways
 
 	- TD Prediction (TD(0))
 
 		- Updates value estimates after each step:  
-			$V(S_t) ← V(S_t) + α (R_{t+1} + γ V(S_{t+1}) - V(S_t))$
+
+			$$V(S_t) ← V(S_t) + α (R_{t+1} + γ V(S_{t+1}) - V(S_t))$$
 		- TD error ($δ_t$) measures the difference between predicted and updated values.
 		- Advantages: No model needed, incremental updates, faster convergence than MC.
 
 	- TD Control Methods
 
 		- Sarsa (on-policy): Updates based on the current policy. Safer, but may not find the most optimal paths.  
-		$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]$
+
+		$$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]$$
 
 		- Q-learning (off-policy): Updates using the maximum possible future reward. Learns optimal policies but can be riskier during exploration.  
-		$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$
 
-		- Expected Sarsa: Uses expected future rewards, reducing variance and improving stability.  
-		$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Σ_a π(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)]$
+		$$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$$
+
+		- Expected Sarsa: Uses expected future rewards, reducing variance and improving stability. 
+		 
+		$$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Σ_a π(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)]$$
 
 	- Comparisons
 

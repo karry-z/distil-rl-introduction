@@ -18,6 +18,15 @@ extensions = [
     'sphinx.ext.duration',
     'myst_parser',
     'sphinx.ext.mathjax',
+    #  'sphinx_math_dollar',
+]
+
+myst_enable_extensions = [
+    "dollarmath",
+    "colon_fence",  # for supporting ::: directives
+    "linkify",      # for automatic link detection
+    "substitution", # for substitutions
+    "deflist",      # for definition lists
 ]
 
 source_suffix = {
@@ -25,6 +34,10 @@ source_suffix = {
     '.txt': 'restructuredtext',
     '.md': 'markdown',
 }
+
+myst_heading_anchors = 3
+
+html_static_path = ['_static']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

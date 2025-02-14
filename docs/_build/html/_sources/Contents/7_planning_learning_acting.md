@@ -22,6 +22,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 
 - $\textit{Planning}$: any computational process that takes a $\textit{model}$ as input and produces or improves a policy for interacting with the modeled environment, illustrated as:
+
 	$$
 		model \xrightarrow{\text{planning}} policy
 	$$
@@ -50,7 +51,8 @@ In addition to the unified view of planning and learning methods, a second theme
 			- 2. Send $S, A$ to a sample model, and obtain a sample next reward $R$, and a sample next state, $S'$
 
 			- 3. Apply **one-step tabular Q-learning** to $S, A, R, S'$: 
-				$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S', a) - Q(S, A)]$
+
+				$$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S', a) - Q(S, A)]$$
 			
 ## 7.2 Dyna: Integrated Planning, Acting, and Learning
 
@@ -58,7 +60,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 	- The possible relationships between experience, model, values, and policy are summarized in the following diagram:
 		<div style="display: flex; justify-content: center;">
-		<img src="../img/chapter7/planning_agent.png" alt="Architecture of a planning agent" style="width: 39%;">        
+		<img src="../_static/img/chapter7/planning_agent.png" alt="Architecture of a planning agent" style="width: 39%;">        
 		</div>
 
 	- Depending on how the real experience is used, the reinforcement learning process can be divided into direct and indirect RL:
@@ -73,7 +75,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 	- Architecture:
 		<div style="display: flex; justify-content: center;">
-		<img src="../img/chapter7/dyna_agent_architecture.png" alt="Architecture of Dyna agent" style="width: 50%;">        
+		<img src="../_static/img/chapter7/dyna_agent_architecture.png" alt="Architecture of Dyna agent" style="width: 50%;">        
 		</div>
 
 	- Explanatoin:
@@ -120,14 +122,14 @@ In addition to the unified view of planning and learning methods, a second theme
 	- Lecture video for an illustrative Example (starting from `3:13`): In a gridworld with obstacles, an agent starts from the lower left grid and travels to the end state on the upper right. Initial policy $\pi$ assigns equal probability to all four action: left, right, up and down.
 
 		<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/k7Out/the-dyna-algorithm">
-		<img src="../img/chapter7/dyna_q_example.png" alt="Video: The dyna algorithm" style="width:40%;">
+		<img src="../_static/img/chapter7/dyna_q_example.png" alt="Video: The dyna algorithm" style="width:50%;">
 		</a>
 
 - Example: Dyna Maze
 	- An illustratiev example of how exactly a planning agent may learn much fastet than a pure learning agent:
 
 		<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/TGSQi/dyna-q-learning-in-a-simple-maze">
-		<img src="../img/chapter7/example_maze.png" alt="Video: The Maze example" style="width:55%;">
+		<img src="../_static/img/chapter7/example_maze.png" alt="Video: The Maze example" style="width:60%;">
 		</a>
 
 	- The agent needs many planning steps because search control samples state action pairs randomly. The planning update will not have any effect if the sample state action pair produces a 0 TD error. This happened a lot in this environment because all the rewards are 0, and so are the initial values. 
@@ -148,7 +150,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 	- Description: initially, there is a short path from start to goal, to the right of the barrier, as shown in the upper left of the figure. After 1000 time steps, the short path is “blocked,” and a longer path is opened up along the left-hand side of the barrier
 
-		<img src="../img/chapter7/example_blocking_maze.png" alt="The blocking maze example" style="width:50%;">
+		<img src="../_static/img/chapter7/example_blocking_maze.png" alt="The blocking maze example" style="width:60%;">
 
 	- Notes
 		- The first part of the graph shows that both Dyna agents found the short path within 1000 steps. 
@@ -161,7 +163,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 	- Description: initially, the optimal path is to go around the left side of the barrier (upper left). After 3000 steps, however, a shorter path is opened up along the right side, without disturbing the longer path
 
-		<img src="../img/chapter7/example_shortcut_maze.png" alt="The shortcut maze example" style="width:50%;">
+		<img src="../_static/img/chapter7/example_shortcut_maze.png" alt="The shortcut maze example" style="width:60%;">
 
 	- Notes:
 		- It is harder to detect modeling error in the case where the environment changes to become "better" (better solutions emerge), this is where more thoughts on exploration (during planning) are need to keep the model up-to-date.
@@ -201,7 +203,7 @@ In addition to the unified view of planning and learning methods, a second theme
 
 - Mindmap of where we are now
 
-	<img src="../img/chapter7/chapter7_mindmap.png" alt="Mindmap" style="width: 100%;"> 
+	<img src="../_static/img/chapter7/chapter7_mindmap.png" alt="Mindmap" style="width: 100%;"> 
 
 - Key Takeaways
 

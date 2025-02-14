@@ -38,7 +38,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
 
 - Example: Short corridor with switched actions
 
-    <img src="../img/chapter10/short_corridor.png" alt="Example of short corridor with switched actions" style="width:60%;">
+    <img src="../_static/img/chapter10/short_corridor.png" alt="Example of short corridor with switched actions" style="width:60%;">
 
     - Setup: 
         - As shown in the image, there are three nonterminal states, the reward is 1 per step.
@@ -159,18 +159,20 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
         - Generate an episode $S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T$, following $\pi(\cdot | \cdot, \theta)$
         - Loop for each step of the episode $t = 0, 1, \dots, T-1$:
             - Compute return (with $\gamma$ added for the general discounted case):
-            $$
-            G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
-            $$
+
+                $$
+                G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
+                $$
             - Update policy parameters:
-            $$
-            \theta \leftarrow \theta + \alpha \gamma^t G \nabla \ln \pi(A_t | S_t, \theta)
-            $$
+
+                $$
+                \theta \leftarrow \theta + \alpha \gamma^t G \nabla \ln \pi(A_t | S_t, \theta)
+                $$
 
 
 - Performance of REINFORCE on the short-corridor example
 
-    <img src="../img/chapter10/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:70%;">
+    <img src="../_static/img/chapter10/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:70%;">
 
     - Results: as shown, with a good step size, the total reward per episode approaches the optimal value of the start state ($v_\star(s_0)$).
 
@@ -223,25 +225,29 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
         - Generate an episode $S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T$, following $\pi(\cdot | \cdot, \theta)$
         - Loop for each step of the episode $t = 0, 1, \dots, T-1$:
         - Compute return (with $\gamma$ added for the general discounted case):
+
             $$
             G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
             $$
         - Compute TD error (note that this term minic the TD error and it is not really TD according to TD's definition):
+
             $$
             \delta \leftarrow G - \hat{v}(S_t, \mathbf{w})
             $$
         - Update state-value weights with semi-gradient method:
+
             $$
             \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
             $$
         - Update policy parameters:
+
             $$
             \theta \leftarrow \theta + \alpha^{\theta} \gamma^t \delta \nabla \ln \pi(A_t | S_t, \theta)
             $$
 
 - Performance of REINFORCE with Baseline on the short-corridor example
     
-    <img src="../img/chapter10/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:70%;">
+    <img src="../_static/img/chapter10/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:70%;">
 
     Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.
     
@@ -259,17 +265,13 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
 
     One-step actorâ€“critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:
 
-    $$ 
+    $$
         \begin{align*}
-        \theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \\
-
-        &\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
-
-        &\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
-
-        &= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
-
-        &= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
+        \theta_{t+1} &\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \quad \quad \quad \quad \quad \quad \quad \text{(REINFORCE)} \\
+        &\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \quad \quad \quad \text{(REINFORCE with Baseline)} \\
+        &\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \quad \quad \quad \quad \quad \quad \text{(Actor-Critic)} \\
+        &= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \text{(Actor-Critic)} \\
+        &= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \text{(Actor-Critic)}.
         \end{align*}
     $$
 
@@ -288,23 +290,28 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
         - Sample action $A \sim \pi(\cdot | S, \theta)$
         - Take action $A$, observe $S'$, $R$
         - Compute TD error:
+
             $$
             \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w}) \ \ \text{(if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)}
             $$
             
         - Update state-value weights:
+
             $$
             \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
             $$
         - Update policy parameters:
+
             $$
             \theta \leftarrow \theta + \alpha^{\theta} I \delta \nabla \ln \pi(A | S, \theta)
             $$
         - Update importance weight:
+
             $$
             I \leftarrow \gamma I
             $$
         - Update state:
+
             $$
             S \leftarrow S'
             $$
@@ -329,22 +336,28 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
         - Sample action $A \sim \pi(\cdot | S, \theta)$
         - Take action $A$, observe $S'$, $R$
         - Compute TD error:
+
             $$
             \delta \leftarrow R - \bar{R} + \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
             $$
+
         - Update average reward estimate:
+
             $$
             \bar{R} \leftarrow \bar{R} + \alpha^{\bar{R}} \delta
             $$
         - Update state-value weights:
+
             $$
             \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
             $$
         - Update policy parameters:
+
             $$
             \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A | S, \theta)
             $$
         - Update state:
+
             $$
             S \leftarrow S'
             $$
@@ -359,7 +372,7 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
 
 - Example of AC method: Pendulum Swing-up (continuing task)
 
-    <img src="../img/chapter10/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
+    <img src="../_static/img/chapter10/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
 
     - Setup: an agent must balance a pendulum upright by applying torque to a pivot point, the pendulum starts from rest position (hanging down) with zero velocity and can move freely under the influence of gravity and the applied actions.
         
@@ -381,9 +394,10 @@ In AC methods, the state-value function assigns credit to "critizes" the policyâ
 
     - Performance: Training was repeated 100 times, and an exponentially weighted reward plot was used to evaluate performance. As shown by the figure below, the learned policy is quite stable and reliable
 
-        <img src="../img/chapter10/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:75%;">
+        <img src="../_static/img/chapter10/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:75%;">
 
         - Optional: The Exponentially Weighted Moving Average (EWMA) for reward is commonly used in reinforcement learning to reduce noise and better observe trends in an agent's learning progress, it is calculated as:
+
             $$
             R_t^{EW} = \lambda R_{t-1}^{EW} + (1 - \lambda) R_t
             $$
@@ -447,7 +461,7 @@ This chapter introduces policy gradient methods, a family of reinforcement learn
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter10/chapter10_mindmap.png" alt="Mindmap" style="width:100%;">
+    <img src="../_static/img/chapter10/chapter10_mindmap.png" alt="Mindmap" style="width:100%;">
 
 - Key Takeaways
 
@@ -466,27 +480,33 @@ This chapter introduces policy gradient methods, a family of reinforcement learn
 
         - Objective: Maximize average reward $r(\pi)$ in continuing tasks.
         - Gradient Expression: 
+
             $$
             \nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
             $$
+
         - Avoids differentiating the state distribution $\mu(s)$.
 
     4. REINFORCE Algorithm
 
         - Monte Carlo Policy Gradient: Uses full returns from episodes to update policies.
         - Update Rule:
+
             $$
             \theta_{t+1} = \theta_t + \alpha G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
             $$
+
         - Limitations: High variance and slow learning in some cases.
 
     5. REINFORCE with Baseline
 
         - Variance Reduction: Introduces a baseline $b(s)$, typically the state-value estimate $\hat{v}(s)$, to reduce variance.
         - Update Rule with Baseline:
+
             $$
             \theta_{t+1} = \theta_t + \alpha (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
             $$
+
         - Performance: Faster learning and improved stability compared to plain REINFORCE.
 
     6. Actor-Critic Methods
@@ -494,24 +514,32 @@ This chapter introduces policy gradient methods, a family of reinforcement learn
         - Combines Policy and Value Learning* The **actor** updates the policy, while the **critic** evaluates actions using bootstrapped value estimates.
         - Update Rules:
             - Policy (Actor):
+
                 $$
                 \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A_t|S_t, \theta)
                 $$
+
             - Value Function (Critic):
+
                 $$
                 \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
                 $$
+
             - TD Error:
+
                 $$
                 \delta = R_{t+1} + \gamma \hat{v}(S_{t+1}) - \hat{v}(S_t)
                 $$
+
         - Advantages: Lower variance, faster convergence, and fully online learning.
 
     7. Continuous Action Spaces and Gaussian Policies
 
         - Gaussian Policy Parameterization: For continuous actions, policies are modeled as Gaussian distributions with learnable mean $\mu(s)$ and standard deviation $\sigma(s)$.
         - Update Flexibility:
-        $$
-        \pi(a | s, \theta) = \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right)
-        $$
+
+            $$
+            \pi(a | s, \theta) = \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right)
+            $$
+            
         - Benefits: Enables fine-grained control, efficient exploration, and generalization over large or infinite action spaces.

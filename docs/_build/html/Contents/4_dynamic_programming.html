@@ -43,6 +43,8 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/4_dynamic_programming';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -137,32 +139,27 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="nav bd-sidenav">
+        <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 4. Dynamic Programming</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
 </ul>
@@ -327,7 +324,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="chapter-4-dynamic-programming">
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-4-dynamic-programming">
 <h1>Chapter 4. Dynamic Programming<a class="headerlink" href="#chapter-4-dynamic-programming" title="Link to this heading">#</a></h1>
 <p>The term dynamic programming (DP) refers to a collection of algorithms that can be used to compute optimal policies <strong>given a perfect model of the environment</strong> as a Markov decision process (MDP), it therefore requires no interaction with the environment.</p>
 <p>DP algorithms is limited in practice because of their assumption of a perfect model and because of their great computational expense. Yet DP provides an essential foundation for the understanding of the methods presented in the rest of this book. In fact, all of these methods can be viewed as attempts to achieve much the same effect as DP, only with less computation and without assuming a perfect model of the environment.</p>
@@ -335,95 +332,96 @@
 <section id="policy-evaluation-prediction-problem">
 <h2>4.1 Policy Evaluation (Prediction problem)<a class="headerlink" href="#policy-evaluation-prediction-problem" title="Link to this heading">#</a></h2>
 <ul>
-<li><p>$\textit{Policy Evaluation}$: to compute the state-value function $v_{\pi}$ for an arbitrary policy $\pi$. (We also refer to this as the $\textit{prediction problem}$.)</p>
+<li><p><span class="math notranslate nohighlight">\(\textit{Policy Evaluation}\)</span>: to compute the state-value function <span class="math notranslate nohighlight">\(v_{\pi}\)</span> for an arbitrary policy <span class="math notranslate nohighlight">\(\pi\)</span>. (We also refer to this as the <span class="math notranslate nohighlight">\(\textit{prediction problem}\)</span>.)</p>
 <ul>
-<li><p>DP assumes the environment’s dynamics are completely known (perfect model of the environment), in this case, we could use bellman equation to form a simultaneous linear equation system with $|S|$ equations and $|S|$ unknowns.</p>
-<p>With the initial approximation $v_0$ chosen arbitrarily (except that the terminal state, if any, must be given value 0):</p>
-<p>$$
-\begin{align*}
-v_{k+1}(s) &amp;= E_{\pi}[R_{t+1} + \gamma v_{k}(S_{t+1}) | S_t = s] \
-&amp;= \sum_a \pi(a|s) \sum_{s’, r}p(s’, r|s, a) [r + \gamma v_{k}(s’)] \text{ for all } s \in S
-\end{align*}
-$$</p>
+<li><p>DP assumes the environment’s dynamics are completely known (perfect model of the environment), in this case, we could use bellman equation to form a simultaneous linear equation system with <span class="math notranslate nohighlight">\(|S|\)</span> equations and <span class="math notranslate nohighlight">\(|S|\)</span> unknowns.</p>
+<p>With the initial approximation <span class="math notranslate nohighlight">\(v_0\)</span> chosen arbitrarily (except that the terminal state, if any, must be given value 0):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        v_{k+1}(s) &amp;= E_{\pi}[R_{t+1} + \gamma v_{k}(S_{t+1}) | S_t = s] \\
+        &amp;= \sum_a \pi(a|s) \sum_{s', r}p(s', r|s, a) [r + \gamma v_{k}(s')] \text{ for all } s \in S
+        \end{align*}
+        \end{split}\]</div>
 </li>
-<li><p>The above algorithm is called $\textit{iterative policy evaluation}$. Letter $k$ denotes the number of iterations.</p></li>
-<li><p>All the updates done in DP algorithms are called $\textit{expected updates}$ because they are based on an expectation over all possible next states rather than on a sample next state.</p></li>
-<li><p>The updates of all states in one iteration is called a $\textit{sweep}$ through the state space.</p></li>
+<li><p>The above algorithm is called <span class="math notranslate nohighlight">\(\textit{iterative policy evaluation}\)</span>. Letter <span class="math notranslate nohighlight">\(k\)</span> denotes the number of iterations.</p></li>
+<li><p>All the updates done in DP algorithms are called <span class="math notranslate nohighlight">\(\textit{expected updates}\)</span> because they are based on an expectation over all possible next states rather than on a sample next state.</p></li>
+<li><p>The updates of all states in one iteration is called a <span class="math notranslate nohighlight">\(\textit{sweep}\)</span> through the state space.</p></li>
 </ul>
 </li>
-<li><p>The Iterative Policy Evaluation algorithm for estimating $V \approx v_{\pi}$</p>
+<li><p>The Iterative Policy Evaluation algorithm for estimating <span class="math notranslate nohighlight">\(V \approx v_{\pi}\)</span></p>
 <ul class="simple">
 <li><p>Algo:</p>
 <ul>
 <li><p>Initialization:</p>
 <ul>
-<li><p>Input: $\pi$, the policy to be evaluated</p></li>
-<li><p>Algorithm Parameters: A small threshold $\theta &gt; 0$ determining the accuracy of estimation</p></li>
-<li><p>Initialize $V(s)$ for all $s \in S$, arbitrarily, except that $V(terminal) = 0$</p></li>
+<li><p>Input: <span class="math notranslate nohighlight">\(\pi\)</span>, the policy to be evaluated</p></li>
+<li><p>Algorithm Parameters: A small threshold <span class="math notranslate nohighlight">\(\theta &gt; 0\)</span> determining the accuracy of estimation</p></li>
+<li><p>Initialize <span class="math notranslate nohighlight">\(V(s)\)</span> for all <span class="math notranslate nohighlight">\(s \in S\)</span>, arbitrarily, except that <span class="math notranslate nohighlight">\(V(terminal) = 0\)</span></p></li>
 </ul>
 </li>
 <li><p>Loop: (for each iteration)</p>
 <ul>
-<li><p>$\Delta = 0$</p></li>
-<li><p>Loop for each $s \in S$:</p>
+<li><p><span class="math notranslate nohighlight">\(\Delta = 0\)</span></p></li>
+<li><p>Loop for each <span class="math notranslate nohighlight">\(s \in S\)</span>:</p>
 <ul>
-<li><p>$v \leftarrow V(s)$</p></li>
-<li><p>$V(s) = \sum_a \pi(a|s) \sum_{s’, r} p(s’,r|s,a) [r + \gamma V(s’)]$</p></li>
-<li><p>$\Delta \leftarrow \max(\Delta, |v - V(s)|)$</p></li>
+<li><p><span class="math notranslate nohighlight">\(v \leftarrow V(s)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(V(s) = \sum_a \pi(a|s) \sum_{s', r} p(s',r|s,a) [r + \gamma V(s')]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta \leftarrow \max(\Delta, |v - V(s)|)\)</span></p></li>
 </ul>
 </li>
-<li><p>Until $\Delta &lt; \theta$</p></li>
+<li><p>Until <span class="math notranslate nohighlight">\(\Delta &lt; \theta\)</span></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Intuition: $\Delta$ will be set to 0 at the beginning of each iteration, and is used to record the <strong>maximal changes in all state values</strong> through state space. So when the maximal change in a sweep is smaller than the threshold $\theta$, the algorithm stops. We receive a approximate optimal value function $V \approx v_{\pi_\star}$</p></li>
+<li><p>Intuition: <span class="math notranslate nohighlight">\(\Delta\)</span> will be set to 0 at the beginning of each iteration, and is used to record the <strong>maximal changes in all state values</strong> through state space. So when the maximal change in a sweep is smaller than the threshold <span class="math notranslate nohighlight">\(\theta\)</span>, the algorithm stops. We receive a approximate optimal value function <span class="math notranslate nohighlight">\(V \approx v_{\pi_\star}\)</span></p></li>
 </ul>
 </li>
 <li><p>Gridworld Example: watch this <a class="reference external" href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/ICAfp/iterative-policy-evaluation">lecture video</a> if you find the illustrations of sweeps during policy evaluation too hard to grasp.</p>
 <ul>
 <li><p>Description:</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 70%;">
+  <img src="../_static/img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 70%;">
   </div>
 <ul class="simple">
-<li><p>States: the nonterminal states are $S = {1, 2,…,14}$.</p></li>
-<li><p>Actions: there are four actions possible in each state, $A = {up, down, right, left}$, which deterministically cause the corresponding state transitions, except that actions that would take the agent off the grid in fact leave the state unchanged.</p>
+<li><p>States: the nonterminal states are <span class="math notranslate nohighlight">\(S = {1, 2,...,14}\)</span>.</p></li>
+<li><p>Actions: there are four actions possible in each state, <span class="math notranslate nohighlight">\(A = \{up, down, right, left\}\)</span>, which deterministically cause the corresponding state transitions, except that actions that would take the agent off the grid in fact leave the state unchanged.</p>
 <ul>
-<li><p>For instance, $p(6, -1|5, right) = 1, p(7, -1|7, right) = 1$, and $p(10,r|5, right) = 0$ for all $r \in R$.</p></li>
+<li><p>For instance, <span class="math notranslate nohighlight">\(p(6, -1|5, right) = 1, p(7, -1|7, right) = 1\)</span>, and <span class="math notranslate nohighlight">\(p(10,r|5, right) = 0\)</span> for all <span class="math notranslate nohighlight">\(r \in R\)</span>.</p></li>
 </ul>
 </li>
-<li><p>Reward: this is an undiscounted, episodic task. The reward is $-1$ on all transitions until the terminal state is reached. The expected reward function is thus $r(s, a, s’)= -1$ for all states $s, s’$ and actions $a$.</p></li>
-<li><p>Policy: an equiprobable random policy (all actions are equally likely with probability of $0.25$)</p></li>
+<li><p>Reward: this is an undiscounted, episodic task. The reward is <span class="math notranslate nohighlight">\(-1\)</span> on all transitions until the terminal state is reached. The expected reward function is thus <span class="math notranslate nohighlight">\(r(s, a, s')= -1\)</span> for all states <span class="math notranslate nohighlight">\(s, s'\)</span> and actions <span class="math notranslate nohighlight">\(a\)</span>.</p></li>
+<li><p>Policy: an equiprobable random policy (all actions are equally likely with probability of <span class="math notranslate nohighlight">\(0.25\)</span>)</p></li>
 </ul>
 </li>
 <li><p>Policy Evaluation:</p>
 <ul>
 <li><p>The first sweep:</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 75%;">        
+  <img src="../_static/img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 75%;">        
   </div>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.3.png" alt="Step1.2" style="width: 75%;">        
+  <img src="../_static/img/chapter4/example4.1.3.png" alt="Step1.2" style="width: 75%;">        
   </div>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.4.png" alt="Step1.3" style="width: 75%;">        
+  <img src="../_static/img/chapter4/example4.1.4.png" alt="Step1.3" style="width: 75%;">        
   </div>
 </li>
 <li><p>The second sweep:</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.5.png" alt="Step2" style="width: 75%;">        
+  <img src="../_static/img/chapter4/example4.1.5.png" alt="Step2" style="width: 75%;">        
   </div>
 </li>
 <li><p>The third sweep:</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.6.png" alt="Step3" style="width: 75%;">        
+  <img src="../_static/img/chapter4/example4.1.6.png" alt="Step3" style="width: 75%;">        
   </div>
 </li>
 <li><p>…</p></li>
-<li><p>The final sweep: $\Delta = 0$ and is finally smaller than $\theta$, $V$ and $V’$ are both $V_\pi$</p>
+<li><p>The final sweep: <span class="math notranslate nohighlight">\(\Delta = 0\)</span> and is finally smaller than <span class="math notranslate nohighlight">\(\theta\)</span>, <span class="math notranslate nohighlight">\(V\)</span> and <span class="math notranslate nohighlight">\(V'\)</span> are both <span class="math notranslate nohighlight">\(V_\pi\)</span></p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.1.7.png" alt="Final Step" style="width: 75%">        
+  <img src="../_static/img/chapter4/example4.1.7.png" alt="Final Step" style="width: 75%">        
   </div>
 </li>
 </ul>
@@ -435,46 +433,49 @@ $$</p>
 <section id="policy-improvement">
 <h2>4.2 Policy Improvement<a class="headerlink" href="#policy-improvement" title="Link to this heading">#</a></h2>
 <ul>
-<li><p>$\textit{Policy Improvement Theorem}$: if $q_{\pi}(s, \pi’(s)) \ge v_{\pi}(s)$ holds for all $s \in S$, then the policy $\pi’$ must be as good as, or better than, $\pi$. In other words, $v_{\pi’}(s) \ge v_{\pi}(s)$ for all $s \in S$ also holds.</p>
+<li><p><span class="math notranslate nohighlight">\(\textit{Policy Improvement Theorem}\)</span>: if <span class="math notranslate nohighlight">\(q_{\pi}(s, \pi'(s)) \ge v_{\pi}(s)\)</span> holds for all <span class="math notranslate nohighlight">\(s \in S\)</span>, then the policy <span class="math notranslate nohighlight">\(\pi'\)</span> must be as good as, or better than, <span class="math notranslate nohighlight">\(\pi\)</span>. In other words, <span class="math notranslate nohighlight">\(v_{\pi'}(s) \ge v_{\pi}(s)\)</span> for all <span class="math notranslate nohighlight">\(s \in S\)</span> also holds.</p>
 <ul>
-<li><p>the intuition of the inequality $q_{\pi}(s, \pi’(s)) \ge v_{\pi}(s)$ is that (recall the backup diagram starting with $v(s)$ shown below) there exists one (or more) explicit action(s) that could bring more return for state $s$ than simply calculating the expectation (since $v(s) = \sum_a \pi(a|s)q(s,a)$)</p>
+<li><p>the intuition of the inequality <span class="math notranslate nohighlight">\(q_{\pi}(s, \pi'(s)) \ge v_{\pi}(s)\)</span> is that (recall the backup diagram starting with <span class="math notranslate nohighlight">\(v(s)\)</span> shown below) there exists one (or more) explicit action(s) that could bring more return for state <span class="math notranslate nohighlight">\(s\)</span> than simply calculating the expectation (since <span class="math notranslate nohighlight">\(v(s) = \sum_a \pi(a|s)q(s,a)\)</span>)</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 23%;">
+  <img src="../_static/img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 23%;">
   </div>
 </li>
 </ul>
 </li>
-<li><p>$\textit{Policy Improvement}$: the process of making a new policy that improves on an original policy, <strong>by making it greedy</strong> with respect to the value function of the original policy.</p>
+<li><p><span class="math notranslate nohighlight">\(\textit{Policy Improvement}\)</span>: the process of making a new policy that improves on an original policy, <strong>by making it greedy</strong> with respect to the value function of the original policy.</p>
 <ul>
-<li><p>Greedification: with $\pi’$ denoting the greedified policy:
-$$
-\begin{align*}
-\pi’(s) &amp;= \arg\max_a q_{\pi}(s, a) \
-&amp;= \arg\max_a E_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) | S_t=s] \
-&amp;= \arg\max_a \sum_{s’, r} p(s’, r|s,a)[r + \gamma v_{\pi}(s’)]
-\end{align*}
-$$</p></li>
+<li><p>Greedification: with <span class="math notranslate nohighlight">\(\pi'\)</span> denoting the greedified policy:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \pi'(s) &amp;= \arg\max_a q_{\pi}(s, a) \\
+        &amp;= \arg\max_a E_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) | S_t=s] \\
+        &amp;= \arg\max_a \sum_{s', r} p(s', r|s,a)[r + \gamma v_{\pi}(s')]
+        \end{align*} 
+        \end{split}\]</div>
+</li>
 <li><p><strong>Policy Improvement will lead to a strictly better policy</strong> unless the original policy is already optimal:</p>
 <ul>
-<li><p>suppose the new policy is as good as, but no better than the old policy (the policy can not be any better in the end), meaning $v_{\pi’}=v_{\pi}$, then:</p>
-<p>$$
-\begin{align*}
-v_{\pi’} &amp;= \max_a \sum_{s’, r} p(s’, r|s,a)[r + \gamma v_{\pi}(s’)] \
-&amp;= \max_a \sum_{s’, r} p(s’, r|s,a)[r + \gamma v_{\pi’}(s’)]
-\end{align*}
-$$</p>
-<p>The above last equation is exactly the bellman optimality equation, this means that when the policy can not get any better, $v_{\pi’}$ is $v_{\star}$, therefore, $\pi$ and $\pi’$ are both the optimal policy $\pi_{\star}$.</p>
+<li><p>suppose the new policy is as good as, but no better than the old policy (the policy can not be any better in the end), meaning <span class="math notranslate nohighlight">\(v_{\pi'}=v_{\pi}\)</span>, then:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+            \begin{align*}
+            v_{\pi'} &amp;= \max_a \sum_{s', r} p(s', r|s,a)[r + \gamma v_{\pi}(s')] \\
+            &amp;= \max_a \sum_{s', r} p(s', r|s,a)[r + \gamma v_{\pi'}(s')]
+            \end{align*}
+            \end{split}\]</div>
+<p>The above last equation is exactly the bellman optimality equation, this means that when the policy can not get any better, <span class="math notranslate nohighlight">\(v_{\pi'}\)</span> is <span class="math notranslate nohighlight">\(v_{\star}\)</span>, therefore, <span class="math notranslate nohighlight">\(\pi\)</span> and <span class="math notranslate nohighlight">\(\pi'\)</span> are both the optimal policy <span class="math notranslate nohighlight">\(\pi_{\star}\)</span>.</p>
 </li>
 <li><p><strong>if a policy is already the greedy policy with respect to its own value function, then this policy is the optimal policy</strong></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Gridworld Example from <a class="reference internal" href="#41-policy-evaluation-prediction-problem"><span class="xref myst">section 4.1</span></a> (continue)</p>
+<li><p>Gridworld Example from <a class="reference internal" href="#policy-evaluation-prediction-problem">section 4.1</a> (continue)</p>
 <ul>
-<li><p>After getting the value function $v_{\pi}$ of the initial random policy $\pi$, we perform greedification to get the new policy $\pi’$ (illustrated by white arrows), which is strictly better than $\pi$ according to the nature of policy improvement.</p>
+<li><p>After getting the value function <span class="math notranslate nohighlight">\(v_{\pi}\)</span> of the initial random policy <span class="math notranslate nohighlight">\(\pi\)</span>, we perform greedification to get the new policy <span class="math notranslate nohighlight">\(\pi'\)</span> (illustrated by white arrows), which is strictly better than <span class="math notranslate nohighlight">\(\pi\)</span> according to the nature of policy improvement.</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 500px;">        
+  <img src="../_static/img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 500px;">        
   </div>
 </li>
 <li><p>In doing so, we now have successfully improved our original policy (for one iteration).</p></li>
@@ -485,30 +486,31 @@ $$</p>
 <section id="policy-iteration-control">
 <h2>4.3 Policy Iteration (Control)<a class="headerlink" href="#policy-iteration-control" title="Link to this heading">#</a></h2>
 <ul>
-<li><p>$\textit{Policy iteration}$: the process of performing policy evaluation and policy improvement iteratively to find the optimal policy.</p>
+<li><p><span class="math notranslate nohighlight">\(\textit{Policy iteration}\)</span>: the process of performing policy evaluation and policy improvement iteratively to find the optimal policy.</p>
 <ul class="simple">
-<li><p>Because a finite MDP has only a finite number of policies, this process must converge to an optimal policy and optimal value function in a finite number of iterations. With $E$ stands for evaluation and $I$ for improvement, the process is:</p></li>
+<li><p>Because a finite MDP has only a finite number of policies, this process must converge to an optimal policy and optimal value function in a finite number of iterations. With <span class="math notranslate nohighlight">\(E\)</span> stands for evaluation and <span class="math notranslate nohighlight">\(I\)</span> for improvement, the process is:</p></li>
 </ul>
-<p>$$
-\pi_0 \xrightarrow{\text{E}} v_{\pi_0} \xrightarrow{\text{I}} \pi_1 \xrightarrow{\text{E}} v_{\pi_1} \xrightarrow{\text{I}} … \xrightarrow{\text{I}} \pi_{\star} \xrightarrow{\text{E}} v_{\star}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+    \pi_0 \xrightarrow{\text{E}} v_{\pi_0} \xrightarrow{\text{I}} \pi_1 \xrightarrow{\text{E}} v_{\pi_1} \xrightarrow{\text{I}} ... \xrightarrow{\text{I}} \pi_{\star} \xrightarrow{\text{E}} v_{\star}
+    \]</div>
 </li>
 <li><p>Algorithm for Policy Iteration:</p>
 <ul class="simple">
-<li><p>Initialization $V(s) \in R$ and $\pi(s) \in A(s)$ arbitrarily for all $s \in S$</p></li>
-<li><p>Policy Evaluation (see the algorithm in <a class="reference internal" href="#41-policy-evaluation-prediction-problem"><span class="xref myst">section 4.1</span></a>
+<li><p>Initialization <span class="math notranslate nohighlight">\(V(s) \in R\)</span> and <span class="math notranslate nohighlight">\(\pi(s) \in A(s)\)</span> arbitrarily for all <span class="math notranslate nohighlight">\(s \in S\)</span></p></li>
+<li><p>Policy Evaluation (see the algorithm in <a class="reference internal" href="#policy-evaluation-prediction-problem">section 4.1</a>
 )</p></li>
 <li><p>Policy Improvement:</p>
 <ul>
-<li><p><em>policy-stable</em> $\leftarrow$ <em>true</em></p></li>
-<li><p>For each $s \in S$:</p>
+<li><p><em>policy-stable</em> <span class="math notranslate nohighlight">\(\leftarrow\)</span> <em>true</em></p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(s \in S\)</span>:</p>
 <ul>
-<li><p><em>old-action</em> $\leftarrow \pi(s)$</p></li>
-<li><p>$\pi(s) \leftarrow \arg \underset{a}{\max} \ \sum_{s’,r}\  p(s’,r|s,a) \ [r + \gamma v_{\pi}(s’)]$</p></li>
-<li><p>if <em>old-action</em> $\neq \pi(s)$ and $q(s, \pi(s)) \neq q(s, \textit{old-action})$, then <em>policy-stable</em> $\leftarrow$ <em>false</em></p></li>
+<li><p><em>old-action</em> <span class="math notranslate nohighlight">\(\leftarrow \pi(s)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\pi(s) \leftarrow \arg \underset{a}{\max} \ \sum_{s',r}\  p(s',r|s,a) \ [r + \gamma v_{\pi}(s')]\)</span></p></li>
+<li><p>if <em>old-action</em> <span class="math notranslate nohighlight">\(\neq \pi(s)\)</span> and <span class="math notranslate nohighlight">\(q(s, \pi(s)) \neq q(s, \textit{old-action})\)</span>, then <em>policy-stable</em> <span class="math notranslate nohighlight">\(\leftarrow\)</span> <em>false</em></p></li>
 </ul>
 </li>
-<li><p>if <em>policy-stable</em>, then stop and return $V$ as $V_{\star}$ and $\pi$ as $\pi_{\star}$, else go to step 2.</p></li>
+<li><p>if <em>policy-stable</em>, then stop and return <span class="math notranslate nohighlight">\(V\)</span> as <span class="math notranslate nohighlight">\(V_{\star}\)</span> and <span class="math notranslate nohighlight">\(\pi\)</span> as <span class="math notranslate nohighlight">\(\pi_{\star}\)</span>, else go to step 2.</p></li>
 </ul>
 </li>
 </ul>
@@ -517,9 +519,9 @@ $$</p>
 <ul>
 <li><p>Description:</p>
 <ul>
-<li><p>The Gridworld example in <a class="reference internal" href="#41-policy-evaluation-prediction-problem"><span class="xref myst">section 4.1</span></a> actually reaches the optimal policy after only one iteration, we now make the example a bit more complex by elimating one terminal grid and adding blue states where rewards have much lower value of $-10$.</p>
+<li><p>The Gridworld example in <a class="reference internal" href="#policy-evaluation-prediction-problem">section 4.1</a> actually reaches the optimal policy after only one iteration, we now make the example a bit more complex by elimating one terminal grid and adding blue states where rewards have much lower value of <span class="math notranslate nohighlight">\(-10\)</span>.</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/example4.3.1.png" alt="New Gridworld" style="width: 380px;">        
+  <img src="../_static/img/chapter4/example4.3.1.png" alt="New Gridworld" style="width: 380px;">        
   </div>
 </li>
 </ul>
@@ -530,28 +532,28 @@ $$</p>
   <div style="display: flex; justify-content: center; gap: 20px;">
   <div style="display: flex; flex-direction: column; align-items: center;">
   <h4>Evaluation</h4>
-  <img src="../img/chapter4/example4.3.2.png" alt="Evaluation" style="width: 200px;">
+  <img src="../_static/img/chapter4/example4.3.2.png" alt="Evaluation" style="width: 200px;">
   </div>
   <div style="display: flex; flex-direction: column; align-items: center;">
   <h4>Improvement</h4>
-  <img src="../img/chapter4/example4.3.3.png" alt="Improvement" style="width: 200px;">
+  <img src="../_static/img/chapter4/example4.3.3.png" alt="Improvement" style="width: 200px;">
   </div>
   </div>
 </li>
 <li><p>The second iteration:</p>
 <ul>
 <li><p>Pay attention to how exactly the greedification is performed (e.g., the second left grid on the last row).</p>
-<p>Remember that $\pi’(s) = \arg\max_a \sum_{s’, r} p(s’, r|s,a)[r + \gamma v_{\pi}(s’)]$ not $\pi’(s) = \arg\max_a v(s’)$, so don’t just greedify an action towards a state $s’$ simply because that state has a higher value $v(s’)$.</p>
+<p>Remember that <span class="math notranslate nohighlight">\(\pi'(s) = \arg\max_a \sum_{s', r} p(s', r|s,a)[r + \gamma v_{\pi}(s')]\)</span> not <span class="math notranslate nohighlight">\(\pi'(s) = \arg\max_a v(s')\)</span>, so don’t just greedify an action towards a state <span class="math notranslate nohighlight">\(s'\)</span> simply because that state has a higher value <span class="math notranslate nohighlight">\(v(s')\)</span>.</p>
 </li>
 </ul>
   <div style="display: flex; justify-content: center; gap: 20px;">
   <div style="display: flex; flex-direction: column; align-items: center;">
   <h4>Evaluation</h4>
-  <img src="../img/chapter4/example4.3.4.png" alt="Evaluation" style="width: 200px;">
+  <img src="../_static/img/chapter4/example4.3.4.png" alt="Evaluation" style="width: 200px;">
   </div>
   <div style="display: flex; flex-direction: column; align-items: center;">
   <h4>Improvement</h4>
-  <img src="../img/chapter4/example4.3.5.png" alt="Improvement" style="width: 200px;">
+  <img src="../_static/img/chapter4/example4.3.5.png" alt="Improvement" style="width: 200px;">
   </div>
   </div>
 </li>
@@ -563,11 +565,11 @@ $$</p>
   <div style="display: flex; justify-content: center; gap: 20px;">
   <div style="display: flex; flex-direction: column; align-items: center;">
   <h4>Evaluation</h4>
-  <img src="../img/chapter4/example4.3.6.png" alt="Evaluation" style="width: 200px;">
+  <img src="../_static/img/chapter4/example4.3.6.png" alt="Evaluation" style="width: 200px;">
   </div>
   <div style="display: flex; flex-direction: column; align-items: center;">
   <h4>Improvement</h4>
-  <img src="../img/chapter4/example4.3.7.png" alt="Improvement" style="width: 200px;">
+  <img src="../_static/img/chapter4/example4.3.7.png" alt="Improvement" style="width: 200px;">
   </div>
   </div>
 </li>
@@ -587,35 +589,38 @@ $$</p>
 </ul>
 </li>
 <li><p>Update rule:</p>
-<p>$$
-\begin{align*}
-V_{k+1}(s) \ &amp;\dot= \ \max_a q_{k}(s, a) \
-&amp;= \max_a \sum_{s’, r} p(s’, r|s,a) [r + \gamma V_{k}(s’)]\ \text{for all} s \in S
-\end{align*}
-$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    V_{k+1}(s) \ &amp;\dot= \ \max_a q_{k}(s, a) \\
+    &amp;= \max_a \sum_{s', r} p(s', r|s,a) [r + \gamma V_{k}(s')]\ \text{for all} s \in S
+    \end{align*}
+    \end{split}\]</div>
 <ul class="simple">
 <li><p>Note that the above equation is obtained simply by turning Bellman Optimality Equation into an updating rule.</p></li>
 </ul>
 </li>
 <li><p>Algorithm for Value Iteration:</p>
-<ul class="simple">
-<li><p>Initialize a small threshold $\theta &gt; 0$ for determining accuracy of estimation.</p></li>
-<li><p>Initialize $V(s)$, for all $s \in S^+$, arbitrarily except that $V(terminal) = 0$.</p></li>
+<ul>
+<li><p>Initialize a small threshold <span class="math notranslate nohighlight">\(\theta &gt; 0\)</span> for determining accuracy of estimation.</p></li>
+<li><p>Initialize <span class="math notranslate nohighlight">\(V(s)\)</span>, for all <span class="math notranslate nohighlight">\(s \in S^+\)</span>, arbitrarily except that <span class="math notranslate nohighlight">\(V(terminal) = 0\)</span>.</p></li>
 <li><p>Loop:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\Delta \leftarrow 0\)</span></p></li>
+<li><p>For <span class="math notranslate nohighlight">\(s \in S\)</span>:</p>
 <ul>
-<li><p>$\Delta \leftarrow 0$</p></li>
-<li><p>For $s \in S$:</p>
-<ul>
-<li><p>$v \leftarrow V(s)$</p></li>
-<li><p>$V(s) = \underset{a}{\max} \underset{s’, r}{\sum} p(s’, r|s,a) [r + \gamma V(s’)]$</p></li>
-<li><p>$\Delta \leftarrow \text{max}(\Delta, |v - V(s)|)$</p></li>
+<li><p><span class="math notranslate nohighlight">\(v \leftarrow V(s)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(V(s) = \underset{a}{\max} \underset{s', r}{\sum} p(s', r|s,a) [r + \gamma V(s')]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta \leftarrow \text{max}(\Delta, |v - V(s)|)\)</span></p></li>
 </ul>
 </li>
-<li><p>until $\Delta &lt; \theta$</p></li>
+<li><p>until <span class="math notranslate nohighlight">\(\Delta &lt; \theta\)</span></p></li>
 </ul>
 </li>
-<li><p>Output a deterministic policy, $\pi \approx \pi_{\star}$, such that
-$$\pi(s) = \arg \underset{a}{\max}  \underset{s’, r}{\sum} p(s’, r|s,a) [r + \gamma V(s’)]$$</p></li>
+<li><p>Output a deterministic policy, <span class="math notranslate nohighlight">\(\pi \approx \pi_{\star}\)</span>, such that</p>
+<div class="math notranslate nohighlight">
+\[\pi(s) = \arg \underset{a}{\max}  \underset{s', r}{\sum} p(s', r|s,a) [r + \gamma V(s')]\]</div>
+</li>
 </ul>
 </li>
 </ul>
@@ -623,19 +628,19 @@ $$\pi(s) = \arg \underset{a}{\max}  \underset{s’, r}{\sum} p(s’, r|s,a) [r +
 <section id="generalized-policy-iteration-gpi">
 <h2>4.5 Generalized Policy Iteration (GPI)<a class="headerlink" href="#generalized-policy-iteration-gpi" title="Link to this heading">#</a></h2>
 <ul>
-<li><p>$\star$ Two types of DP:</p>
+<li><p><span class="math notranslate nohighlight">\(\star\)</span> Two types of DP:</p>
 <ul class="simple">
 <li><p>Synchronous DP: update all states systematically in a certain order (takes very long for large state space)</p></li>
 <li><p>Asynchronous DP: update states without order (can be faster, but also problematic when only a small set of states being updated constantly)</p></li>
 </ul>
 </li>
-<li><p>$\textit{Generalized policy iteration (GPI)}$: refers to the general idea of letting policy-evaluation and policyimprovement processes interact, independent of the granularity and other details of the two processes.</p>
+<li><p><span class="math notranslate nohighlight">\(\textit{Generalized policy iteration (GPI)}\)</span>: refers to the general idea of letting policy-evaluation and policyimprovement processes interact, independent of the granularity and other details of the two processes.</p>
 <ul>
 <li><p>Almost all reinforcement learning methods are well described as GPI. That is, all have identifiable policies and value functions, with the policy always being improved with respect to the value function and the value function always being driven toward the value function for the policy:</p>
   <div style="display: flex; justify-content: center;">
-  <img src="../img/chapter4/gpi2.png" alt="Generalized policy iteration" style="width: 280px;">
+  <img src="../_static/img/chapter4/gpi2.png" alt="Generalized policy iteration" style="width: 280px;">
   </div>
-<p>Both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function (when $\pi$ itself is the greedy policy of $v_{\pi}$). This implies that the Bellman optimality equation for state-value function holds, and thus that the policy and the value function are optimal.</p>
+<p>Both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function (when <span class="math notranslate nohighlight">\(\pi\)</span> itself is the greedy policy of <span class="math notranslate nohighlight">\(v_{\pi}\)</span>). This implies that the Bellman optimality equation for state-value function holds, and thus that the policy and the value function are optimal.</p>
 </li>
 </ul>
 </li>
@@ -643,15 +648,15 @@ $$\pi(s) = \arg \underset{a}{\max}  \underset{s’, r}{\sum} p(s’, r|s,a) [r +
 </section>
 <section id="summary">
 <h2>4.6 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
-<p>Classical DP methods operate in sweeps through the state set, performing an $\textit{expected update}$ operation on each state. The update of states based on estimates of the values of successor states. That is, estimates are updated on the basis of other estimates. We call this general idea $\textit{bootstrapping}$ (a very fundamental concept in many RL algorithms, and we will introduce it in depth in <a class="reference internal" href="6_temporal_difference_learning.html"><span class="std std-doc">Chapter 6</span></a>) and requires a perfect model of the environment.</p>
+<p>Classical DP methods operate in sweeps through the state set, performing an <span class="math notranslate nohighlight">\(\textit{expected update}\)</span> operation on each state. The update of states based on estimates of the values of successor states. That is, estimates are updated on the basis of other estimates. We call this general idea <span class="math notranslate nohighlight">\(\textit{bootstrapping}\)</span> (a very fundamental concept in many RL algorithms, and we will introduce it in depth in <a class="reference internal" href="6_temporal_difference_learning.html"><span class="std std-doc">Chapter 6</span></a>) and requires a perfect model of the environment.</p>
 <p>In the next chapter we explore Monte Carlo method - a reinforcement learning method that do not require a model and do not bootstrap. But for now, a quick summary:</p>
-<ul class="simple">
-<li><p>Mindmap of where we are now
-<img src="../img/chapter4/chapter4_mindmap.png" alt="Mindmap" style="width:100%;"></p></li>
-<li><p>Key Takeaways:</p>
-<ol class="arabic simple">
-<li><p>DP Overview:</p>
 <ul>
+<li><p>Mindmap of where we are now
+<img src="../_static/img/chapter4/chapter4_mindmap.png" alt="Mindmap" style="width:100%;"></p></li>
+<li><p>Key Takeaways:</p>
+<ol class="arabic">
+<li><p>DP Overview:</p>
+<ul class="simple">
 <li><p>Computes optimal policies using a perfect model of the environment (MDP).</p></li>
 <li><p>No interaction with the environment; computationally expensive but foundational for RL.</p></li>
 <li><p>Core idea is to use value functions and Bellman equations as update rules to improve policies.</p></li>
@@ -659,41 +664,49 @@ $$\pi(s) = \arg \underset{a}{\max}  \underset{s’, r}{\sum} p(s’, r|s,a) [r +
 </li>
 <li><p>Policy Evaluation (Prediction):</p>
 <ul>
-<li><p>Iteratively estimate $v_\pi$ for a given policy $\pi$:
-$$
-v_{k+1}(s) = \sum_a \pi(a|s) \sum_{s’, r} p(s’, r | s, a) [r + \gamma v_k(s’)]
-$$</p></li>
-<li><p>Stop when changes in $v(s)$ are smaller than a threshold $\theta$.</p></li>
+<li><p>Iteratively estimate <span class="math notranslate nohighlight">\(v_\pi\)</span> for a given policy <span class="math notranslate nohighlight">\(\pi\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+            v_{k+1}(s) = \sum_a \pi(a|s) \sum_{s', r} p(s', r | s, a) [r + \gamma v_k(s')]
+            \]</div>
+</li>
+<li><p>Stop when changes in <span class="math notranslate nohighlight">\(v(s)\)</span> are smaller than a threshold <span class="math notranslate nohighlight">\(\theta\)</span>.</p></li>
 </ul>
 </li>
 <li><p>Policy Improvement:</p>
 <ul>
-<li><p>Create a greedy policy $\pi’$ with respect to $v_\pi$:
-$$
-\pi’(s) = \arg\max_a \sum_{s’, r} p(s’, r | s, a) [r + \gamma v_\pi(s’)]
-$$</p></li>
-<li><p>If no further improvement is possible, $\pi$ is optimal.</p></li>
+<li><p>Create a greedy policy <span class="math notranslate nohighlight">\(\pi'\)</span> with respect to <span class="math notranslate nohighlight">\(v_\pi\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+            \pi'(s) = \arg\max_a \sum_{s', r} p(s', r | s, a) [r + \gamma v_\pi(s')]
+            \]</div>
+</li>
+<li><p>If no further improvement is possible, <span class="math notranslate nohighlight">\(\pi\)</span> is optimal.</p></li>
 </ul>
 </li>
 <li><p>Policy Iteration:</p>
 <ul>
-<li><p>Alternate between policy evaluation and improvement until convergence:
-$$
-\pi_0 \rightarrow v_{\pi_0} \rightarrow \pi_1 \rightarrow v_{\pi_1} \rightarrow \ldots \rightarrow \pi_* \rightarrow v_*
-$$</p></li>
+<li><p>Alternate between policy evaluation and improvement until convergence:</p>
+<div class="math notranslate nohighlight">
+\[
+            \pi_0 \rightarrow v_{\pi_0} \rightarrow \pi_1 \rightarrow v_{\pi_1} \rightarrow \ldots \rightarrow \pi_* \rightarrow v_*
+            \]</div>
+</li>
 </ul>
 </li>
 <li><p>Value Iteration:</p>
 <ul>
-<li><p>Simplified policy iteration with one sweep per iteration:
-$$
-V_{k+1}(s) = \max_a \sum_{s’, r} p(s’, r | s, a) [r + \gamma V_k(s’)]
-$$</p></li>
-<li><p>Converges to optimal $V$ and greedy policy $\pi_*$.</p></li>
+<li><p>Simplified policy iteration with one sweep per iteration:</p>
+<div class="math notranslate nohighlight">
+\[
+            V_{k+1}(s) = \max_a \sum_{s', r} p(s', r | s, a) [r + \gamma V_k(s')]
+            \]</div>
+</li>
+<li><p>Converges to optimal <span class="math notranslate nohighlight">\(V\)</span> and greedy policy <span class="math notranslate nohighlight">\(\pi_*\)</span>.</p></li>
 </ul>
 </li>
 <li><p>Generalized Policy Iteration (GPI):</p>
-<ul>
+<ul class="simple">
 <li><p>Continuous interaction of policy evaluation and improvement.</p></li>
 <li><p>Stabilizes when the policy is greedy with respect to its own value function.</p></li>
 </ul>

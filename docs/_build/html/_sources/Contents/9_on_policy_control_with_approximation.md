@@ -22,6 +22,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
 - Gradient descent update:
     - General update rule for action-value prediction
+
         $$
         \boldsymbol{w_{t+1}} \dot= \boldsymbol{w_t} + \alpha [U_t - \hat{q}(S_t, A_t, \boldsymbol{w_t})]\nabla\hat{q}(S_t, A_t, \boldsymbol{w_t})
         $$
@@ -29,6 +30,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
     - Update rule for Episodic semi-gradient one-step Sarsa
 
         - update rule
+
             $$
             \boldsymbol{w_{t+1}} \dot= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma\hat{q}(S_{t+1}, A_{t+1}, \boldsymbol{w_t}) - \hat{q}(S_t, A_t, \boldsymbol{w_t})]\nabla\hat{q}(S_t, A_t, \boldsymbol{w_t})
             $$
@@ -45,36 +47,43 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
                     - Take action $A$ according to the policy, observe $S\prime, R$
                     - If $S\prime$ is terminal:
                         - update weights:
+
                         $$
                         \boldsymbol{w} \dot= \boldsymbol{w} + \alpha [R - \hat{q}(S, A, \boldsymbol{w})]\nabla\hat{q}(S, A, \boldsymbol{w})
                         $$
+
                         - Go to the next episode
+
                     - Choose $A\prime$ based on the function $\hat{q}(S, a, \boldsymbol{w})$ and the policy (e.g., $\epsilon-greedy$)
                     - Update weights: 
+
                         $$
                         \boldsymbol{w} \dot= \boldsymbol{w} + \alpha [R + \gamma\hat{q}(S\prime, A\prime, \boldsymbol{w}) - \hat{q}(S, A, \boldsymbol{w})]\nabla\hat{q}(S, A, \boldsymbol{w})
                         $$
                     - Updata state and action:
-                    $$
-                    S \leftarrow S\prime \\
-                    A \leftarrow A\prime
-                    $$
+
+                        $$
+                        S \leftarrow S\prime \\
+                        A \leftarrow A\prime
+                        $$
+
     - Update rule for semi-gradient Expected Sarsa:
+
         $$
         \mathbf{w} \leftarrow \mathbf{w} + \alpha \left( R_{t+1} + \gamma \sum_{a'} \pi(a' \mid S_{t+1}) \hat{q}(S_{t+1}, a', \mathbf{w}) - \hat{q}(S_t, A_t, \mathbf{w}) \right) \nabla \hat{q}(S_t, A_t, \mathbf{w})
         $$
 
     - Update rule for semi-gradient Q-learning:
+
         $$
         \mathbf{w} \leftarrow \mathbf{w} + \alpha \left( R_{t+1} + \gamma \max_{a'} \hat{q}(S_{t+1}, a', \mathbf{w}) - \hat{q}(S_t, A_t, \mathbf{w}) \right) \nabla \hat{q}(S_t, A_t, \mathbf{w})
         $$
 
 
-			
 - Using gradient methods for on-policy control: Example of Mountain Car (lecture video)
 
     <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/YgKc7/episodic-sarsa-in-mountain-car">
-    <img src="../img/chapter9/mountain_car_example.png" alt="Video: The Mountain Car Example" style="width:80%;">
+    <img src="../_static/img/chapter9/mountain_car_example.png" alt="Video: The Mountain Car Example" style="width:80%;">
     </a>
 
     - Quick intro: driving an underpowered car up a steep mountain road and gravity is stronger than the car’s engine - a simple example of a continuous control task where things have to get worse in a sense (farther from the goal) before they can get better. Set up of this problem:
@@ -131,11 +140,13 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
 - Derived definitions:
     - Returns: returns are defined in terms of differences between rewards and the average reward:
+
         $$
         G_t \doteq R_{t+1} - r(\pi) + R_{t+2} - r(\pi) + R_{t+3} - r(\pi) + \cdots.
         $$
 
     - Bellman equations:
+
         $$
         \begin{align}
         v_\pi(s) &= \sum_{a} \pi(a \mid s) \sum_{r, s'} p(s', r \mid s, a) \left[ r - r(\pi) + v_\pi(s') \right], \\
@@ -144,6 +155,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         $$
 
     - Bellman Optimality equations:
+
         $$
         \begin{align}
         v_*(s) &= \max_{a} \sum_{r, s'} p(s', r \mid s, a) \left[ r - \max_\pi r(\pi) + v_*(s') \right], \\
@@ -152,6 +164,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         $$
 
     - The two TD errors (differential form): 
+
         $$
         \begin{align}
         \delta_t &\doteq R_{t+1} - \bar{R}_t + \hat{v}(S_{t+1}, \mathbf{w}_t) - \hat{v}(S_t, \mathbf{w}_t), \\
@@ -196,7 +209,7 @@ In this chapter, we extended tabular control methods to function approximation, 
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter9/chapter9_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
+    <img src="../_static/img/chapter9/chapter9_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
 
 - Key Takeaways
 

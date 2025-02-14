@@ -42,7 +42,7 @@ Basics of MC methods:
 
     - Visualization of return calculation ($T=5$):
         <div style="display: flex; justify-content: center;">
-        <img src="../img/chapter5/computing_gt.png" alt="Backward calculation of returns" style="width: 350px;">
+        <img src="../_static/img/chapter5/computing_gt.png" alt="Backward calculation of returns" style="width: 350px;">
         </div>
 
 - Notes:
@@ -130,7 +130,7 @@ Apparently, these two assumptions are hardly truth in practice, so we are now go
 
 - $\epsilon$-soft policies:
 
-    - $\epsilon$-greedy policy: as introduced in Chapter 2 [section 2.2]((../Contents/2_multi_armed_bandits.md#22-action-value-methods)) all non-greedy action are given the minimal probability of selection $\frac{\epsilon}{|A(s)|}$ (**uniform distribution**), the greedy action has the probability of $1 - \epsilon + \frac{\epsilon}{|A(s)|}$. 
+    - $\epsilon$-greedy policy: as introduced in Chapter 2 [section 2.2](../Contents/2_multi_armed_bandits.md#22-action-value-methods) all non-greedy action are given the minimal probability of selection $\frac{\epsilon}{|A(s)|}$ (**uniform distribution**), the greedy action has the probability of $1 - \epsilon + \frac{\epsilon}{|A(s)|}$. 
         - $\epsilon$-greedy policy is a type of $\epsilon$-soft policies. Among $\epsilon$-soft policies, $\epsilon$-greedy policies are in some sense those that are closest to greedy.
 
     - $\epsilon$-soft policy: all actions have probability of $\pi(a|s)>\frac{\epsilon}{|A(s)|}$ for all states. This means that the agent explores all possible actions with non-zero probability $\frac{\epsilon}{|A(s)|}$, but **not necessarily uniformly**.
@@ -156,6 +156,7 @@ Apparently, these two assumptions are hardly truth in practice, so we are now go
                     - $Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))$
                     - $A^* \leftarrow \arg \underset{a}{\max} \ Q(S_t, A_t)$ (with ties broken arbitrarily)
                     - For all $a \in A(S_t)$:
+                    
                     $$
                     \colorbox{lightyellow}{$
                     \pi(S_t) = 
@@ -197,7 +198,9 @@ Let's recap On / Off-policy learning:
 - $\textit{Importance Sampling}$ Implementation: Here is a [lecture video](https://www.coursera.org/learn/sample-based-learning-methods/lecture/XPxPd/importance-sampling) to explain importance sampling should you find the textual derivation hard to understand.
 
 	- given existing samples from $X \sim b$, we want to estimate $E_{\pi}[X]$ (of a different distribution)
+
 	- derivation:
+
         $$
         \begin{align*}
         E_{\pi}[X] &= \sum_{x \in X} x \pi(x) \\
@@ -208,6 +211,7 @@ Let's recap On / Off-policy learning:
         &\approx \frac{1}{n} \sum_{i=1}^n x_i \rho(x_i)
         \end{align*}
         $$
+
     - the ratio $\rho(x)=\frac{\pi(x)}{b(x)}$ is called the **importance sampling ratio**.
 
 - Importance Sampling for evaluating the target policy $\pi$ **in theory**:
@@ -223,7 +227,9 @@ Let's recap On / Off-policy learning:
             &= \Pi_{k=t+1}^{k={T-1}} p(S_k|A_{k-1}, S_{k-1})\pi(A_k|S_k) \times p(S_T|A_{T-1},S_{T-1})
             \end{align*}
             $$  
+
 	        Therefore the **importance sampling ratio**:
+
             $$
             \begin{align*}
             \rho_{t+1: T-1} &= \frac{\Pi_{k=t+1}^{k={T-1}} p(S_k|A_{k-1}, S_{k-1})\pi(A_k|S_k) \times p(S_T|A_{T-1},S_{T-1})}{\Pi_{k=t+1}^{k={T-1}} p(S_k|A_{k-1}, S_{k-1})b(A_k|S_k) \times p(S_T|A_{T-1},S_{T-1})} \\
@@ -238,7 +244,9 @@ Let's recap On / Off-policy learning:
             - $\rho_{t+1: T-1}$ only depends on the two policies, **not the dynamics of the environment**, which means importance sampling can be used in model-free RL problems.
 
     2. Estimating $q_{\pi}(s,a)$ given $q_b(s,a) = E_b[G_t|S_t = s, A_t = a]$ as:
+
         $$q_{\pi}(s,a)= E_b[\rho_{t+1:T-1} \times G_t|S_t = s, A_t=a]$$
+
         - Intuition: note that the value function for $q$: $E[G_t|S_t = s, A_t=a]$ is caculating an expection based on all given trajectories, so every $G_t$ is a single realisation, which can be seen as the variable $x$ in the derivation of importance sampling equation. \
         The importance sampling ratio $\rho_{t+1:T-1}$ is caculated on a trajectory basis to correspond to this trajectory-based charactor of $G_t$ (and is used for multiplication with $G_t$ directly).
 
@@ -249,18 +257,25 @@ Let's recap On / Off-policy learning:
         - About time steps: the time steps will be numbered in a way that increases across episode boundaries for convenience. That is, if the first episode of the batch ends in a terminal state at $t=100$, then the next episode begins at $t = 101$.
 
         - About notations:
+
             - $J(s,a)$: **the set of time steps** in which state action pair $(s,a)$ is visited (This is for an every-visit method; for a first-visit method, $J(s,a)$ would only include time steps that were first visits to $(s,a)$ within their episodes).
+
             - $T(t)$: **the time step** of the first terminal state from time step $t$.
+
             - $\{G_t\}_{t \in J(s,a)}$: the set of returns that pertain to state action pair $(s,a)$ from all episodes.
+
             - $\{\rho_{t+1:T(t)-1}\}_{t \in J(s,a)}$: the importance sampling ratio for the trajectory $\{S_{t+1}, A_{t+1}, ..., S_{T(t)-1}, A_{T(t)-1}, S_{T(t)} \}$.
 
     - Approaches:
+
         - Ordinary importance sampling for evaluating target policy:
+
         $$
         Q(s,a) \dot= \frac{\sum_{t \in J(s)} \ \rho_{t+1:T(t)-1} \times G_t}{|J(s,a)|}
         $$
         
         - Weighted importance sampling for evaluating target policy:
+        
         $$
         Q(s,a) \dot= \frac{\sum_{t \in J(s)} \ \rho_{t+1:T(t)-1} \times G_t}{\sum_{t \in J(s)} \ \rho_{t+1:T(t)-1}}
         $$
@@ -279,17 +294,25 @@ Let's recap On / Off-policy learning:
                 The every-visit methods for ordinary and weighed importance sampling are both biased, though, again, the bias falls asymptotically to zero as the number of samples increases. **In practice, every-visit methods are often preferred because they remove the need to keep track of which states have been visited and because they are much easier to extend to approximations.**
 
 - Incremental Implementation for updating $Q(s,a)$:
+
     - For on-policy methods:
+
         $Q(s,a)$ is calculated by simply averaging the collected return realizations, so the incremental implementation can be done the same way as in Chapter 2 in [section 2.4.1](../Contents/2_multi_armed_bandits.md#241-stationary-problems), namely:
+
         $$
-        NewEstimate \leftarrow OldEstimate + StepSize*[Target - OldEstimate]$$
+        NewEstimate \leftarrow OldEstimate + StepSize*[Target - OldEstimate]
+        $$
+
     - For off-policy methods:
+
         - Ordinary importance sampling: the returns are also simply averaged by $J(s,a)$, so the incremental rule is the same as on-policy methods, as shown above.
 
         - Weighted importance sampling: here we have to form a weighted average of the returns using a slightly different incremental algorithm.
-        
+
             - Assume the set $\{G_t\}_{t \in J(s,a)}$ alredy contains $n-1$ items, numbered as $G_1, G_2, ..., G_{n-1}$, and the respective weight for $G_i$ is $W_i = \rho_{i+1:T(i)-1}$ and $W_i \in \{\rho_{t+1:T(t)-1}\}_{t \in J(s,a)}$
+
             - So the $n$-th weighted average estimate for $Q(s,a)$ is:
+
                 $$
                 \begin{align*}
                 Q_n(s,a) &\dot= \frac{\sum_{k=1}^{k=n-1}W_k G_k}{\sum_{k=1}^{k=n-1}W_k} \\
@@ -357,7 +380,7 @@ Currently, Monte Carlo methods for both prediction and control remain unsettled 
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter5/chapter5_mindmap.png" alt="Mindmap" style="width:100%;">
+    <img src="../_static/img/chapter5/chapter5_mindmap.png" alt="Mindmap" style="width:100%;">
 
 - Key Takeaways
     - Advantages of MC over DP methods:

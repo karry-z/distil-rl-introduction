@@ -25,9 +25,11 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
     - Motivation: by assumption we have far more states than weights, so making one state’s estimate more accurate invariably means making others’ less accurate. We are obligated then to say which states we care most about.
 
     - Measure: Mean Squared Value Error ($\overline{VE}$)
+
         $$
         \overline{VE}(w) = \sum_{s \in S} u(s)[v_\pi(s) - \hat{v}(s,w)]^2
         $$
+
         - The state distribution $u(s) \ge 0, \sum_s u(s)=1$ is called $\textit{on-policy distribution}$, and denotes how much we care about the error in each state $s$. “Often $μ(s)$ is chosen to be the fraction of time spent in $s$.
 
     - Notes:
@@ -46,6 +48,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
     - Setup: assume that on each step, we observe a new example $S_t \rightarrow v_\pi(S_t)$ consisting of a (possibly randomly selected) state $S_t$ and its true value under the policy.
     - SGD method:
         - update rule:
+
             $$
             \begin{align}
             \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
@@ -65,6 +68,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
         - Loop forever (for each episode):
             - Generate an episode $S_0, A_0, R_1, ... S_{T-1}, A_{T-1}, R_T, S_T$ using $\pi$.
             - $ \text{for } t \text{ in } \{T-1, T-2, ..., 0\}$:
+
                 $$
                 \boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha [G_t - \hat{v}(S_t, \boldsymbol{w})]\nabla\hat{v}(S_t, \boldsymbol{w})
                 $$
@@ -74,6 +78,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 
     - Semi-gradient methods:
         - update rule
+
             $$
             \begin{align}
             \boldsymbol{w_{t+1}} &\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
@@ -109,13 +114,13 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
     - Using state aggregation for gradent MC (Lecture video):
 
         <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/aJ9j6/state-aggregation-with-monte-carlo">
-        <img src="../img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:60%;">
+        <img src="../_static/img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:60%;">
         </a>
     
     - Using state aggregation for semi-gradient TD (Lecture video):
 
         <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
-        <img src="../img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:60%;">
+        <img src="../_static/img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:60%;">
         </a>
     
     - Comparison between MC and TD: as already described in the above lecture video, the main differences between Temporal Difference (TD) and Monte Carlo (MC) methods in the context of function approximation are as follows:
@@ -155,6 +160,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
 - (Semi-)Gradient methods for linear value function
 
     - Update rule:
+
         $$
         \begin{align*}
         \boldsymbol{w_{t+1}} &= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t}) \\
@@ -180,6 +186,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
                 - Note: $\boldsymbol{x_t}$ is used to represent $\boldsymbol{x}(S_t)$ for simplicity
             
             - in steady state (convergence):
+
                 $$
                 E[\boldsymbol{w_{t+1}}|\boldsymbol{w_{t}}] = \boldsymbol{w_{t}} + \alpha(\boldsymbol{b - Aw_{t+1}})
                 $$
@@ -187,6 +194,7 @@ Typically, the number of weights (the dimensionality of $w$) is much less than t
                 with  $\boldsymbol{b} \dot= E[R_{t+1}\boldsymbol{x_{t}}] \in \mathbb{R}^d$ and $\boldsymbol{A} \dot= E[\boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}] \in \mathbb{R}^d \times \mathbb{R}^d$ 
 
                 And at converge:
+
                 $$
                 \begin{align*}
                 & \Rightarrow \quad \mathbf{b} - \mathbf{A}\mathbf{w}_{\text{TD}} = \mathbf{0} \\
@@ -222,7 +230,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
     - Feature construction: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a $\textit{binary feature}$.)
 
-        <img src="../img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
+        <img src="../_static/img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
 
         Corresponding to each circle / feature is a single weight (a component of $\boldsymbol{w}$) that is affected by learning.
 
@@ -238,7 +246,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
     
         Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).
 
-        <img src="../img/chapter8/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
+        <img src="../_static/img/chapter8/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
 
         As above, features with large $\textit{receptive fields}$ give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the $\textit{receptive fields}$, but finest discrimination is ultimately  controlled more **by the total number of features**, as shown by the next example. 
 
@@ -248,7 +256,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
         - Results: as below, the width of the features had a strong e↵ect early in learning. However, the final function learned was a↵ected only slightly by the width of the features
 
-            <img src="../img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
+            <img src="../_static/img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
 
 
 ### 8.4.2 Tile Coding
@@ -261,7 +269,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 
     - Demonstration:
 
-        <img src="../img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:85%;">
+        <img src="../_static/img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:85%;">
 
         - The simplest tiling of a two-dimensional state space is a uniform grid such as that shown on the left side of figure above. Note that with just one tiling, we would not have coarse coding but just a case of state aggregation.
 
@@ -276,7 +284,7 @@ In this last section we study **how to construct such $x(s)$** for approximating
 - How it works: It is recommended to watch the lecture video below since it offers a more comprehensive explanation of how tile code works with TD.
 
     <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td">
-    <img src="../img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
+    <img src="../_static/img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
     </a>
 
 ## 8.5 Summary
@@ -284,7 +292,7 @@ In this chapter, we focused on extending reinforcement learning (RL) from the ta
 
 - Mindmap of where we are now
 
-    <img src="../img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
+    <img src="../_static/img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
 
 
 - Key Takeaways
@@ -311,9 +319,5 @@ In this chapter, we focused on extending reinforcement learning (RL) from the ta
             - A specialized form of coarse coding that uses **overlapping grids (tilings)**.
             - Each tiling is non-overlapping, with one active feature per grid, but multiple offset tilings allow for finer state discrimination.
             - The design of tilings balances generalization, discrimination, and efficiency.
-
-        - **Neural Network-based Representations**:
-            - Unlike fixed representations (e.g., coarse coding), neural networks learn representations **online**.
-            - Networks use layers of neurons to transform inputs into outputs, with weights updated through **gradient descent** based on a **loss function**.
 
 - Extra Lecture Video (optional): [David Silver on Deep Learning + RL = AI?](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/xZuSl/david-silver-on-deep-learning-rl-ai)

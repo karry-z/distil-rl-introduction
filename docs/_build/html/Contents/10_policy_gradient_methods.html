@@ -43,6 +43,8 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/10_policy_gradient_methods';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -136,32 +138,27 @@
 </button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="nav bd-sidenav">
+        <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Why this project</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals of Reinforcement Learning</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sample-based Learning Methods</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Value Function Approximation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Policy Approximation</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 10. Policy Gradient Methods</a></li>
 </ul>
@@ -334,29 +331,32 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="chapter-10-policy-gradient-methods">
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-10-policy-gradient-methods">
 <h1>Chapter 10. Policy Gradient Methods<a class="headerlink" href="#chapter-10-policy-gradient-methods" title="Link to this heading">#</a></h1>
-<p>So far in this book almost all the methods have been action-value methods, i.e., they try to learn the values of actions and then selected actions based on their estimated action values. We now consider methods that instead learn a parameterized policy that can select actions without consulting a value function. Note that a value function may still be used to $\textit{learn}$ the policy parameter (denoted by $\theta \in \mathbb{R}^{d’}$), but is not required for action selection.</p>
-<p>This chapter considers methods for learning the policy parameter (the policy is represented as $\pi(a \mid s, \theta) = \Pr{ A_t = a \mid S_t = s, \theta_t = \theta }$) based on the gradient of some scalar performance measure $J(\theta)$, which we aim to maximize. Therefore the update of policy parameter follows gradient ascent:</p>
-<p>$$\theta_{t+1} = \theta_t + \alpha \nabla \widehat{J}(\theta_t)$$</p>
-<p>where $\nabla \widehat{J}(\theta_t)$ is a stohastic estimate whose expectation approximates the gradient of the performance measure with respect to its argument $\theta_t$. All methods that follow this general schema are called $\textit{policy gradient methods}$.</p>
-<p>Among $\textit{policy gradient methods}$, methods that learn approximations to both policy and value functions are often called $\textit{actor–critic methods}$, where $\textit{‘actor’}$ is a reference to the learned policy, and $\textit{‘critic’}$ refers to the learned value function.</p>
+<p>So far in this book almost all the methods have been action-value methods, i.e., they try to learn the values of actions and then selected actions based on their estimated action values. We now consider methods that instead learn a parameterized policy that can select actions without consulting a value function. Note that a value function may still be used to <span class="math notranslate nohighlight">\(\textit{learn}\)</span> the policy parameter (denoted by <span class="math notranslate nohighlight">\(\theta \in \mathbb{R}^{d'}\)</span>), but is not required for action selection.</p>
+<p>This chapter considers methods for learning the policy parameter (the policy is represented as <span class="math notranslate nohighlight">\(\pi(a \mid s, \theta) = \Pr\{ A_t = a \mid S_t = s, \theta_t = \theta \}\)</span>) based on the gradient of some scalar performance measure <span class="math notranslate nohighlight">\(J(\theta)\)</span>, which we aim to maximize. Therefore the update of policy parameter follows gradient ascent:</p>
+<div class="math notranslate nohighlight">
+\[\theta_{t+1} = \theta_t + \alpha \nabla \widehat{J}(\theta_t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla \widehat{J}(\theta_t)\)</span> is a stohastic estimate whose expectation approximates the gradient of the performance measure with respect to its argument <span class="math notranslate nohighlight">\(\theta_t\)</span>. All methods that follow this general schema are called <span class="math notranslate nohighlight">\(\textit{policy gradient methods}\)</span>.</p>
+<p>Among <span class="math notranslate nohighlight">\(\textit{policy gradient methods}\)</span>, methods that learn approximations to both policy and value functions are often called <span class="math notranslate nohighlight">\(\textit{actor–critic methods}\)</span>, where <span class="math notranslate nohighlight">\(\textit{'actor'}\)</span> is a reference to the learned policy, and <span class="math notranslate nohighlight">\(\textit{'critic'}\)</span> refers to the learned value function.</p>
 <section id="policy-approximation-and-its-advantages">
 <h2>10.1 Policy Approximation and its Advantages<a class="headerlink" href="#policy-approximation-and-its-advantages" title="Link to this heading">#</a></h2>
 <ul>
-<li><p>Setup: In policy gradient methods, the policy can be parameterized in any way, as long as $\pi(a|s, \theta)$ is differentiable with respect to its parameters, In practice, to ensure exploration we generally require that the policy never becomes deterministic (i.e., that $\pi(a|s, \theta) \in (0, 1)$, for all $s, a, \theta$)</p></li>
+<li><p>Setup: In policy gradient methods, the policy can be parameterized in any way, as long as <span class="math notranslate nohighlight">\(\pi(a|s, \theta)\)</span> is differentiable with respect to its parameters, In practice, to ensure exploration we generally require that the policy never becomes deterministic (i.e., that <span class="math notranslate nohighlight">\(\pi(a|s, \theta) \in (0, 1)\)</span>, for all <span class="math notranslate nohighlight">\(s, a, \theta\)</span>)</p></li>
 <li><p>Approximation example for discrete and small (not too large) action space:</p>
 <ul>
-<li><p>Parameterization of the policy: in this setting, we first parameterize numerical $\textit{action preferences}$ $h(s, a, \theta) \in R$ for each state–action pair. The actions with the highest preferences in each state are given the highest probabilities of being selected, according to an e.g., exponential soft-max distribution:</p>
-<p>$$\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}$$</p>
+<li><p>Parameterization of the policy: in this setting, we first parameterize numerical <span class="math notranslate nohighlight">\(\textit{action preferences}\)</span> <span class="math notranslate nohighlight">\(h(s, a, \theta) \in R\)</span> for each state–action pair. The actions with the highest preferences in each state are given the highest probabilities of being selected, according to an e.g., exponential soft-max distribution:</p>
+<div class="math notranslate nohighlight">
+\[\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}\]</div>
 <p>We call this kind of policy parameterization soft-max in action preferences.</p>
 </li>
-<li><p>Parameterization of the state-action pair: The action preferences $h(s, a, \theta) \in R$ themselves can be parameterized arbitrarily. For exapmle, by:</p>
+<li><p>Parameterization of the state-action pair: The action preferences <span class="math notranslate nohighlight">\(h(s, a, \theta) \in R\)</span> themselves can be parameterized arbitrarily. For exapmle, by:</p>
 <ul>
-<li><p>a deep artificial network (ANN), where $\theta$ is the vector of all the connection weights of the network (as in the AlphaGo system, readers of interest can refer to the book section 16.6), or</p></li>
+<li><p>a deep artificial network (ANN), where <span class="math notranslate nohighlight">\(\theta\)</span> is the vector of all the connection weights of the network (as in the AlphaGo system, readers of interest can refer to the book section 16.6), or</p></li>
 <li><p>a linear system in features as</p>
-<p>$$h(s, a, \theta) = \theta^\top x(s, a)$$</p>
-<p>using feature vectors $x(s, a) \in \mathbb{R}^{d’}$ constructed by any of the methods described in Chapter 9.</p>
+<div class="math notranslate nohighlight">
+\[h(s, a, \theta) = \theta^\top x(s, a)\]</div>
+<p>using feature vectors <span class="math notranslate nohighlight">\(x(s, a) \in \mathbb{R}^{d'}\)</span> constructed by any of the methods described in Chapter 9.</p>
 </li>
 </ul>
 </li>
@@ -369,7 +369,7 @@
 </ul>
 </li>
 <li><p>Example: Short corridor with switched actions</p>
-  <img src="../img/chapter10/short_corridor.png" alt="Example of short corridor with switched actions" style="width:60%;">
+  <img src="../_static/img/chapter10/short_corridor.png" alt="Example of short corridor with switched actions" style="width:60%;">
 <ul class="simple">
 <li><p>Setup:</p>
 <ul>
@@ -380,8 +380,8 @@
 </li>
 <li><p>Comparison between action-value method and policy approximation:</p>
 <ul>
-<li><p>An action-value method with $\epsilon$-greedy action selection is forced to choose between just two policies. For example, if $\epsilon = 0.1$, then either left of right action gets the probability of $1 - \frac{\epsilon}{2} = 0.95$, and the other gets only $0.05$. These two $\epsilon$-greedy policies achieve a value (at the start state $S$) of less than $-44$ and $-82$.</p></li>
-<li><p>Policy approximation can do significantly better since it learns a specific probability with which to select right (allowing more stochasticity). As shown in the image, the best probability of selecting the right action with policy approximation is about $0.59$, which achieves a value of about $-11.6$.</p></li>
+<li><p>An action-value method with <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy action selection is forced to choose between just two policies. For example, if <span class="math notranslate nohighlight">\(\epsilon = 0.1\)</span>, then either left of right action gets the probability of <span class="math notranslate nohighlight">\(1 - \frac{\epsilon}{2} = 0.95\)</span>, and the other gets only <span class="math notranslate nohighlight">\(0.05\)</span>. These two <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy policies achieve a value (at the start state <span class="math notranslate nohighlight">\(S\)</span>) of less than <span class="math notranslate nohighlight">\(-44\)</span> and <span class="math notranslate nohighlight">\(-82\)</span>.</p></li>
+<li><p>Policy approximation can do significantly better since it learns a specific probability with which to select right (allowing more stochasticity). As shown in the image, the best probability of selecting the right action with policy approximation is about <span class="math notranslate nohighlight">\(0.59\)</span>, which achieves a value of about <span class="math notranslate nohighlight">\(-11.6\)</span>.</p></li>
 </ul>
 </li>
 </ul>
@@ -394,35 +394,38 @@
 <li><p>Policy Gradient Objective:</p>
 <p>When we parameterize our policy directly, we can use the ultimate goal of reinforcement learning directly as the learning objective, i.e., to learn a policy that obtains as much reward as possible in the long run. Recall that our three form of reward formulations are:</p>
 <ul class="simple">
-<li><p>Episodic Setting: $G_t = \sum_{t=0}^{T} R_t$</p></li>
-<li><p>Continuing Setting with Discounted Return: $G_t = \sum_{t=0}^{\infty} \gamma^t R_t$</p></li>
-<li><p>Continuing Setting with Average Reward Formulation: $G_t = \sum_{t=0}^{\infty} R_t - r(\pi)$</p></li>
+<li><p>Episodic Setting: <span class="math notranslate nohighlight">\(G_t = \sum_{t=0}^{T} R_t\)</span></p></li>
+<li><p>Continuing Setting with Discounted Return: <span class="math notranslate nohighlight">\(G_t = \sum_{t=0}^{\infty} \gamma^t R_t\)</span></p></li>
+<li><p>Continuing Setting with Average Reward Formulation: <span class="math notranslate nohighlight">\(G_t = \sum_{t=0}^{\infty} R_t - r(\pi)\)</span></p></li>
 </ul>
-<p>In this chapter, <strong>we focus on the continuing setting with average reward as the objective</strong> (only for continuing tasks, of course). The average reward for a policy $\pi$ is defined as:</p>
-<p>$$
-\begin{align*}
-r(\pi) &amp;= \sum_{s}\mu(s) v(s) \
-&amp;= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) q(s,a) \
-&amp;= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
-\end{align*}
-$$</p>
+<p>In this chapter, <strong>we focus on the continuing setting with average reward as the objective</strong> (only for continuing tasks, of course). The average reward for a policy <span class="math notranslate nohighlight">\(\pi\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    r(\pi) &amp;= \sum_{s}\mu(s) v(s) \\
+    &amp;= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) q(s,a) \\
+    &amp;= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
+    \end{align*}
+    \end{split}\]</div>
 <p>Therefore, the goal is to find a policy that maximizes this average reward, so the gradient ascent update we introduced at the beginning of this chapter can be formulated as:</p>
-<p>$$
-\begin{align*}
-\theta_{t+1} &amp;= \theta_t + \alpha \nabla \widehat{J}(\theta_t) \
-&amp;= \theta_t + \alpha \nabla r(\pi) \
-&amp;= \theta_t + \alpha \nabla \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
-\end{align*}
-$$</p>
-<p>However, Unlike value function approximation (where \mu(s) was fixed), here \mu(s) depends on the policy, which in return changes the distribution $\mu(s)$ when it gets updated. We need a update rule for parameterizing the policy model without depending on $\mu(s)$, and that is when the policy gradient theorem comes to the rescue.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \theta_{t+1} &amp;= \theta_t + \alpha \nabla \widehat{J}(\theta_t) \\
+    &amp;= \theta_t + \alpha \nabla r(\pi) \\
+    &amp;= \theta_t + \alpha \nabla \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) \sum_{s^\prime, a} p(s^\prime, r \vert s, a) r
+    \end{align*}
+    \end{split}\]</div>
+<p>However, Unlike value function approximation (where \mu(s) was fixed), here \mu(s) depends on the policy, which in return changes the distribution <span class="math notranslate nohighlight">\(\mu(s)\)</span> when it gets updated. We need a update rule for parameterizing the policy model without depending on <span class="math notranslate nohighlight">\(\mu(s)\)</span>, and that is when the policy gradient theorem comes to the rescue.</p>
 </li>
 <li><p>Policy Gradient Theorem:</p>
 <p>The theorem provides an analytic expression for the gradient of performance (average reward) with respect to the policy parameter that does not involve the derivative of the state distribution, and it has proved:</p>
-<p>$$
-\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
-$$</p>
-<p>The symbol $\propto$ here means “proportional to”. In the episodic case, the constant of proportionality is the average length of an episode, and in the continuing case it is 1. The distribution $\mu$ hereis the on-policy distribution under $\pi$ as introduced in the last chapter.</p>
-<p>This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/Wv6wa/the-policy-gradient-theorem">optional lecture video</a> (between 2:08 - 4:27) provides an intuition of what the term $\sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)$ does. For a detailed derivation of the policy gradient theorem, please refer to the book chapter 13.2, page 325.</p>
+<div class="math notranslate nohighlight">
+\[
+    \nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
+    \]</div>
+<p>The symbol <span class="math notranslate nohighlight">\(\propto\)</span> here means “proportional to”. In the episodic case, the constant of proportionality is the average length of an episode, and in the continuing case it is 1. The distribution <span class="math notranslate nohighlight">\(\mu\)</span> hereis the on-policy distribution under <span class="math notranslate nohighlight">\(\pi\)</span> as introduced in the last chapter.</p>
+<p>This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/Wv6wa/the-policy-gradient-theorem">optional lecture video</a> (between 2:08 - 4:27) provides an intuition of what the term <span class="math notranslate nohighlight">\(\sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)\)</span> does. For a detailed derivation of the policy gradient theorem, please refer to the book chapter 13.2, page 325.</p>
 </li>
 </ul>
 </section>
@@ -434,64 +437,64 @@ $$</p>
 <li><p>Derivation of REINFORCE’s update rule:</p>
 <p>The strategy of stohastic gradient ascent requires a way to obtain samples such that the expectation of the sample gradient is proportional to the actual gradient of the performance measure, i.e., we need some way of sampling whose expectation equals or approximates the expression given by the policy gradient theorem.</p>
 <p>Naturally, we can reformulate the policy gradient theorem as</p>
-<p>$$
-\begin{align*}
-\nabla J(\theta) &amp;\propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta) \</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  &amp;= \mathbb{E}_{\pi} \left[ \sum_a q_{\pi}(S_t, a) \nabla \pi(a | S_t, \theta) \right],
-  \end{align*}
-</pre></div>
-</div>
-<p>$$</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}
+        \begin{align*}
+        \nabla J(\theta) &amp;\propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta) \\\end{split}\\        &amp;= \mathbb{E}_{\pi} \left[ \sum_a q_{\pi}(S_t, a) \nabla \pi(a | S_t, \theta) \right],
+        \end{align*}
+    \end{aligned}\end{align} \]</div>
 <p>and we can just stop here and instantiate the stochastic gradient-ascent algorithm as</p>
-<p>$$
-\theta_{t+1} \doteq \theta_t + \alpha \sum_a \hat{q}(S_t, a, \mathbf{w}) \nabla \pi(a | S_t, \theta),
-$$</p>
-<p>where $\hat{q}$ is some learned approximation to $q_\pi$. This update algorithm is called an $\textit{all-actions}$ method because its update involves all of the actions. The algorithm is promising and deserves further study, but our current interest is the classical REINFORCE algorithm, which continues the above transformation as follows:</p>
-<p>$$
-\begin{align*}
-\nabla J(\theta) &amp;= \mathbb{E}<em>{\pi} \left[ \sum_a \pi(a|S_t, \theta) q</em>{\pi}(S_t, a) \frac{\nabla \pi(a|S_t, \theta)}{\pi(a|S_t, \theta)} \right] \</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  &amp;= \mathbb{E}_{\pi} \left[ q_{\pi}(S_t, A_t) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \ \text{(replacing \( a \) by a sample \( A_t \sim \pi \))}\\
-
-  &amp;= \mathbb{E}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \  \text{(because \( \mathbb{E}_{\pi} [ G_t | S_t, A_t] = q_{\pi}(S_t, A_t) \))}
-  \end{align*} \\
-</pre></div>
-</div>
-<p>$$</p>
+<div class="math notranslate nohighlight">
+\[
+        \theta_{t+1} \doteq \theta_t + \alpha \sum_a \hat{q}(S_t, a, \mathbf{w}) \nabla \pi(a | S_t, \theta),
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{q}\)</span> is some learned approximation to <span class="math notranslate nohighlight">\(q_\pi\)</span>. This update algorithm is called an <span class="math notranslate nohighlight">\(\textit{all-actions}\)</span> method because its update involves all of the actions. The algorithm is promising and deserves further study, but our current interest is the classical REINFORCE algorithm, which continues the above transformation as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}
+        \begin{align*}
+        \nabla J(\theta) &amp;= \mathbb{E}_{\pi} \left[ \sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a) \frac{\nabla \pi(a|S_t, \theta)}{\pi(a|S_t, \theta)} \right] \\\end{split}\\\begin{split}        &amp;= \mathbb{E}_{\pi} \left[ q_{\pi}(S_t, A_t) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \ \text{(replacing \( a \) by a sample \( A_t \sim \pi \))}\\\end{split}\\\begin{split}        &amp;= \mathbb{E}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \  \text{(because \( \mathbb{E}_{\pi} [ G_t | S_t, A_t] = q_{\pi}(S_t, A_t) \))}
+        \end{align*} \\
+    \end{split}\end{aligned}\end{align} \]</div>
 <p>The stochastic gradient-ascent update of REINFORCE can therefore be instantiated as</p>
-<p>$$\theta_{t+1} \doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}$$</p>
+<div class="math notranslate nohighlight">
+\[\theta_{t+1} \doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}\]</div>
 </li>
 <li><p>Intuition on REINFORCE</p>
 <ul>
-<li><p>The derivation: note that during derivation, we used a sample $A_t \sim \pi$ to replace the the expectation term $\sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a)$. This strategy shares similarity as we change from Monte Carlo methods to TD methods. Similarly, this replacement brings more bias yet lower the variance at the same time.</p></li>
-<li><p>The final update form: the increment of REINFORCE is proportional to the product of a return $G_t$ and a vector (called the $\textit{eligibility vector}$) - the gradient of the probability of taking the action actually taken divided by the probability of taking that action. The latter may sound horrible when first hearing it, so let’s shed some light on what this increment indicates:</p>
+<li><p>The derivation: note that during derivation, we used a sample <span class="math notranslate nohighlight">\(A_t \sim \pi\)</span> to replace the the expectation term <span class="math notranslate nohighlight">\(\sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a)\)</span>. This strategy shares similarity as we change from Monte Carlo methods to TD methods. Similarly, this replacement brings more bias yet lower the variance at the same time.</p></li>
+<li><p>The final update form: the increment of REINFORCE is proportional to the product of a return <span class="math notranslate nohighlight">\(G_t\)</span> and a vector (called the <span class="math notranslate nohighlight">\(\textit{eligibility vector}\)</span>) - the gradient of the probability of taking the action actually taken divided by the probability of taking that action. The latter may sound horrible when first hearing it, so let’s shed some light on what this increment indicates:</p>
 <ul>
-<li><p>The return $G_t$ in the incremental term causes the parameter to move most in the directions that favor actions that yield the highest return. (This is where the name REINFORCE comes from, because the algorithm reinforces good actions and discourages bad ones.)</p></li>
-<li><p>The vector $\frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}$, on the other hand, is a typical form of what is called $\textit{relative rate of change}$. In this case, it indicates the direction in parameter space that most increases the probability of repeating the action $A_t$ on future visits to state $S_t$.</p>
+<li><p>The return <span class="math notranslate nohighlight">\(G_t\)</span> in the incremental term causes the parameter to move most in the directions that favor actions that yield the highest return. (This is where the name REINFORCE comes from, because the algorithm reinforces good actions and discourages bad ones.)</p></li>
+<li><p>The vector <span class="math notranslate nohighlight">\(\frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}\)</span>, on the other hand, is a typical form of what is called <span class="math notranslate nohighlight">\(\textit{relative rate of change}\)</span>. In this case, it indicates the direction in parameter space that most increases the probability of repeating the action <span class="math notranslate nohighlight">\(A_t\)</span> on future visits to state <span class="math notranslate nohighlight">\(S_t\)</span>.</p>
 <p>Moreover, the update is inversely proportional to the action probability, giving actions that are less frequently selected an advantag, i.e., encouraging exploration.</p>
 </li>
 </ul>
 </li>
-<li><p>Why Monte Carlo: Note that REINFORCE uses the complete return $G_t$ from time $t$, which includes all future rewards up until the end of the episode. In this sense it is a Monte Carlo algorithm and is well defined <strong>only for the episodic case</strong>.</p></li>
+<li><p>Why Monte Carlo: Note that REINFORCE uses the complete return <span class="math notranslate nohighlight">\(G_t\)</span> from time <span class="math notranslate nohighlight">\(t\)</span>, which includes all future rewards up until the end of the episode. In this sense it is a Monte Carlo algorithm and is well defined <strong>only for the episodic case</strong>.</p></li>
 </ul>
 </li>
-<li><p>Algorithm of REINFORCE: Monte-Carlo Policy-Gradient Control (episodic) for $\pi_{\star}$</p>
-<ul class="simple">
-<li><p>Input: a differentiable policy parameterization $ \pi(a | s, \theta) $</p></li>
-<li><p>Algorithm parameter: step size $\alpha &gt; 0$</p></li>
-<li><p>Initialize policy parameter $\theta \in \mathbb{R}^d$ (e.g., to $0$)</p></li>
+<li><p>Algorithm of REINFORCE: Monte-Carlo Policy-Gradient Control (episodic) for <span class="math notranslate nohighlight">\(\pi_{\star}\)</span></p>
+<ul>
+<li><p>Input: a differentiable policy parameterization <span class="math notranslate nohighlight">\( \pi(a | s, \theta) \)</span></p></li>
+<li><p>Algorithm parameter: step size <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span></p></li>
+<li><p>Initialize policy parameter <span class="math notranslate nohighlight">\(\theta \in \mathbb{R}^d\)</span> (e.g., to <span class="math notranslate nohighlight">\(0\)</span>)</p></li>
 <li><p>Loop forever (for each episode):</p>
 <ul>
-<li><p>Generate an episode $S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T$, following $\pi(\cdot | \cdot, \theta)$</p></li>
-<li><p>Loop for each step of the episode $t = 0, 1, \dots, T-1$:</p>
+<li><p>Generate an episode <span class="math notranslate nohighlight">\(S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T\)</span>, following <span class="math notranslate nohighlight">\(\pi(\cdot | \cdot, \theta)\)</span></p></li>
+<li><p>Loop for each step of the episode <span class="math notranslate nohighlight">\(t = 0, 1, \dots, T-1\)</span>:</p>
 <ul>
-<li><p>Compute return (with $\gamma$ added for the general discounted case):
-$$
-G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
-$$</p></li>
-<li><p>Update policy parameters:
-$$
-\theta \leftarrow \theta + \alpha \gamma^t G \nabla \ln \pi(A_t | S_t, \theta)
-$$</p></li>
+<li><p>Compute return (with <span class="math notranslate nohighlight">\(\gamma\)</span> added for the general discounted case):</p>
+<div class="math notranslate nohighlight">
+\[
+                G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
+                \]</div>
+</li>
+<li><p>Update policy parameters:</p>
+<div class="math notranslate nohighlight">
+\[
+                \theta \leftarrow \theta + \alpha \gamma^t G \nabla \ln \pi(A_t | S_t, \theta)
+                \]</div>
+</li>
 </ul>
 </li>
 </ul>
@@ -499,10 +502,10 @@ $$</p></li>
 </ul>
 </li>
 <li><p>Performance of REINFORCE on the short-corridor example</p>
-  <img src="../img/chapter10/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:70%;">
+  <img src="../_static/img/chapter10/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:70%;">
 <ul class="simple">
-<li><p>Results: as shown, with a good step size, the total reward per episode approaches the optimal value of the start state ($v_\star(s_0)$).</p></li>
-<li><p>Properties of REINFORCE: for suffciently small $\alpha$, the improvement in expected performance is assured, and convergence to a local optimum under standard stochastic approximation conditions happens for decreasing $\alpha$. However, as a Monte Carlo method REINFORCE may be of high variance and thus produce slow learning.</p></li>
+<li><p>Results: as shown, with a good step size, the total reward per episode approaches the optimal value of the start state (<span class="math notranslate nohighlight">\(v_\star(s_0)\)</span>).</p></li>
+<li><p>Properties of REINFORCE: for suffciently small <span class="math notranslate nohighlight">\(\alpha\)</span>, the improvement in expected performance is assured, and convergence to a local optimum under standard stochastic approximation conditions happens for decreasing <span class="math notranslate nohighlight">\(\alpha\)</span>. However, as a Monte Carlo method REINFORCE may be of high variance and thus produce slow learning.</p></li>
 </ul>
 </li>
 </ul>
@@ -511,64 +514,75 @@ $$</p></li>
 <h3>10.3.2 REINFORCE with Baseline<a class="headerlink" href="#reinforce-with-baseline" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Derivation of REINFORCE with Baseline</p>
-<p>We now generalize the policy gradient theorem to include a comparison of the action value $q_{\pi}(s, a)$ to an arbitrary $baseline \ b(s)$</p>
-<p>$$
-\nabla J(\theta) \propto \sum_{s} \mu(s) \sum_{a} \left( q_{\pi}(s, a) - b(s) \right) \nabla \pi(a \mid s, \theta).
-$$</p>
-<p>The baseline can be any function, even a random variable, <strong>as long as it does not vary with $a$</strong>, and the equation remains valid because the subtracted quantity is zero:</p>
-<p>$$
-\begin{align*}
-\sum_{a} b(s) \nabla \pi(a \mid s, \theta) &amp;= b(s) \nabla \sum_{a} \pi(a \mid s, \theta) \
-&amp;= b(s) \nabla 1 \
-&amp;= 0.
-\end{align*}
-$$</p>
+<p>We now generalize the policy gradient theorem to include a comparison of the action value <span class="math notranslate nohighlight">\(q_{\pi}(s, a)\)</span> to an arbitrary <span class="math notranslate nohighlight">\(baseline \ b(s)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+    \nabla J(\theta) \propto \sum_{s} \mu(s) \sum_{a} \left( q_{\pi}(s, a) - b(s) \right) \nabla \pi(a \mid s, \theta).
+    \]</div>
+<p>The baseline can be any function, even a random variable, <strong>as long as it does not vary with <span class="math notranslate nohighlight">\(a\)</span></strong>, and the equation remains valid because the subtracted quantity is zero:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \sum_{a} b(s) \nabla \pi(a \mid s, \theta) &amp;= b(s) \nabla \sum_{a} \pi(a \mid s, \theta) \\
+    &amp;= b(s) \nabla 1 \\
+    &amp;= 0.
+    \end{align*}
+    \end{split}\]</div>
 <p>Therefore, we now have a new update rule that includes a general baseline, which is a strict generalization of REINFORCE (since the baseline could be uniformly zero):</p>
-<p>$$
-\theta_{t+1} \doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+    \theta_{t+1} \doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+    \]</div>
 </li>
 <li><p>Justification for adding the baseline</p>
 <ul>
 <li><p>Lower the variance: In general, the baseline leaves the expected value of the update unchanged, but it can have a large effect on its variance. Adding a baseline can significantly reduce the variance (and thus speed the learning).</p></li>
 <li><p>Setting of the baseline:</p>
 <p>For MDPs, the baseline should vary with state. In some states all actions have high values and we need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions will have low values and a low baseline is appropriate.</p>
-<p>Therefore, a natural choice of the baseline is an estimate of the state value: $\hat{v}(S_t, \boldsymbol{w})$. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights $\boldsymbol{w}$. To this end, we give the algorithm of REINFORCE with Baseline as below.</p>
+<p>Therefore, a natural choice of the baseline is an estimate of the state value: <span class="math notranslate nohighlight">\(\hat{v}(S_t, \boldsymbol{w})\)</span>. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>. To this end, we give the algorithm of REINFORCE with Baseline as below.</p>
 </li>
 </ul>
 </li>
-<li><p>Algorithm of REINFORCE with Baseline: Monte-Carlo Policy-Gradient Control (episodic) for $\pi_\theta \approx \pi_{\star}$</p>
-<ul class="simple">
-<li><p>Input: a differentiable policy parameterization $\pi(a | s, \theta)$</p></li>
-<li><p>Input: a differentiable state-value function parameterization $\hat{v}(s, \boldsymbol{w})$</p></li>
-<li><p>Algorithm parameters: step sizes $\alpha^{\theta} &gt; 0$, $\alpha^{w} &gt; 0$</p></li>
-<li><p>Initialize policy parameter $\theta \in \mathbb{R}^d$ and state-value weights $\mathbf{w} \in \mathbb{R}^d$ (e.g., to $0$)</p></li>
+<li><p>Algorithm of REINFORCE with Baseline: Monte-Carlo Policy-Gradient Control (episodic) for <span class="math notranslate nohighlight">\(\pi_\theta \approx \pi_{\star}\)</span></p>
+<ul>
+<li><p>Input: a differentiable policy parameterization <span class="math notranslate nohighlight">\(\pi(a | s, \theta)\)</span></p></li>
+<li><p>Input: a differentiable state-value function parameterization <span class="math notranslate nohighlight">\(\hat{v}(s, \boldsymbol{w})\)</span></p></li>
+<li><p>Algorithm parameters: step sizes <span class="math notranslate nohighlight">\(\alpha^{\theta} &gt; 0\)</span>, <span class="math notranslate nohighlight">\(\alpha^{w} &gt; 0\)</span></p></li>
+<li><p>Initialize policy parameter <span class="math notranslate nohighlight">\(\theta \in \mathbb{R}^d\)</span> and state-value weights <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{R}^d\)</span> (e.g., to <span class="math notranslate nohighlight">\(0\)</span>)</p></li>
 <li><p>Loop forever (for each episode):</p>
 <ul>
-<li><p>Generate an episode $S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T$, following $\pi(\cdot | \cdot, \theta)$</p></li>
-<li><p>Loop for each step of the episode $t = 0, 1, \dots, T-1$:</p></li>
-<li><p>Compute return (with $\gamma$ added for the general discounted case):
-$$
-G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
-$$</p></li>
-<li><p>Compute TD error (note that this term minic the TD error and it is not really TD according to TD’s definition):
-$$
-\delta \leftarrow G - \hat{v}(S_t, \mathbf{w})
-$$</p></li>
-<li><p>Update state-value weights with semi-gradient method:
-$$
-\mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
-$$</p></li>
-<li><p>Update policy parameters:
-$$
-\theta \leftarrow \theta + \alpha^{\theta} \gamma^t \delta \nabla \ln \pi(A_t | S_t, \theta)
-$$</p></li>
+<li><p>Generate an episode <span class="math notranslate nohighlight">\(S_0, A_0, R_1, \dots, S_{T-1}, A_{T-1}, R_T\)</span>, following <span class="math notranslate nohighlight">\(\pi(\cdot | \cdot, \theta)\)</span></p></li>
+<li><p>Loop for each step of the episode <span class="math notranslate nohighlight">\(t = 0, 1, \dots, T-1\)</span>:</p></li>
+<li><p>Compute return (with <span class="math notranslate nohighlight">\(\gamma\)</span> added for the general discounted case):</p>
+<div class="math notranslate nohighlight">
+\[
+            G \leftarrow \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
+            \]</div>
+</li>
+<li><p>Compute TD error (note that this term minic the TD error and it is not really TD according to TD’s definition):</p>
+<div class="math notranslate nohighlight">
+\[
+            \delta \leftarrow G - \hat{v}(S_t, \mathbf{w})
+            \]</div>
+</li>
+<li><p>Update state-value weights with semi-gradient method:</p>
+<div class="math notranslate nohighlight">
+\[
+            \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
+            \]</div>
+</li>
+<li><p>Update policy parameters:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta \leftarrow \theta + \alpha^{\theta} \gamma^t \delta \nabla \ln \pi(A_t | S_t, \theta)
+            \]</div>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p>Performance of REINFORCE with Baseline on the short-corridor example</p>
-  <img src="../img/chapter10/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:70%;">
+  <img src="../_static/img/chapter10/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:70%;">
 <p>Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.</p>
 </li>
 </ul>
@@ -584,55 +598,61 @@ $$</p></li>
 <ul>
 <li><p>Derivation</p>
 <p>One-step actor–critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:</p>
-<p>$$
-\begin{align*}
-\theta_{t+1} &amp;\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{4cm} \text{(REINFORCE)} \</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  &amp;\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \hspace{2.6cm} \text{(REINFORCE with Baseline)} \\
-
-  &amp;\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{3cm} \text{(Actor-Critic)} \\
-
-  &amp;= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{1cm} \text{(Actor-Critic)} \\
-
-  &amp;= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \hspace{5.7cm} \text{(Actor-Critic)}.
-  \end{align*}
-</pre></div>
-</div>
-<p>$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \theta_{t+1} &amp;\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \quad \quad \quad \quad \quad \quad \quad \text{(REINFORCE)} \\
+        &amp;\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \quad \quad \quad \text{(REINFORCE with Baseline)} \\
+        &amp;\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \quad \quad \quad \quad \quad \quad \text{(Actor-Critic)} \\
+        &amp;= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \text{(Actor-Critic)} \\
+        &amp;= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \text{(Actor-Critic)}.
+        \end{align*}
+    \end{split}\]</div>
 <p>The natural state-value-function learning method to pair with this is semi-gradient TD(0) as given in the following algorithm. Note that <strong>it is now a fully online, incremental algorithm</strong>, with states, actions, and rewards processed as they occur and then never revisited.</p>
 </li>
-<li><p>Algorithm: One-step Actor-Critic (episodic) for estimating $\pi_\theta \approx \pi_{\star}$</p>
-<ul class="simple">
-<li><p>Input: a differentiable policy parameterization $\pi(a | s, \theta)$</p></li>
-<li><p>Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$</p></li>
-<li><p>Parameters: step sizes $\alpha^{\theta} &gt; 0$, $\alpha^{w} &gt; 0$</p></li>
-<li><p>Initialize policy parameter $\theta \in \mathbb{R}^d$ and state-value weights $\mathbf{w} \in \mathbb{R}^d$ (e.g., to $0$)</p></li>
+<li><p>Algorithm: One-step Actor-Critic (episodic) for estimating <span class="math notranslate nohighlight">\(\pi_\theta \approx \pi_{\star}\)</span></p>
+<ul>
+<li><p>Input: a differentiable policy parameterization <span class="math notranslate nohighlight">\(\pi(a | s, \theta)\)</span></p></li>
+<li><p>Input: a differentiable state-value function parameterization <span class="math notranslate nohighlight">\(\hat{v}(s, \mathbf{w})\)</span></p></li>
+<li><p>Parameters: step sizes <span class="math notranslate nohighlight">\(\alpha^{\theta} &gt; 0\)</span>, <span class="math notranslate nohighlight">\(\alpha^{w} &gt; 0\)</span></p></li>
+<li><p>Initialize policy parameter <span class="math notranslate nohighlight">\(\theta \in \mathbb{R}^d\)</span> and state-value weights <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{R}^d\)</span> (e.g., to <span class="math notranslate nohighlight">\(0\)</span>)</p></li>
 <li><p>Loop forever (for each episode):</p>
 <ul>
-<li><p>Initialize $S$ (first state of the episode)</p></li>
-<li><p>$I \leftarrow 1$</p></li>
-<li><p>Loop while $S$ is not terminal (for each time step):</p></li>
-<li><p>Sample action $A \sim \pi(\cdot | S, \theta)$</p></li>
-<li><p>Take action $A$, observe $S’$, $R$</p></li>
-<li><p>Compute TD error:
-$$
-\delta \leftarrow R + \gamma \hat{v}(S’, \mathbf{w}) - \hat{v}(S, \mathbf{w}) \ \ \text{(if $S’$ is terminal, then $\hat{v}(S’, \mathbf{w}) \doteq 0$)}
-$$</p></li>
-<li><p>Update state-value weights:
-$$
-\mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
-$$</p></li>
-<li><p>Update policy parameters:
-$$
-\theta \leftarrow \theta + \alpha^{\theta} I \delta \nabla \ln \pi(A | S, \theta)
-$$</p></li>
-<li><p>Update importance weight:
-$$
-I \leftarrow \gamma I
-$$</p></li>
-<li><p>Update state:
-$$
-S \leftarrow S’
-$$</p></li>
+<li><p>Initialize <span class="math notranslate nohighlight">\(S\)</span> (first state of the episode)</p></li>
+<li><p><span class="math notranslate nohighlight">\(I \leftarrow 1\)</span></p></li>
+<li><p>Loop while <span class="math notranslate nohighlight">\(S\)</span> is not terminal (for each time step):</p></li>
+<li><p>Sample action <span class="math notranslate nohighlight">\(A \sim \pi(\cdot | S, \theta)\)</span></p></li>
+<li><p>Take action <span class="math notranslate nohighlight">\(A\)</span>, observe <span class="math notranslate nohighlight">\(S'\)</span>, <span class="math notranslate nohighlight">\(R\)</span></p></li>
+<li><p>Compute TD error:</p>
+<div class="math notranslate nohighlight">
+\[
+            \delta \leftarrow R + \gamma \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w}) \ \ \text{(if $S'$ is terminal, then $\hat{v}(S', \mathbf{w}) \doteq 0$)}
+            \]</div>
+</li>
+<li><p>Update state-value weights:</p>
+<div class="math notranslate nohighlight">
+\[
+            \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
+            \]</div>
+</li>
+<li><p>Update policy parameters:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta \leftarrow \theta + \alpha^{\theta} I \delta \nabla \ln \pi(A | S, \theta)
+            \]</div>
+</li>
+<li><p>Update importance weight:</p>
+<div class="math notranslate nohighlight">
+\[
+            I \leftarrow \gamma I
+            \]</div>
+</li>
+<li><p>Update state:</p>
+<div class="math notranslate nohighlight">
+\[
+            S \leftarrow S'
+            \]</div>
+</li>
 </ul>
 </li>
 </ul>
@@ -643,41 +663,51 @@ $$</p></li>
 <h3>10.4.2 AC methods for continuing tasks:<a class="headerlink" href="#ac-methods-for-continuing-tasks" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Setup:</p>
-<p>For continuing problems, we define the performance $J(\theta)$ in terms of the average rate of reward per time step $r(\pi)$. The definition of $r(\pi)$ can be found in Chapter 9 <a class="reference internal" href="9_on_policy_control_with_approximation.html#92-average-reward-a-new-way-of-formulating-control-problems"><span class="std std-ref">section 9.2</span></a>.</p>
+<p>For continuing problems, we define the performance <span class="math notranslate nohighlight">\(J(\theta)\)</span> in terms of the average rate of reward per time step <span class="math notranslate nohighlight">\(r(\pi)\)</span>. The definition of <span class="math notranslate nohighlight">\(r(\pi)\)</span> can be found in Chapter 9 <a class="reference internal" href="9_on_policy_control_with_approximation.html#average-reward-a-new-way-of-formulating-control-problems"><span class="std std-ref">section 9.2</span></a>.</p>
 <p>Note that the policy gradient theorem as given for the episodic case remains true for the continuing case, a proof can be found in the book chapter 13.6 on page 334. Therefore, we are now able to adapt the algorithm for AC methods with average reward setting as demonstrated below.</p>
 </li>
-<li><p>Algorithm of Actor-Critic (continuing), for estimating $\pi_\theta \approx \pi_{\star}$</p>
-<ul class="simple">
-<li><p>Input: a differentiable policy parameterization $\pi(a | s, \theta)$</p></li>
-<li><p>Input: a differentiable state-value function parameterization $\hat{v}(s, \mathbf{w})$</p></li>
-<li><p>Initialize average reward estimate $\bar{R} \in \mathbb{R}$ to $0$</p></li>
-<li><p>Initialize state-value weights $\mathbf{w} \in \mathbb{R}^d$ and policy parameter $\theta \in \mathbb{R}^{d’}$ (e.g., to $0$)</p></li>
-<li><p>Algorithm parameters: $\alpha^w &gt; 0$, $\alpha^\theta &gt; 0$, $\alpha^{\bar{R}} &gt; 0$</p></li>
-<li><p>Initialize $S \in \mathcal{S}$</p></li>
+<li><p>Algorithm of Actor-Critic (continuing), for estimating <span class="math notranslate nohighlight">\(\pi_\theta \approx \pi_{\star}\)</span></p>
+<ul>
+<li><p>Input: a differentiable policy parameterization <span class="math notranslate nohighlight">\(\pi(a | s, \theta)\)</span></p></li>
+<li><p>Input: a differentiable state-value function parameterization <span class="math notranslate nohighlight">\(\hat{v}(s, \mathbf{w})\)</span></p></li>
+<li><p>Initialize average reward estimate <span class="math notranslate nohighlight">\(\bar{R} \in \mathbb{R}\)</span> to <span class="math notranslate nohighlight">\(0\)</span></p></li>
+<li><p>Initialize state-value weights <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{R}^d\)</span> and policy parameter <span class="math notranslate nohighlight">\(\theta \in \mathbb{R}^{d'}\)</span> (e.g., to <span class="math notranslate nohighlight">\(0\)</span>)</p></li>
+<li><p>Algorithm parameters: <span class="math notranslate nohighlight">\(\alpha^w &gt; 0\)</span>, <span class="math notranslate nohighlight">\(\alpha^\theta &gt; 0\)</span>, <span class="math notranslate nohighlight">\(\alpha^{\bar{R}} &gt; 0\)</span></p></li>
+<li><p>Initialize <span class="math notranslate nohighlight">\(S \in \mathcal{S}\)</span></p></li>
 <li><p>Loop forever (for each time step):</p>
 <ul>
-<li><p>Sample action $A \sim \pi(\cdot | S, \theta)$</p></li>
-<li><p>Take action $A$, observe $S’$, $R$</p></li>
-<li><p>Compute TD error:
-$$
-\delta \leftarrow R - \bar{R} + \hat{v}(S’, \mathbf{w}) - \hat{v}(S, \mathbf{w})
-$$</p></li>
-<li><p>Update average reward estimate:
-$$
-\bar{R} \leftarrow \bar{R} + \alpha^{\bar{R}} \delta
-$$</p></li>
-<li><p>Update state-value weights:
-$$
-\mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
-$$</p></li>
-<li><p>Update policy parameters:
-$$
-\theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A | S, \theta)
-$$</p></li>
-<li><p>Update state:
-$$
-S \leftarrow S’
-$$</p></li>
+<li><p>Sample action <span class="math notranslate nohighlight">\(A \sim \pi(\cdot | S, \theta)\)</span></p></li>
+<li><p>Take action <span class="math notranslate nohighlight">\(A\)</span>, observe <span class="math notranslate nohighlight">\(S'\)</span>, <span class="math notranslate nohighlight">\(R\)</span></p></li>
+<li><p>Compute TD error:</p>
+<div class="math notranslate nohighlight">
+\[
+            \delta \leftarrow R - \bar{R} + \hat{v}(S', \mathbf{w}) - \hat{v}(S, \mathbf{w})
+            \]</div>
+</li>
+<li><p>Update average reward estimate:</p>
+<div class="math notranslate nohighlight">
+\[
+            \bar{R} \leftarrow \bar{R} + \alpha^{\bar{R}} \delta
+            \]</div>
+</li>
+<li><p>Update state-value weights:</p>
+<div class="math notranslate nohighlight">
+\[
+            \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S, \mathbf{w})
+            \]</div>
+</li>
+<li><p>Update policy parameters:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A | S, \theta)
+            \]</div>
+</li>
+<li><p>Update state:</p>
+<div class="math notranslate nohighlight">
+\[
+            S \leftarrow S'
+            \]</div>
+</li>
 </ul>
 </li>
 </ul>
@@ -685,40 +715,41 @@ $$</p></li>
 <li><p>More on Actor-Critic algorithm (continuing):</p>
 <ul class="simple">
 <li><p>Interaction between actor and critic: This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/h9nDv/actor-critic-algorithm">optional lecture video</a> (starting from 2:56 - 3:49) gives a vivid explanation of how the actor and the critic interact with each other.</p></li>
-<li><p>Approximation of value function and policy: This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/OO2jp/actor-critic-with-softmax-policies">optional lecture video</a> offers an example of how to approximate $\pi(A | S, \theta)$ with softmax policy as described in the beginning of this chapter, and $\hat{v}(S, \mathbf{w})$ and action preference $h(s,a,\theta)$ with linear methods.</p></li>
+<li><p>Approximation of value function and policy: This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/OO2jp/actor-critic-with-softmax-policies">optional lecture video</a> offers an example of how to approximate <span class="math notranslate nohighlight">\(\pi(A | S, \theta)\)</span> with softmax policy as described in the beginning of this chapter, and <span class="math notranslate nohighlight">\(\hat{v}(S, \mathbf{w})\)</span> and action preference <span class="math notranslate nohighlight">\(h(s,a,\theta)\)</span> with linear methods.</p></li>
 </ul>
 </li>
 <li><p>Example of AC method: Pendulum Swing-up (continuing task)</p>
-  <img src="../img/chapter10/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
+  <img src="../_static/img/chapter10/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
 <ul>
 <li><p>Setup: an agent must balance a pendulum upright by applying torque to a pivot point, the pendulum starts from rest position (hanging down) with zero velocity and can move freely under the influence of gravity and the applied actions.</p>
 <ul class="simple">
-<li><p>States: Angular position $\beta$ and angular velocity $\dot{\beta}$ with $-2\pi &lt; \dot{\beta} &lt; 2\pi$ (as high angular velocity could damage the system).</p></li>
+<li><p>States: Angular position <span class="math notranslate nohighlight">\(\beta\)</span> and angular velocity <span class="math notranslate nohighlight">\(\dot{\beta}\)</span> with <span class="math notranslate nohighlight">\(-2\pi &lt; \dot{\beta} &lt; 2\pi\)</span> (as high angular velocity could damage the system).</p></li>
 <li><p>Actions: Apply torque in one of three ways: 1) Clockwise torque, 2)Counterclockwise torque and 3) No torque</p></li>
-<li><p>Reward: $r=−∣\beta∣$, i.e., staying upright gives the highest reward zero.</p></li>
+<li><p>Reward: <span class="math notranslate nohighlight">\(r=−∣\beta∣\)</span>, i.e., staying upright gives the highest reward zero.</p></li>
 </ul>
 </li>
 <li><p>Parameterization and Features:</p>
 <ul class="simple">
-<li><p>State-value function: $\hat{v}(s, \mathbf{w}) \dot= \mathbf{w}^{\intercal} x(s)$</p></li>
-<li><p>Softmax policy: $\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}$ with $h(s, a, \theta) = \theta^\top x_h(s, a)$</p></li>
+<li><p>State-value function: <span class="math notranslate nohighlight">\(\hat{v}(s, \mathbf{w}) \dot= \mathbf{w}^{\intercal} x(s)\)</span></p></li>
+<li><p>Softmax policy: <span class="math notranslate nohighlight">\(\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}\)</span> with <span class="math notranslate nohighlight">\(h(s, a, \theta) = \theta^\top x_h(s, a)\)</span></p></li>
 <li><p>Feature construction: Since state is two-dimensional, we can easily use tile coding with 32 tilings of size 8×8.</p></li>
 </ul>
 </li>
-<li><p>Learning: generally, we want $\alpha^\theta &lt; \alpha^\mathbf{w}$, namely <strong>to let the critic to have a bigger step size than the actor</strong> (learning rate) to allow it to update at a faster rate. That way, the critic can accurately critique the more slowly changing policy.</p></li>
+<li><p>Learning: generally, we want <span class="math notranslate nohighlight">\(\alpha^\theta &lt; \alpha^\mathbf{w}\)</span>, namely <strong>to let the critic to have a bigger step size than the actor</strong> (learning rate) to allow it to update at a faster rate. That way, the critic can accurately critique the more slowly changing policy.</p></li>
 <li><p>Performance: Training was repeated 100 times, and an exponentially weighted reward plot was used to evaluate performance. As shown by the figure below, the learned policy is quite stable and reliable</p>
-  <img src="../img/chapter10/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:75%;">
+  <img src="../_static/img/chapter10/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:75%;">
 <ul>
-<li><p>Optional: The Exponentially Weighted Moving Average (EWMA) for reward is commonly used in reinforcement learning to reduce noise and better observe trends in an agent’s learning progress, it is calculated as:
-$$
-R_t^{EW} = \lambda R_{t-1}^{EW} + (1 - \lambda) R_t
-$$</p>
+<li><p>Optional: The Exponentially Weighted Moving Average (EWMA) for reward is commonly used in reinforcement learning to reduce noise and better observe trends in an agent’s learning progress, it is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[
+            R_t^{EW} = \lambda R_{t-1}^{EW} + (1 - \lambda) R_t
+            \]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$R_t^{EW}$ is the exponentially weighted reward at time step $t$.</p></li>
-<li><p>$R_t$ is the actual reward received at time $t$.</p></li>
-<li><p>$\lambda$ is the smoothing factor (typically between 0 and 1).</p></li>
-<li><p>$R_0^{EW}$ is initialized to the first reward.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R_t^{EW}\)</span> is the exponentially weighted reward at time step <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R_t\)</span> is the actual reward received at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> is the smoothing factor (typically between 0 and 1).</p></li>
+<li><p><span class="math notranslate nohighlight">\(R_0^{EW}\)</span> is initialized to the first reward.</p></li>
 </ul>
 </li>
 </ul>
@@ -734,25 +765,27 @@ $$</p>
 <li><p>Setup of Gausssian Policies for Continuous Actions:</p>
 <p>We now turn out attention to continuous actions spaces with an infinite number of actions. For such problems, instead of computing learned probabilities for each of the many actions, we instead learn statistics of the probability distribution, and choose actions by sampling from this distribution.</p>
 <p>Assume the distribution is normal, to produce a policy parameterization, the policy can be defined as the normal probability density over a real-valued scalar action, with mean and standard deviation given by parametric function approximators that depend on the state, as follows:</p>
-<p>$$
-\pi(a | s, \theta) \doteq \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right),
-$$</p>
-<p>where $\mu : \mathcal{S} \times \mathbb{R}^{d’} \to \mathbb{R}$ and $\sigma : \mathcal{S} \times \mathbb{R}^{d’} \to \mathbb{R}^+$ are two parameterized function approximators. Therefore, the policy has two parts of parameters to learn $\theta = [\theta_\mu, \theta_\sigma]^\top$.</p>
+<div class="math notranslate nohighlight">
+\[
+    \pi(a | s, \theta) \doteq \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right),
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu : \mathcal{S} \times \mathbb{R}^{d'} \to \mathbb{R}\)</span> and <span class="math notranslate nohighlight">\(\sigma : \mathcal{S} \times \mathbb{R}^{d'} \to \mathbb{R}^+\)</span> are two parameterized function approximators. Therefore, the policy has two parts of parameters to learn <span class="math notranslate nohighlight">\(\theta = [\theta_\mu, \theta_\sigma]^\top\)</span>.</p>
 <p>The mean can be approximated as a linear function. The standard deviation must always be positive and is better approximated as the exponential of a linear function. Thus</p>
-<p>$$
-\mu(s, \theta) \doteq \theta_{\mu}^{\top} \mathbf{x}<em>{\mu}(s)
-\quad \text{and} \quad
-\sigma(s, \theta) \doteq \exp \left( \theta</em>{\sigma}^{\top} \mathbf{x}_{\sigma}(s) \right),
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+    \mu(s, \theta) \doteq \theta_{\mu}^{\top} \mathbf{x}_{\mu}(s) 
+    \quad \text{and} \quad 
+    \sigma(s, \theta) \doteq \exp \left( \theta_{\sigma}^{\top} \mathbf{x}_{\sigma}(s) \right),
+    \]</div>
 <p>With these definitions, all the algorithms described in the rest of this chapter can be applied to learn to select real-valued actions.</p>
 </li>
 <li><p>Gaussian Policies applied to the Pendulum Swing-Up Task:</p>
 <ul>
 <li><p>States and Reward: Remain the same</p></li>
 <li><p>Actions: Instead of three discrete actions, the agent now selects continuous angular acceleration in the range [-3, 3].</p></li>
-<li><p>Parameterization: We now use Gaussian policy and draw actions from a state-dependent Gaussian distribution. $\mu(s)$ and $\sigma(s)$ are modeled as linear and exponential functions as mentioned above respectively.</p></li>
-<li><p>Action selection: 1) Compute $\mu(s)$ and $\sigma(s)$ based on the current state $s$. 2) Sample an action from the Gaussian poliyc with these parameters.</p>
-<p>During selection, $\sigma(s)$ controls exploration: large $\sigma$ means high variance and leads to high exploration, in contrast, small $\sigma$ leads to low exploration. We typically initialize $\sigma(s)$ to be large and as learning progresses, we expect the variance to shrink and the policy to concentrate around the best action in each state.</p>
+<li><p>Parameterization: We now use Gaussian policy and draw actions from a state-dependent Gaussian distribution. <span class="math notranslate nohighlight">\(\mu(s)\)</span> and <span class="math notranslate nohighlight">\(\sigma(s)\)</span> are modeled as linear and exponential functions as mentioned above respectively.</p></li>
+<li><p>Action selection: 1) Compute <span class="math notranslate nohighlight">\(\mu(s)\)</span> and <span class="math notranslate nohighlight">\(\sigma(s)\)</span> based on the current state <span class="math notranslate nohighlight">\(s\)</span>. 2) Sample an action from the Gaussian poliyc with these parameters.</p>
+<p>During selection, <span class="math notranslate nohighlight">\(\sigma(s)\)</span> controls exploration: large <span class="math notranslate nohighlight">\(\sigma\)</span> means high variance and leads to high exploration, in contrast, small <span class="math notranslate nohighlight">\(\sigma\)</span> leads to low exploration. We typically initialize <span class="math notranslate nohighlight">\(\sigma(s)\)</span> to be large and as learning progresses, we expect the variance to shrink and the policy to concentrate around the best action in each state.</p>
 </li>
 </ul>
 </li>
@@ -770,81 +803,95 @@ $$</p>
 <p>This chapter introduces policy gradient methods, a family of reinforcement learning techniques that directly parameterize and optimize policies, as opposed to traditional action-value methods that estimate action values and derive policies from them. A quick summary:</p>
 <ul>
 <li><p>Mindmap of where we are now</p>
-  <img src="../img/chapter10/chapter10_mindmap.png" alt="Mindmap" style="width:100%;">
+  <img src="../_static/img/chapter10/chapter10_mindmap.png" alt="Mindmap" style="width:100%;">
 </li>
 <li><p>Key Takeaways</p>
-<ol class="arabic simple">
+<ol class="arabic">
 <li><p>Introduction to Policy Gradient Methods</p>
 <ul class="simple">
-<li><p>Direct Policy Optimization: Unlike action-value methods, policy gradient methods directly parameterize and optimize the policy $\pi(a|s, \theta)$.</p></li>
-<li><p>Gradient Ascent: Policies are updated by ascending the gradient of a performance measure $J(\theta)$.</p></li>
+<li><p>Direct Policy Optimization: Unlike action-value methods, policy gradient methods directly parameterize and optimize the policy <span class="math notranslate nohighlight">\(\pi(a|s, \theta)\)</span>.</p></li>
+<li><p>Gradient Ascent: Policies are updated by ascending the gradient of a performance measure <span class="math notranslate nohighlight">\(J(\theta)\)</span>.</p></li>
 </ul>
 </li>
 <li><p>Advantages of Policy Parameterization</p>
 <ul class="simple">
 <li><p>Flexibility: Policies can be stochastic or deterministic, allowing natural convergence to optimal behaviors.</p></li>
-<li><p>Improved Exploration: Stochastic policies enable better exploration compared to $\epsilon$-greedy approaches.</p></li>
+<li><p>Improved Exploration: Stochastic policies enable better exploration compared to <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy approaches.</p></li>
 </ul>
 </li>
 <li><p>Policy Gradient Theorem</p>
-<ul class="simple">
-<li><p>Objective: Maximize average reward $r(\pi)$ in continuing tasks.</p></li>
-<li><p>Gradient Expression:
-$$
-\nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
-$$</p></li>
-<li><p>Avoids differentiating the state distribution $\mu(s)$.</p></li>
+<ul>
+<li><p>Objective: Maximize average reward <span class="math notranslate nohighlight">\(r(\pi)\)</span> in continuing tasks.</p></li>
+<li><p>Gradient Expression:</p>
+<div class="math notranslate nohighlight">
+\[
+            \nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
+            \]</div>
+</li>
+<li><p>Avoids differentiating the state distribution <span class="math notranslate nohighlight">\(\mu(s)\)</span>.</p></li>
 </ul>
 </li>
 <li><p>REINFORCE Algorithm</p>
-<ul class="simple">
+<ul>
 <li><p>Monte Carlo Policy Gradient: Uses full returns from episodes to update policies.</p></li>
-<li><p>Update Rule:
-$$
-\theta_{t+1} = \theta_t + \alpha G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
-$$</p></li>
+<li><p>Update Rule:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta_{t+1} = \theta_t + \alpha G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+            \]</div>
+</li>
 <li><p>Limitations: High variance and slow learning in some cases.</p></li>
 </ul>
 </li>
 <li><p>REINFORCE with Baseline</p>
-<ul class="simple">
-<li><p>Variance Reduction: Introduces a baseline $b(s)$, typically the state-value estimate $\hat{v}(s)$, to reduce variance.</p></li>
-<li><p>Update Rule with Baseline:
-$$
-\theta_{t+1} = \theta_t + \alpha (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
-$$</p></li>
+<ul>
+<li><p>Variance Reduction: Introduces a baseline <span class="math notranslate nohighlight">\(b(s)\)</span>, typically the state-value estimate <span class="math notranslate nohighlight">\(\hat{v}(s)\)</span>, to reduce variance.</p></li>
+<li><p>Update Rule with Baseline:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta_{t+1} = \theta_t + \alpha (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+            \]</div>
+</li>
 <li><p>Performance: Faster learning and improved stability compared to plain REINFORCE.</p></li>
 </ul>
 </li>
 <li><p>Actor-Critic Methods</p>
-<ul class="simple">
+<ul>
 <li><p>Combines Policy and Value Learning* The <strong>actor</strong> updates the policy, while the <strong>critic</strong> evaluates actions using bootstrapped value estimates.</p></li>
 <li><p>Update Rules:</p>
 <ul>
-<li><p>Policy (Actor):
-$$
-\theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A_t|S_t, \theta)
-$$</p></li>
-<li><p>Value Function (Critic):
-$$
-\mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
-$$</p></li>
-<li><p>TD Error:
-$$
-\delta = R_{t+1} + \gamma \hat{v}(S_{t+1}) - \hat{v}(S_t)
-$$</p></li>
+<li><p>Policy (Actor):</p>
+<div class="math notranslate nohighlight">
+\[
+                \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A_t|S_t, \theta)
+                \]</div>
+</li>
+<li><p>Value Function (Critic):</p>
+<div class="math notranslate nohighlight">
+\[
+                \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
+                \]</div>
+</li>
+<li><p>TD Error:</p>
+<div class="math notranslate nohighlight">
+\[
+                \delta = R_{t+1} + \gamma \hat{v}(S_{t+1}) - \hat{v}(S_t)
+                \]</div>
+</li>
 </ul>
 </li>
 <li><p>Advantages: Lower variance, faster convergence, and fully online learning.</p></li>
 </ul>
 </li>
 <li><p>Continuous Action Spaces and Gaussian Policies</p>
-<ul class="simple">
-<li><p>Gaussian Policy Parameterization: For continuous actions, policies are modeled as Gaussian distributions with learnable mean $\mu(s)$ and standard deviation $\sigma(s)$.</p></li>
-<li><p>Update Flexibility:
-$$
-\pi(a | s, \theta) = \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right)
-$$</p></li>
+<ul>
+<li><p>Gaussian Policy Parameterization: For continuous actions, policies are modeled as Gaussian distributions with learnable mean <span class="math notranslate nohighlight">\(\mu(s)\)</span> and standard deviation <span class="math notranslate nohighlight">\(\sigma(s)\)</span>.</p></li>
+<li><p>Update Flexibility:</p>
+<div class="math notranslate nohighlight">
+\[
+            \pi(a | s, \theta) = \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right)
+            \]</div>
+</li>
 <li><p>Benefits: Enables fine-grained control, efficient exploration, and generalization over large or infinite action spaces.</p></li>
 </ul>
 </li>
