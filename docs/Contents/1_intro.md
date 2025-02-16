@@ -22,4 +22,4 @@
 
 - What you are going to learn
 
-    <img src="../img/chapter1/overview.png" alt="Overview of all algorithms introduced in this tutorial" style="width:100%;">
+    <img src="../_static/img/chapter1/overview.png" alt="Overview of all algorithms introduced in this tutorial" style="width:100%;">

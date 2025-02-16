@@ -20,17 +20,17 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
 
 - **To explore or to exploit**: In any RL problem, we are always forced to trade-off between the two options: exploration or exploitation. explained in this setting as follows:
 
-    - Exploitation: to exploit your current knowledge of the values of the actions, i.e., to always choose that one action whose estimated value is the greatest. This action is also called the $\textit{greedy action.}$  
+    - **Exploitation**: to exploit your current knowledge of the values of the actions, i.e., to always choose that one action whose estimated value is the greatest. This action is also called the $\textit{greedy action.}$  
 
-    - Exploration: to select one of the nongreedy actions. This is beneficial since it enables you to improve your estimate of the nongreedy action’s value.
+    - **Exploration**: to select one of the nongreedy actions. This is beneficial since it enables you to improve your estimate of the nongreedy action’s value.
 
     Exploitation is the right thing to do to maximize the expected reward on the one step, but exploration may produce the greater total reward in the long run. The trade-off is faced nearly everywhere in RL problems. We will see some tricks about encouraging exploration later in [section 2.5](#25-more-on-exploration-tricks)
 
 ## 2.2 Action-value methods
 
-- Definition: methods for estimating the values of actions and for using the estimates to make action selection decisions are called action-value methods.
+- **Definition**: methods for estimating the values of actions and for using the estimates to make action selection decisions are called action-value methods.
 
-- Estimation for $Q_{t}(a)$: 
+- **Estimation for $Q_{t}(a)$:**
 
     One natural way to estimate $Q_{t}(a)$ is by averaging the rewards actually received using the socalled $\textit{sample-average method}$
 
@@ -41,19 +41,19 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
         \end{align*}
     $$
 
-- Action selection methods: there are two natural ways when selecting actions based on estimates, one maximizes exploitation and the other takes exploration into account based on that:
+- **Action selection methods:** there are two natural ways when selecting actions based on estimates, one maximizes exploitation and the other takes exploration into account based on that:
 
-    - Greedy action selection: always exploits current knowledge to maximize immediate reward
+    - **Greedy action selection:** always exploits current knowledge to maximize immediate reward
     
     $$
     A_t \dot= \underset{a}{\arg\max} Q_{t}(a)
     $$
 
-    - $\epsilon$-greedy action selection: behave greedily most of the time, but each time with a small probability $\epsilon$ (with $0<\epsilon<1$ and close to $0$), we select randomly among all the actions (including the greedy action) with equal probability. 
+    - **$\epsilon$-greedy action selection:** behave greedily most of the time, but each time with a small probability $\epsilon$ (with $0<\epsilon<1$ and close to $0$), we select randomly among all the actions (including the greedy action) with equal probability. 
 
 ## 2.3 The 10-armed Testbed
 
-- Setup: To demonstrate the effectiveness of greedy and $\epsilon$-greedy action selection, we create the following experiment:
+- **Setup**: To demonstrate the effectiveness of greedy and $\epsilon$-greedy action selection, we create the following experiment:
     - We set $k=10$, i.e., create a 10-armed bandit problem.
     - Design the reward distribution of each action to follow a standard normal distribution ($\mu=0 \text{ and } \sigma=1$) 
 
@@ -61,23 +61,28 @@ In this chapter we study the evaluative aspect of reinforcement learning in a si
         <img src="../_static/img/chapter2/reward_distribution.png" alt="Reward Distribution" style="width:70%;">
         </div>
 
-- Performance: The performance of each action selection method is measured by averaging the results from 2000 independent $\textit{runs}$, with each $\textit{run}$ containing 1000 time steps (recall that time steps describe the number of times actions being taken.)
+- **Performance**: The performance of each action selection method is measured by averaging the results from 2000 independent $\textit{runs}$, with each $\textit{run}$ containing 1000 time steps (recall that time steps describe the number of times actions being taken.)
 
     <div style="display: flex; justify-content: center;">
     <img src="../_static/img/chapter2/running_results.png" alt="Results of running" style="width:70%;">
     </div>
 
-    With greater $\epsilon$ value indicating more exploration and all selection methods used sample averages as their action-value estimates, conclusions from above the above figure are: 
+    With greater $\epsilon$ value indicating more exploration and all selection methods used sample averages as their action-value estimates, conclusions from the above figure are: 
 
     - The greedy method performed significantly worse in the long run because it often got stuck performing suboptimal actions.
 
     - The $\epsilon=0.01$ method (less exploration) improved more slowly, but eventually would perform better than the $\epsilon=0.1$ (more exploration) method. This emphasizes the trade-off between exploration and exploitation, i.e., exploration ($\epsilon=0.01$) can improve performance yet worsen result when too much ($\epsilon=0.1$).
 
-- Note on the advantage of exploration: It depends on the task. 
 
-    - Reward Variance: if the reward variance is large (noisier reward), it takes more exploration to find the optimal action, in this case  $\epsilon$-greedy method should be better. On the contrary, if reward variance is zero, greedy method will clearly perform best.
+```{note}
+- **Note on the advantage of exploration:** It depends on the task. 
 
-    - Stationarity: assume the distribution of the reward changs over time (as in a Markov Decision Process in different states, which will be introduced in the next chapter). In this case exploration is needed even in the deterministic case to make sure one of the nongreedy actions has not changed to become better than the greedy one.
+    - **Reward Variance:** if the reward variance is large (noisier reward), it takes more exploration to find the optimal action, in this case  $\epsilon$-greedy method should be better. On the contrary, if reward variance is zero, greedy method will clearly perform best.
+
+    - **Stationarity**: assume the distribution of the reward changs over time (as in a Markov Decision Process in different states, which will be introduced in the next chapter). In this case exploration is needed even in the deterministic case to make sure one of the nongreedy actions has not changed to become better than the greedy one.
+
+
+```
 
 ## 2.4 Incremental Estimation for Action Values
 
@@ -85,7 +90,7 @@ We now take another look at sample-average method mentioned in [section 2.2](#22
 
 ### 2.4.1 Stationary problems
 
-- Derivation: Let $R_i$ denote the reward received at the $i$-th selection of action $a$, and $Q_n$ denote the estimate of the action value after it has been selected $n-1$ times. For $n$-th action selection:
+- **Derivation**: Let $R_i$ denote the reward received at the $i$-th selection of action $a$, and $Q_n$ denote the estimate of the action value after it has been selected $n-1$ times. For $n$-th action selection:
 
     $$
         \begin{align*}
@@ -105,42 +110,20 @@ We now take another look at sample-average method mentioned in [section 2.2](#22
 
         with $StepSize$ is equal to $\frac{1}{n}$, which changes from time step to time step. In this book, the $StepSize$ is denoted by $\alpha$ or more generally by $\alpha_t(a)$
 
-    - The above equation of incremental estimation is a very representative form of many fundamental update rules in reinforcement learning and will be introduced in depth in [Chapter 6](../Contents/6_temporal_difference_learning.md) in particular. 
+    - This equation of incremental estimation is a very representative form of many fundamental update rules in reinforcement learning and will be introduced in depth in [Chapter 6](../Contents/6_temporal_difference_learning.md) in particular. 
 
     - With this incremental implementation, we now can write a pseudocode for solving **stationary** bandit problem as below.
 
-- Algorithm: A simple bandit algorithm 
+- **Algorithm**: A simple bandit algorithm 
 
-  - **Initialization**:  
-    - For each action $a = 1$ to $k$, initialize $Q(a) \leftarrow 0$ and $N(a) \leftarrow 0$.
-
-  - **Loop** (forever):  
-    - Select Action
-
-        $$
-        A \leftarrow 
-        \begin{cases} 
-        \arg\max_a Q(a) & \text{with probability } 1 - \epsilon \\
-        \text{a random action} & \text{with probability } \epsilon 
-        \end{cases}
-        $$
-
-    - Get reward: 
-
-        $$R \leftarrow \text{bandit}(A)$$
-
-    - Update the selection count: 
-
-        $$N(A) \leftarrow N(A) + 1$$
-
-    - Update the estimated value: 
- 
-        $$Q(A) \leftarrow Q(A) + \frac{1}{N(A)} \left[ R - Q(A) \right]$$  
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter2/algo_bandit.png" alt="Reward Distribution" style="width:100%;">
+    </div>
 
 
 ### 2.4.2 Nonstationary problems
 
-- Derivation: If the problem if nonstationary, i.e., the reward distribution changes over time, it would make more sense to give more weights to recent reward than the long-past rewards. To achieve this goal, we could use a constant step-size parameter $\alpha$
+- **Derivation**: If the problem if nonstationary, i.e., the reward distribution changes over time, it would make more sense to give more weights to recent reward than the long-past rewards. To achieve this goal, we could use a constant step-size parameter $\alpha$
 
     $$
     \begin{align*}
@@ -154,7 +137,7 @@ We now take another look at sample-average method mentioned in [section 2.2](#22
     \end{align*}
     $$
 
-- Explanation:
+- **Explanation**:
 
     - Intuition for the final form
 
@@ -175,9 +158,9 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 
 ### 2.5.1 Optimistic Initial Values: 
 
-- Definition: the method that encourages exploration (only in the beginning) by setting the initial action values to a large positive number.
+- **Definition**: the method that encourages exploration (only in the beginning) by setting the initial action values to a large positive number.
 
-- Performance: As an example, in 10-armed bandit testbed introduced in [section 2.3](#23-the-10-armed-testbed), we now set $Q_1(a)=+5$ for all $a$ (which is wildly optimistic since action values are given by standard normal distribution). Perform the experiment again use the same setting as before, i.e., averaging 2000 runs with each run up to 1000 time steps
+- **Performance**: As an example, in 10-armed bandit testbed introduced in [section 2.3](#23-the-10-armed-testbed), we now set $Q_1(a)=+5$ for all $a$ (which is wildly optimistic since action values are given by standard normal distribution). Perform the experiment again use the same setting as before, i.e., averaging 2000 runs with each run up to 1000 time steps
 
     <div style="display: flex; justify-content: center;">
     <img src="../_static/img/chapter2/optimistic_initial_value.png" alt="Optimistic initial value" style="width:70%;">
@@ -187,7 +170,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 
     - At the beginning, the optimistic method has a sharp rise in optimal action ratio because of its frequent exploration.
 
-- Properties: 
+- **Properties**: 
 
     - It is not well suited to nonstationary problems because its drive for exploration is inherently temporary, i.e., only in the beginning of a run. 
 
@@ -195,7 +178,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 
 ### 2.5.2 Upper-Confidence-Bound Action Selection
 
-- Definition: explores actions by taking their uncertainty into account as below:
+- **Definition**: explores actions by taking their uncertainty into account as below:
 
     $$
         A_t \dot= \underset{a}{\arg\max} [Q_{t}(a) + c\sqrt{\frac{ln(t)}{N_t(A)}}]
@@ -205,7 +188,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
     - $N_t(A)$ denotes the number of action $A$ being selected up to time step $t$
     - $c>0$ controls the degree of exploration 
 
-- Intuition:
+- **Intuition**:
 
     - Naming convention: The square-root term is a measure of the $\textit{uncertainty}$ or variance in the estimate of $a$’s value. The quantity being maximized over is thus a sort of **upper bound on the possible true value** of action $a$, with $c$ determining the confidence level.
 
@@ -217,7 +200,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 
         - All actions will eventually be selected, but actions with lower value estimates, or that have already been selected frequently, will be selected with decreasing frequency over time. In short, more uncertainty leads to more exploration, causing the uncertainty to decrease in return.
 
-- Performance:
+- **Performance**:
 
     <div style="display: flex; justify-content: center;">
     <img src="../_static/img/chapter2/ucb.png" alt="Upper-Confidence-Bound result" style="width:65%;">
@@ -227,7 +210,7 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 
     - Similar to the optimitic initial value method, UCB also leads to a sudden increase in the average reward in the beginning of the experiment. This is because that UCB initializes each action with an optimistic upper confidence bound ($c\sqrt{\frac{ln(t)}{N_t(A)}}$ is quite large when $N_t(a)$ is small), leading all actions to have high values and to be explored in the beginning.
 
-- Properties: UCB is more diffcult than $\epsilon$-greedy to extend beyond bandits to the more general reinforcement learning settings considered in the rest of this book due to its:
+- **Properties**: UCB is more diffcult than $\epsilon$-greedy to extend beyond bandits to the more general reinforcement learning settings considered in the rest of this book due to its:
 
     - Difficulty in dealing with nonostationary problems: For UCB method, $N_t(a)$ accumulates over time. This means older observations dominate the estimated reward $Q_t(a)$. If the reward distribution shifts over time, UCB does not adapt quickly, i.e., it keeps exploiting an outdated "optimal" action rather than re-exploring.
 
@@ -236,18 +219,20 @@ There are two more simple tricks for encouraging exploration beyond $\epsilon$-g
 
 ## 2.6 Summary
 
-This chapter introduces multi-armed bandits, a simplified reinforcement learning problem where an agent chooses between $k$ actions, each with an unknown reward distribution. The goal is to maximize total reward over time while balancing exploitation and exploration.  Key takeaways for this chapter are  
+This chapter introduces multi-armed bandits, a simplified reinforcement learning problem where an agent chooses between $k$ actions, each with an unknown reward distribution. The goal is to maximize total reward over time while balancing exploitation and exploration.  
 
-- Trade-off: Exploration vs. Exploitation
-  - Greedy methods **maximize immediate reward** but can get stuck.  
-  - **ε-greedy** explores randomly with probability **ε** (averaged among all actions) to find better actions.  
+- Key Takeaways 
 
-- Better Exploration Methods
-  - **Optimistic Initial Values**: Start high to encourage early exploration.  
-  - **Upper Confidence Bound (UCB)**: Explores actions with **high uncertainty** more often.  
+    1. Trade-off: Exploration vs. Exploitation
+        - Greedy methods **maximize immediate reward** but can get stuck.  
+        - **ε-greedy** explores randomly with probability **ε** (averaged among all actions) to find better actions.  
 
-- Efficient Learning
-  - **Sample-average updates** work for stable rewards. 
-  - **Constant step-size ($\alpha$) updates** adapt to changing rewards.  
+    2. Better Exploration Methods
+        - **Optimistic Initial Values**: Start high to encourage early exploration.  
+        - **Upper Confidence Bound (UCB)**: Explores actions with **high uncertainty** more often.  
 
-- Optional lecture video: [Jonathan Langford: Contextual Bandits for Real World Reinforcement Learning](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/GkDVA/jonathan-langford-contextual-bandits-for-real-world-reinforcement-learning)
+    3. Efficient Learning
+        - **Sample-average updates** work for stable rewards. 
+        - **Constant step-size ($\alpha$) updates** adapt to changing rewards.  
+
+- **Extra lecture video (optional)**: [Jonathan Langford: Contextual Bandits for Real World Reinforcement Learning](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/GkDVA/jonathan-langford-contextual-bandits-for-real-world-reinforcement-learning)

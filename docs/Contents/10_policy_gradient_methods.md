@@ -110,7 +110,6 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     $$
         \begin{align*}
         \nabla J(\theta) &\propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta) \\
-
         &= \mathbb{E}_{\pi} \left[ \sum_a q_{\pi}(S_t, a) \nabla \pi(a | S_t, \theta) \right],
         \end{align*}
     $$
@@ -126,9 +125,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     $$
         \begin{align*}
         \nabla J(\theta) &= \mathbb{E}_{\pi} \left[ \sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a) \frac{\nabla \pi(a|S_t, \theta)}{\pi(a|S_t, \theta)} \right] \\
-
         &= \mathbb{E}_{\pi} \left[ q_{\pi}(S_t, A_t) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \ \text{(replacing \( a \) by a sample \( A_t \sim \pi \))}\\
-
         &= \mathbb{E}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \  \text{(because \( \mathbb{E}_{\pi} [ G_t | S_t, A_t] = q_{\pi}(S_t, A_t) \))}
         \end{align*} \\
     $$

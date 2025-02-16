@@ -8,9 +8,9 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
 ## 4.1 Policy Evaluation (Prediction problem)
 
-- $\textit{Policy Evaluation}$: to compute the state-value function $v_{\pi}$ for an arbitrary policy $\pi$. (We also refer to this as the $\textit{prediction problem}$.)
+- **Policy Evaluation**: to compute the state-value function $v_{\pi}$ for an arbitrary policy $\pi$. (We also refer to this as the $\textit{prediction problem}$.)
 
-    - DP assumes the environment’s dynamics are completely known (perfect model of the environment), in this case, we could use bellman equation to form a simultaneous linear equation system with $|S|$ equations and $|S|$ unknowns.
+    - **DP assumes the environment’s dynamics are completely known** (perfect model of the environment), in this case, we could use bellman equation to form a simultaneous linear equation system with $|S|$ equations and $|S|$ unknowns.
 
         With the initial approximation $v_0$ chosen arbitrarily (except that the terminal state, if any, must be given value 0):
 
@@ -25,39 +25,32 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     - All the updates done in DP algorithms are called $\textit{expected updates}$ because they are based on an expectation over all possible next states rather than on a sample next state.
     - The updates of all states in one iteration is called a $\textit{sweep}$ through the state space.
 
-- The Iterative Policy Evaluation algorithm for estimating $V \approx v_{\pi}$
-    - Algo:
-        - Initialization: 
-            - Input: $\pi$, the policy to be evaluated
-            - Algorithm Parameters: A small threshold $\theta > 0$ determining the accuracy of estimation
-            - Initialize $V(s)$ for all $s \in S$, arbitrarily, except that $V(terminal) = 0$
-        - Loop: (for each iteration)
-            - $\Delta = 0$
-            - Loop for each $s \in S$:
-                - $v \leftarrow V(s)$
-                - $V(s) = \sum_a \pi(a|s) \sum_{s', r} p(s',r|s,a) [r + \gamma V(s')]$
-                - $\Delta \leftarrow \max(\Delta, |v - V(s)|)$
-            - Until $\Delta < \theta$
+- **The Iterative Policy Evaluation algorithm for estimating $V \approx v_{\pi}$**
+    - Algorithm:
+
+        <div style="display: flex; justify-content: center;">
+        <img src="../_static/img/chapter4/algo_iter_policy_eval.png" alt="Algorithm: Iterative Policy Evaluation" style="width: 100%;">
+        </div>
 
     - Intuition: $\Delta$ will be set to 0 at the beginning of each iteration, and is used to record the **maximal changes in all state values** through state space. So when the maximal change in a sweep is smaller than the threshold $\theta$, the algorithm stops. We receive a approximate optimal value function $V \approx v_{\pi_\star}$
 
-- Gridworld Example: watch this [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/ICAfp/iterative-policy-evaluation) if you find the illustrations of sweeps during policy evaluation too hard to grasp.
-    - Description: 
+- **Gridworld Example:** watch this [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/ICAfp/iterative-policy-evaluation) if you find the illustrations of sweeps during policy evaluation too hard to grasp.
+    - **Description**: 
 
         <div style="display: flex; justify-content: center;">
         <img src="../_static/img/chapter4/example4.1.1.png" alt="Gridworld" style="width: 70%;">
         </div>
 
-        - States: the nonterminal states are $S = {1, 2,...,14}$. 
+        - **States**: the nonterminal states are $S = {1, 2,...,14}$. 
 
-        - Actions: there are four actions possible in each state, $A = \{up, down, right, left\}$, which deterministically cause the corresponding state transitions, except that actions that would take the agent off the grid in fact leave the state unchanged. 
+        - **Actions**: there are four actions possible in each state, $A = \{up, down, right, left\}$, which deterministically cause the corresponding state transitions, except that actions that would take the agent off the grid in fact leave the state unchanged. 
             - For instance, $p(6, -1|5, right) = 1, p(7, -1|7, right) = 1$, and $p(10,r|5, right) = 0$ for all $r \in R$. 
 
-        - Reward: this is an undiscounted, episodic task. The reward is $-1$ on all transitions until the terminal state is reached. The expected reward function is thus $r(s, a, s')= -1$ for all states $s, s'$ and actions $a$.
+        - **Reward**: this is an undiscounted, episodic task. The reward is $-1$ on all transitions until the terminal state is reached. The expected reward function is thus $r(s, a, s')= -1$ for all states $s, s'$ and actions $a$.
 
-        - Policy: an equiprobable random policy (all actions are equally likely with probability of $0.25$)
+        - **Policy**: an equiprobable random policy (all actions are equally likely with probability of $0.25$)
     
-    - Policy Evaluation:
+    - **Policy Evaluation**:
         - The first sweep:
             <div style="display: flex; justify-content: center;">
             <img src="../_static/img/chapter4/example4.1.2.png" alt="Step1.1" style="width: 75%;">        
@@ -90,7 +83,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
 ## 4.2 Policy Improvement
 
-- $\textit{Policy Improvement Theorem}$: if $q_{\pi}(s, \pi'(s)) \ge v_{\pi}(s)$ holds for all $s \in S$, then the policy $\pi'$ must be as good as, or better than, $\pi$. In other words, $v_{\pi'}(s) \ge v_{\pi}(s)$ for all $s \in S$ also holds.
+- **Policy Improvement Theorem**: if $q_{\pi}(s, \pi'(s)) \ge v_{\pi}(s)$ holds for all $s \in S$, then the policy $\pi'$ must be as good as, or better than, $\pi$. In other words, $v_{\pi'}(s) \ge v_{\pi}(s)$ for all $s \in S$ also holds.
 
     - the intuition of the inequality $q_{\pi}(s, \pi'(s)) \ge v_{\pi}(s)$ is that (recall the backup diagram starting with $v(s)$ shown below) there exists one (or more) explicit action(s) that could bring more return for state $s$ than simply calculating the expectation (since $v(s) = \sum_a \pi(a|s)q(s,a)$)
 
@@ -98,9 +91,9 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
         <img src="../_static/img/chapter3/backup_diagram_v.png" alt="Backup diagram for v" style="width: 23%;">
         </div>
 
-- $\textit{Policy Improvement}$: the process of making a new policy that improves on an original policy, **by making it greedy** with respect to the value function of the original policy.
+- **Policy Improvement**: the process of making a new policy that improves on an original policy, **by making it greedy** with respect to the value function of the original policy.
 
-    - Greedification: with $\pi'$ denoting the greedified policy:
+    - **Greedification**: with $\pi'$ denoting the greedified policy:
 
         $$
         \begin{align*}
@@ -123,7 +116,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
             The above last equation is exactly the bellman optimality equation, this means that when the policy can not get any better, $v_{\pi'}$ is $v_{\star}$, therefore, $\pi$ and $\pi'$ are both the optimal policy $\pi_{\star}$.
         - **if a policy is already the greedy policy with respect to its own value function, then this policy is the optimal policy**
 
-- Gridworld Example from [section 4.1](#41-policy-evaluation-prediction-problem) (continue)
+- **Gridworld Example from [section 4.1](#41-policy-evaluation-prediction-problem) (continue)**
 
     - After getting the value function $v_{\pi}$ of the initial random policy $\pi$, we perform greedification to get the new policy $\pi'$ (illustrated by white arrows), which is strictly better than $\pi$ according to the nature of policy improvement. 
 
@@ -135,7 +128,7 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
 ## 4.3 Policy Iteration (Control)
 
-- $\textit{Policy iteration}$: the process of performing policy evaluation and policy improvement iteratively to find the optimal policy. 
+- **Policy iteration**: the process of performing policy evaluation and policy improvement iteratively to find the optimal policy. 
 
     - Because a finite MDP has only a finite number of policies, this process must converge to an optimal policy and optimal value function in a finite number of iterations. With $E$ stands for evaluation and $I$ for improvement, the process is:
 
@@ -143,31 +136,22 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
     \pi_0 \xrightarrow{\text{E}} v_{\pi_0} \xrightarrow{\text{I}} \pi_1 \xrightarrow{\text{E}} v_{\pi_1} \xrightarrow{\text{I}} ... \xrightarrow{\text{I}} \pi_{\star} \xrightarrow{\text{E}} v_{\star}
     $$
 
-- Algorithm for Policy Iteration:
+- **Algorithm for Policy Iteration**:
 
-    - Initialization $V(s) \in R$ and $\pi(s) \in A(s)$ arbitrarily for all $s \in S$
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter4/algo_policy_iteration.png" alt="Algorithm: Policy Iteration" style="width: 100%;">
+    </div>
 
-    - Policy Evaluation (see the algorithm in [section 4.1](#41-policy-evaluation-prediction-problem)
-    )
+- **New Gridworld Example**: again, if you find this all too abstract, watch this [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/Xv32P/policy-iteration) which should give you a more slow and smooth illustration. 
 
-    - Policy Improvement:
-        - *policy-stable* $\leftarrow$ *true*
-        - For each $s \in S$:
-            - *old-action* $\leftarrow \pi(s)$
-            - $\pi(s) \leftarrow \arg \underset{a}{\max} \ \sum_{s',r}\  p(s',r|s,a) \ [r + \gamma v_{\pi}(s')]$ 
-            - if *old-action* $\neq \pi(s)$ and $q(s, \pi(s)) \neq q(s, \textit{old-action})$, then *policy-stable* $\leftarrow$ *false*
-        - if *policy-stable*, then stop and return $V$ as $V_{\star}$ and $\pi$ as $\pi_{\star}$, else go to step 2.
-
-- New Gridworld Example: again, if you find this all too abstract, watch this [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/Xv32P/policy-iteration) which should give you a more slow and smooth illustration. 
-
-    - Description: 
+    - **Description**: 
         - The Gridworld example in [section 4.1](#41-policy-evaluation-prediction-problem) actually reaches the optimal policy after only one iteration, we now make the example a bit more complex by elimating one terminal grid and adding blue states where rewards have much lower value of $-10$.
 
             <div style="display: flex; justify-content: center;">
             <img src="../_static/img/chapter4/example4.3.1.png" alt="New Gridworld" style="width: 380px;">        
             </div>
     
-    - Policy iteraton:
+    - **Policy iteraton**:
         - The first iteration:
             <div style="display: flex; justify-content: center; gap: 20px;">
             <div style="display: flex; flex-direction: column; align-items: center;">
@@ -216,13 +200,13 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
 ## 4.4 Value Iteration
 
-- Value Iteration:  is the special case of Policy Iteration where policy evaluation stops after just one sweep. 
+- **Value Iteration**:  is the special case of Policy Iteration where policy evaluation stops after just one sweep. 
 
     - Drawback of policy iteration: requires iterative computation, each of its iterations involves policy evaluation, which may itself be a protracted iterative computation requiring multiple sweeps through the state set, and convergence only occurs in the limit, which takes a lot of time.
 
     - Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement
 
-- Update rule:
+- **Update rule**:
 
     $$
     \begin{align*}
@@ -233,37 +217,25 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
 
     - Note that the above equation is obtained simply by turning Bellman Optimality Equation into an updating rule. 
 
-- Algorithm for Value Iteration:
+- **Algorithm for Value Iteration**:
 
-    - Initialize a small threshold $\theta > 0$ for determining accuracy of estimation. 
-    
-    - Initialize $V(s)$, for all $s \in S^+$, arbitrarily except that $V(terminal) = 0$.
-
-    - Loop:
-        - $\Delta \leftarrow 0$ 
-        - For $s \in S$:
-            - $v \leftarrow V(s)$
-            - $V(s) = \underset{a}{\max} \underset{s', r}{\sum} p(s', r|s,a) [r + \gamma V(s')]$
-            - $\Delta \leftarrow \text{max}(\Delta, |v - V(s)|)$ 
-        - until $\Delta < \theta$
-    
-    - Output a deterministic policy, $\pi \approx \pi_{\star}$, such that
-
-        $$\pi(s) = \arg \underset{a}{\max}  \underset{s', r}{\sum} p(s', r|s,a) [r + \gamma V(s')]$$
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter4/algo_value_iteration.png" alt="Algorithm: Value Iteration" style="width: 100%;">
+    </div>
 
 ## 4.5 Generalized Policy Iteration (GPI) 
 
-- $\star$ Two types of DP:
+- $\star$ **Two types of DP**:
     - Synchronous DP: update all states systematically in a certain order (takes very long for large state space)
 
     - Asynchronous DP: update states without order (can be faster, but also problematic when only a small set of states being updated constantly)
 
-- $\textit{Generalized policy iteration (GPI)}$: refers to the general idea of letting policy-evaluation and policyimprovement processes interact, independent of the granularity and other details of the two processes.
+- **Generalized policy iteration (GPI)**: refers to the general idea of letting policy-evaluation and policyimprovement processes interact, independent of the granularity and other details of the two processes.
 
     - Almost all reinforcement learning methods are well described as GPI. That is, all have identifiable policies and value functions, with the policy always being improved with respect to the value function and the value function always being driven toward the value function for the policy:
 
         <div style="display: flex; justify-content: center;">
-        <img src="../_static/img/chapter4/gpi2.png" alt="Generalized policy iteration" style="width: 280px;">
+        <img src="../_static/img/chapter4/gpi2.png" alt="Generalized policy iteration" style="width: 50%;;">
         </div>
 
         Both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function (when $\pi$ itself is the greedy policy of $v_{\pi}$). This implies that the Bellman optimality equation for state-value function holds, and thus that the policy and the value function are optimal.
@@ -274,17 +246,18 @@ Classical DP methods operate in sweeps through the state set, performing an $\te
 
 In the next chapter we explore Monte Carlo method - a reinforcement learning method that do not require a model and do not bootstrap. But for now, a quick summary:
 
-- Mindmap of where we are now
+- **Mindmap of where we are now**:
+
     <img src="../_static/img/chapter4/chapter4_mindmap.png" alt="Mindmap" style="width:100%;">
 
-- Key Takeaways:
+- **Key Takeaways**:
 
-    1. DP Overview:
+    1. **DP Overview:**
         - Computes optimal policies using a perfect model of the environment (MDP).
         - No interaction with the environment; computationally expensive but foundational for RL.
         - Core idea is to use value functions and Bellman equations as update rules to improve policies.
 
-    2. Policy Evaluation (Prediction):
+    2. **Policy Evaluation (Prediction):**
         - Iteratively estimate $v_\pi$ for a given policy $\pi$:
 
             $$
@@ -292,7 +265,7 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
             $$
         - Stop when changes in $v(s)$ are smaller than a threshold $\theta$.
 
-    3. Policy Improvement:
+    3. **Policy Improvement:**
         - Create a greedy policy $\pi'$ with respect to $v_\pi$:
 
             $$
@@ -300,14 +273,14 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
             $$
         - If no further improvement is possible, $\pi$ is optimal.
 
-    4. Policy Iteration:
+    4. **Policy Iteration:**
         - Alternate between policy evaluation and improvement until convergence:
 
             $$
             \pi_0 \rightarrow v_{\pi_0} \rightarrow \pi_1 \rightarrow v_{\pi_1} \rightarrow \ldots \rightarrow \pi_* \rightarrow v_*
             $$
 
-    5. Value Iteration:
+    5. **Value Iteration:**
         - Simplified policy iteration with one sweep per iteration:
 
             $$
@@ -315,8 +288,8 @@ In the next chapter we explore Monte Carlo method - a reinforcement learning met
             $$
         - Converges to optimal $V$ and greedy policy $\pi_*$.
 
-    6. Generalized Policy Iteration (GPI):
+    6. **Generalized Policy Iteration (GPI):**
         - Continuous interaction of policy evaluation and improvement.
         - Stabilizes when the policy is greedy with respect to its own value function.
 
-- Optional lecture video: [Warren Powell: Approximate Dynamic Programming for Fleet Management (Long)](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/phTdz/warren-powell-approximate-dynamic-programming-for-fleet-management-long)
+- **Extra lecture video (optional)**: [Warren Powell: Approximate Dynamic Programming for Fleet Management (Long)](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/phTdz/warren-powell-approximate-dynamic-programming-for-fleet-management-long)

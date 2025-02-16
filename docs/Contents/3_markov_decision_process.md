@@ -6,13 +6,13 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 
 ## 3.1. Agent-Environment Interface
 
-- Illustration of a MDP: MDPs are meant to be a straightforward framing of the problem of learning from interaction between a learner and the environment to achieve a goal, illustrated as follows:
+- **Illustration of a MDP**: MDPs are meant to be a straightforward framing of the problem of learning from interaction between a learner and the environment to achieve a goal, illustrated as follows:
 
     <div style="display: flex; justify-content: center;">
     <img src="../_static/img/chapter3/agent_env_interaction.png" alt="Agent Environment Interaction" style="width: 70%;">
     </div>
 
-    - Explanation:
+    - Explanations:
 
         - $\textit{Agent}$: the learner and decision maker
 
@@ -22,14 +22,14 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 
         - $\textit{Trajectory}$: The sequence led by the interaction process: $s_0, a_0, r_1, s_1, a_1, r_2, ... , s_t, a_t, r_{t+1}$ (sometimes when we talk about MDPs, we refer to this kind of sequences directly).
 
-- Dynamics of MDP: in a $\textit{finite MDP}$ - the sets of $S, A, R$ all have finite elements, so $S_t, R_t$ have well defined discrete probability distributions that are dependent only on the preceding state and action ($\textit{Markov property}$) - the dynamics of a finite MDP can be represented in this form as follows:
+- **Dynamics of MDP**: in a $\textit{finite MDP}$ - the sets of $S, A, R$ all have finite elements, so $S_t, R_t$ have well defined discrete probability distributions that are dependent only on the preceding state and action ($\textit{Markov property}$) - the dynamics of a finite MDP can be represented in this form as follows:
 
     $$
         p(s', r | s, a) \dot= Pr(S_{t+1}=s', R_{t+1}=r | A_t=a, S_t=s) \\
         \text{with} \sum_{s' \in S} \sum_{ r\in R} p(s', r | s, a) = 1, \text{for all} \ s \in S, a \in A(s)
     $$
 
-- Useful derivations: with the dynamics of a MDP known, one can compute anything one might want to know about the envrionment:
+- **Useful derivations**: with the dynamics of a MDP known, one can compute anything one might want to know about the envrionment:
 
     - State-transition probability:
 
@@ -54,15 +54,15 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 
 ### 3.2.1 Goals and Rewards
 
-- Definition of reward: In reinforcement learning, the purpose or goal of the agent is formalized in terms of a special scalar signal, called the $\textit{reward} \ (R_t \in R)$, passing from the environment to the agent.
+- **Definition of reward**: In reinforcement learning, the purpose or goal of the agent is formalized in terms of a special scalar signal, called the $\textit{reward} \ (R_t \in R)$, passing from the environment to the agent.
 
     Note that the reward signal is your way of communicating to the agent of what you want it to achieve, NOT how you want it achieved, i.e., reward signal doesn't take the process into account.
 
-- Reward hypothesis: The idea of maximizing the cumulative reward to allow the agent to show desirablt behaviour is based on the $\textit{reward hypothesis}$: that all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of the reward.
+- **Reward hypothesis**: The idea of maximizing the cumulative reward to allow the agent to show desirablt behaviour is based on the $\textit{reward hypothesis}$: that all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of the reward.
 
 ### 2.2 Returns and Episodes
 
-- Goal: In general, we seek to maximize the $\textit{expected return} \ G_t$ of a sequence of rewards: 
+- **Goal**: In general, we seek to maximize the $\textit{expected return} \ G_t$ of a sequence of rewards: 
 
     - for episodic tasks:
 
@@ -80,9 +80,9 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
         \end{align*}
         $$
 
-- Details on the two type of tasks:
+- **Details on the two type of tasks**:
 
-    - Episodic tasks: episodes end in a special state called the $\textit{terminal state}$, followed by a reset to a standard starting state or to a sample from a standard distribution of starting states. Note that
+    - $\textit{Episodic tasks}$: episodes end in a special state called the $\textit{terminal state}$, followed by a reset to a standard starting state or to a sample from a standard distribution of starting states. Note that
     
         - the next episode begins independently of how the previous one ended
 
@@ -90,7 +90,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 
         - notation $S^+$ is used to denote the set of all non-terminal states plus the terminal state.
 
-    - Continuing tasks: in contrast, continuing tasks are those tasks in which the agent–environment interaction does not break naturally into identifiable episodes, but goes on continually without limit. Note that in continuous cases,
+    - $\textit{Continuing tasks}$: in contrast, continuing tasks are those tasks in which the agent–environment interaction does not break naturally into identifiable episodes, but goes on continually without limit. Note that in continuous cases,
 
         - $\gamma \in (0,1)$ is called the $\textit{discout rate}$, and is used to represent the agent's preference between immediate and future reward. The more $\gamma$ approaches 1, the more "farsighted" the agent becomes.
 
@@ -104,15 +104,15 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 
         - notation $S$ is used to denote the set of all non-terminal states.
 
-- Example of the two type of tasks: Pole-Balancing (could be episode or continuing)
+- **Example of the two type of tasks**: Pole-Balancing (could be episode or continuing)
 
     <div style="display: flex; justify-content: center;">
     <img src="../_static/img/chapter3/cart_pole.png" alt="Example of Cart-Pole" style="width: 50%;">
     </div>
 
-    - Objective: to apply forces to a cart moving along a track so as to keep a pole hinged to the cart from falling over. The pole is reset to vertical after each failure.
+    - **Objective**: to apply forces to a cart moving along a track so as to keep a pole hinged to the cart from falling over. The pole is reset to vertical after each failure.
 
-    - Episodic perspective:
+    - **Episodic perspective**:
 
         - Description: This task could be treated as episodic, where the natural episodes are the repeated attempts to balance the pole. 
         
@@ -120,7 +120,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
         
         - Return: Return at each time would be the number of steps until failure.
 
-    - Continuing perspective:
+    - **Continuing perspective**:
 
         - Description: We could also treat this as a continuing task, using discounting. 
         
@@ -143,7 +143,7 @@ So the expected return of both episodic and continuing tasks can now be written 
 
 Almost all reinforcement learning algorithms involve estimating value functions - functions of states (or of state - action pairs) that estimate how good it is for the agent to be in a given state. We start this section by first defining policy:
 
-- Definition: formally, a $\textit{policy}$ is a mapping from states to probabilities of selecting each possible action:
+- **Definition**: formally, a $\textit{policy}$ is a mapping from states to probabilities of selecting each possible action:
 
     $$
         \pi(a|s) = Pr(A_t=a|S_t=s)
@@ -153,7 +153,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
 ### 3.3.1 Bellman Equations ([Optional Lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/X5VDU/bellman-equation-derivation))
 
-- Value Function (of state $s$) under policy $\pi$: is the expected return when starting in state $s$ and following $\pi$ thereafter:
+- **Value Function (of state $s$) under policy $\pi$**: is the expected return when starting in state $s$ and following $\pi$ thereafter:
 
     $$
         \begin{align*}
@@ -177,7 +177,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
         The backup operations (from bottom $s'$ to top $s$) transfer value information back to a state from its successor states.
 
-- Action-value function under policy $\pi$: the expected return starting from $s$, taking the action $a$, and thereafter following policy $\pi$:
+- **Action-value function under policy $\pi$**: the expected return starting from $s$, taking the action $a$, and thereafter following policy $\pi$:
 
     $$
         \begin{align*}
@@ -197,7 +197,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
         </div>
 
 
-- Example of Gridworld (lecture video)
+- **Example of Gridworld (lecture video)**
 
     Watch this lecture video linked to the following image, which gives a vivid example of how Bellman equation is computed in a gridworld environment. If the image is not clickable, try [this link](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/in2Rn/why-bellman-equations)
 
@@ -208,7 +208,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
 ### 3.3.2 Bellman Optimality Equation ([Optional Lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/9DFPk/optimal-value-functions))
 
-- Optimal Policy: This [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/AjTR1/optimal-policies) introduces optimal policy in depth if you find the textual definition too abstract.
+- **Optimal Policy:** This [lecture video](https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/AjTR1/optimal-policies) introduces optimal policy in depth if you find the textual definition too abstract.
 
     - Better or Equal Policy: A policy $\pi$ is defined to be **better or equal** to another policy $\pi'$ if:
 
@@ -218,7 +218,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
         - $\pi_{\star}$ must exist.
         - There can be more than one optimal policy.
 
-- Optimal value functions:
+- **Optimal value functions:**
 
     - Optimal State-Value Function: The **optimal state-value function** is defined as:
 
@@ -229,7 +229,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     $$ q_{\star}(s, a) \doteq \max_{\pi} q_{\pi}(s, a) \text{ for all } s \in S, a \in A(s) $$
 
 
-- Bellman Optimality Equation:
+- **Bellman Optimality Equation:**
 
 	- for $v_{\star}(s)$ (also written as $v_{\pi_\star}(s)$):
 
@@ -260,7 +260,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
         - Keep in mind that **$v_{\star}(s) =  \underset{a \in A(s)}{\max} q_{\star}(s,a)$ is the key of deriving both bellmann optimality equations.**
 
-- Why are we doing: you could feel confused at this point of what are we doing here. Well in short, the one thing we need in the end of RL process is the (near-)optimal policy, which supports our (or should I say, the agent's) decision making. 
+- **What are we doing**: you could easily feel confused at this point of what are we doing here. Well in short, the one thing we need in the end of RL process is the (near-)optimal policy, which supports our (or should I say, the agent's) decision making. 
 
     The optimal policy can be derived by having the optimal value function, and the optimal value function can be solved with bellmann optimality equation. To give you more details, 
 
@@ -273,7 +273,7 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
 
 ## 3.4 Summary
 
-- Key Takeaways:
+- **Key Takeaways:**
 
     1. MDP Basics:
         - MDPs model sequential decision-making where actions influence immediate and future rewards.
@@ -299,8 +299,9 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
         - Action-value function $q_\pi(s, a)$:  $q_\pi(s, a) = \mathbb{E}_\pi[G_t | S_t = s, A_t = a]$.
 
     6. Bellman (optimality) Equations: refer to [section 3.3](#33-policies-and-value-functions) for their derivations
-        
-- Final note:
+
+```{note}
+- **Final note:**
 
     Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. However, this solution is rarely directly useful - it relies on at least three assumptions that are rarely true in practice:
 
@@ -309,6 +310,8 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     3) the Markov property.
 
     Even in a simple tabular setting where 1. and 3. are met, the number of states could easily scale beyond any current suptercomputer's ability. Therefore, there are other reinforcement learning methods that can be understood as **approximately solving the Bellman optimality equation**, and will be introduced in the following chapters.
+```
+
 
 
 

@@ -1,3 +1,5 @@
+# Chapter 0. Prelude 
+
 ## Why this project
 
 ## What this is
@@ -8,6 +10,7 @@ best suited for learners who have had some experience with RL here and there and
 
 Structure
 
+
 Details
 1. textual tutorail merged with lecture videos, 
 for math derivations, both text and videos are provided
@@ -16,7 +19,11 @@ note with lecture videos and some are optional
 
 2. section or paragraph marked with $\star$ are optional
 
+every text chunk has a word or a set of words for describing its main content, this word lead is boldmarked
+
+$\textit{italic texts}$ symble important concepts that are to be defined.
+
 learn with LLMs!
 
-## Acknoeledgements and Future work
+## Acknowledgements and Future work
 
