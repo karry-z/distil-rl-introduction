@@ -6,7 +6,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 ## 6.1 TD prediction
 
-- To introduce TD methods, first recall that 
+- **To introduce TD methods, first recall that** 
 
 	$$
 		\begin{align}
@@ -37,36 +37,26 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 		- The term $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$ is called $\textit{TD error}$. $\delta_t$ is the error in $V(S_t)$, yet available at time $t+1$.
 
-- Tabular TD(0) for estimating $v_\pi$:
+- **Tabular TD(0) for estimating $v_\pi$**:
 
 	- Algorithm:
 
-		- Input: 
+		<div style="display: flex; justify-content: center;">
+    	<img src="../_static/img/chapter6/algo_tabular_td.png" alt="Algorithm: Tabular TD(0)" style="width: 100%;;">
+    	</div>
 
-			- the policy $\pi$ to be evaluated
-			- Algorithm parameter: step size $\alpha \in (0,1]$
-			- Initialize $V(s)$, for all $s \in S^+$ arbitrarily except that V($terminal$) = 0
+	
+		```{note}
+		Notice the difference between MC algorithms, there is now no need to generate the whole episode. Instead, $V(s)$ will be updated right after an action is taken and a new state is observed, i.e., TD methods work in a "step-wise" fashion.
+		```
 
-		- Loop for each episode:
-
-			- Initialize $S$
-			- Loop for each step of episode:
-				- $A \leftarrow$ action given by $\pi$ for S
-				- Take action $A$, observe $R, S'$
-				- $V(S) \leftarrow V(S) + \alpha (R + \gamma V(S') - V(S))$
-				- $S \leftarrow S'$
-			- until $S$ is the terminal state
-
-	- Notes:
-		- notice the difference between MC algorithms, there is now no need to generate the whole episode. Instead, $V(s)$ will be updated right after an action is taken and a new state is observed, i.e., TD methods work in a "step-wise" fashion.
-
-- Example of Driving Home (Click to watch the lecture video)
+- **Example of Driving Home** (Click to watch the lecture video)
 
 	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/9Dxlq/the-advantages-of-temporal-difference-learning">
 	<img src="../_static/img/chapter6/driving_home.png" alt="Video: TD prediction on Driving Home Example" style="width:70%;">
 	</a>
 
-- Advantages of TD prediction:
+- **Advantages of TD prediction**:
 
 	- Over dynamic programming: TD methods do not need a model of the environment. Over Monte Carlo: TD methods are naturally implemented in an online, fully incremental fashion, i.e., they do not require to wait until the end of an episode.
 
@@ -82,7 +72,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 ### 6.2.1 Sarsa: On-policy TD Control
 
-- Backgound for Sarsa:
+- **Backgound for Sarsa**:
 	- Since TD methods deal with tasks where there is no model of environment available, it is natural to estimate $Q_\pi(s,a)$ instead of $V_\pi(s)$. Similar to [section 6.1](#61-td-prediction), the **update rule for Sarsa** is: 
 
 		$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]$$
@@ -93,34 +83,24 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 	- Similar to any other on-policy methods, we continually estimate $q_\pi$ for the behavior policy $\pi$, and at the same time change $\pi$ toward greediness with respect to $q_\pi$ (pattern of generalized policy iteration (GPI)). 
 
-- Sarsa (on-policy TD control) for estimating $Q \approx q_{\star}$
+- **Sarsa (on-policy TD control) for estimating $Q \approx q_{\star}$**
 
-	- Algorithm:
+	<div style="display: flex; justify-content: center;">
+	<img src="../_static/img/chapter6/algo_sarsa.png" alt="Algorithm: SARSA" style="width: 100%;;">
+	</div>
 
-		- Algorithm parameter: step size $\alpha \in (0,1]$, small $\epsilon>0$
 
-		- Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$ arbitrarily except that $A(terminal, .) = 0$
-		
-		- Loop for each episode:
-			- Initialize $S$
-			- Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-			- Loop for each step of episode:
-				- Take action A, observe $R, S'$
-				- Choose $A'$ from $S'$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-				- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma Q(S', A') - Q(S, A)]$
-				- $S \leftarrow S', A \leftarrow A'$
-			- until $S$ is terminal
+	```{note}
+	- **There is no need to initialize a policy $\pi$ in the beginning**, the action can be derived directly from a given policy wth $Q(s,a), \text{ for all } s \in S, a \in A(s)$ available.
+
+	- While deriving the next action, make sure to use a soft-policy to ensure exploration.
+
+	- Notice that after transit to the state $S'$, you still need to take another action $A'$ to be able to update $Q(S,A)$.
+
+	- Sarsa converges with probability 1 to an optimal policy and action-value function as long as all state–action pairs are visited an infinite number of times and the policy converges in the limit to the greedy policy (which can be arranged, for example, with $\epsilon$-greedy policies by setting $\epsilon = 1/t$).
+	```
 	
-	- Notes:
-		- **There is no need to initialize a policy $\pi$ in the beginning**, the action can be derived directly from a given policy wth $Q(s,a), \text{ for all } s \in S, a \in A(s)$ available.
-
-		- While deriving the next action, make sure to use a soft-policy to ensure exploration.
-
-		- Notice that after transit to the state $S'$, you still need to take another action $A'$ to be able to update $Q(S,A)$.
-
-		- Sarsa converges with probability 1 to an optimal policy and action-value function as long as all state–action pairs are visited an infinite number of times and the policy converges in the limit to the greedy policy (which can be arranged, for example, with $\epsilon$-greedy policies by setting $\epsilon = 1/t$).
-	
-- Example: Sarsa in the Windy Gridworld:
+- **Example: Sarsa in the Windy Gridworld**
 
 	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/RZeRQ/sarsa-in-the-windy-grid-world">
 	<img src="../_static/img/chapter6/windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
@@ -133,31 +113,28 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 ### 6.2.2 Q-learning: Off-policy TD Control
 
-- Backgound for Q-learning:
+- **Backgound for Q-learning**:
+
 	- The update rule for Q-learning is: 
 
 		$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$$
 
 	- This way of directly approximating $q_\star$ dramatically simplifies the analysis of the algorithm and enabled early convergence proofs. All that is required for correct convergence is that all pairs continue to be updated (exploration).
 
-- $Q$-learning (off-policy TD control) for estimating $\pi \approx \pi_{\star}$
-	- Algorithm:
-		- Algorithm parameter: step size $\alpha \in (0,1], \epsilon > 0$
-		- Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$
-		- Loop for each episode:
-			- Initialize $S$
-			- Loop for each step of episode:
-				- Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-				- Take action $A$, observe $R, S'$
-				- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma max_a Q(S', a) - Q(S, A)]$
-				- $S \leftarrow S'$
-			- until $S$ is terminal
-	- Notes:
-		- **Different from Sarsa, at target state $S'$, Q-learning choose the greedy action that maximizes $Q(S', a)$ directly**, but not according to a policy derived from $Q$ (although, the derived policy from $Q$ can also be the greedy policy, if so, the update rules of Sarsa and Q-learning are identical).
+- **$Q$-learning (off-policy TD control) for estimating $\pi \approx \pi_{\star}$**
 
-		- **Q-learning is off-policy, but why?** Consider the derived policy from current $Q$ as the $\textit{behaviour policy}$, which can be e.g., $\epsilon$-greedy. but the $\textit{target policy}$ for Q-learning is actually the greedy policy according to the $max$ term in the update rule from above (actions are chosen according to $\epsilon$-greedy, updates are made according to the greedy policy). Readers of interest about why exactly Q-learning is off-policy can further refer to this [lecture video.](https://www.coursera.org/learn/sample-based-learning-methods/lecture/1OikH/how-is-q-learning-off-policy) 
+	<div style="display: flex; justify-content: center;">
+	<img src="../_static/img/chapter6/algo_q_learning.png" alt="Algorithm: Q-Learning" style="width: 100%;;">
+	</div>
 
-- Example: Q-learning in the Windy Gridworld:
+
+	```{note}
+	- **Different from Sarsa, at target state $S'$, Q-learning choose the greedy action that maximizes $Q(S', a)$ directly**, but not according to a policy derived from $Q$ (although, the derived policy from $Q$ can also be the greedy policy, if so, the update rules of Sarsa and Q-learning are identical).
+
+	- **Q-learning is off-policy, but why?** Consider the derived policy from current $Q$ as the $\textit{behaviour policy}$, which can be e.g., $\epsilon$-greedy. but the $\textit{target policy}$ for Q-learning is actually the greedy policy according to the $max$ term in the update rule from above (actions are chosen according to $\epsilon$-greedy, updates are made according to the greedy policy). Readers of interest about why exactly Q-learning is off-policy can further refer to this [lecture video.](https://www.coursera.org/learn/sample-based-learning-methods/lecture/1OikH/how-is-q-learning-off-policy) 
+	```
+		
+- **Example: Q-learning in the Windy Gridworld**
 
 	<a href="https://www.coursera.org/learn/sample-based-learning-methods/lecture/BZbSy/q-learning-in-the-windy-grid-world">
 	<img src="../_static/img/chapter6/q_learning_windy_gridworld.png" alt="Video: Sarsa in the Windy Gridworld" style="width:70%;">
@@ -167,11 +144,11 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 	- When we descrease the step-size $\alpha$, Sarsa learns the same final policy as Q-Learning, but more slowly. This experiment highlights the impact of parameter choices in reinforcement learning. $\alpha$, $\epsilon$, initial values, and the length of the experiment can all influence the final result.
 
-- Example of Cliff Walking - Another comparison between Sarsa and Q-learning
+- **Example of Cliff Walking - Another comparison between Sarsa and Q-learning**
 
 	<img src="../_static/img/chapter6/cliff_walking.png" alt="Video: Sarsa in the Windy Gridworld" style="width:95%;">
 
-	- Description:
+	- **Description**:
 
 		- States and goal: the agent start at state $S$ on the lower left and tries to reach the goal G on the lower right.
 
@@ -179,7 +156,7 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 		- Reward: $-1$ on all transitions except those into the region marked "The Cliff", which incurs a reward of $-100$.
 
-	- Performance comparison:
+	- **Performance comparison**:
 
 		- Q-learning (red): learns values for the optimal policy, that which travels right along the edge of the cliff. But this results in its occasionally falling off the cliff because of the $\epsilon$-greedy action selection.
 
@@ -189,7 +166,8 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 
 ### 6.2.3 Expected Sarsa
 
-- Backgound for expected Sarsa:
+- **Backgound for expected Sarsa**:
+
 	- update rule: 
 
 	$$
@@ -202,32 +180,40 @@ As usual, we start by focusing on the policy evaluation or prediction problem, t
 	- Given the next state, $S_{t+1}$, this update moves deterministically in the same direction as Sarsa moves in expectation, and accordingly it is called Expected Sarsa.
 	- Expected Sarsa is more complex computationally than Sarsa but, in return, it eliminates the variance due to the random selection of $A_{t+1}$. Given the same amount of experience we might expect it to perform slightly better than Sarsa.
 
-- Expected Sarsa for estimating $\pi \approx \pi_{\star}$
-	- Algorithm:
-		- Algorithm parameter: step size $\alpha \in (0,1], \epsilon > 0$
-		- Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$
-		- Loop for each episode:
-			- Initialize $S$
-			- Loop for each step of episode:
-				- Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-				- Take action $A$, observe $R, S'$
-				- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma \sum_{a}\pi(a|S') Q(S', a) - Q(S, A)]$
-				- $S \leftarrow S'$
-			- until $S$ is terminal
+- **Expected Sarsa for estimating $\pi \approx \pi_{\star}$**
 
-	- Notes:
-		- The algorithm is just like Q-learning except that instead of using the maximum over next state-action pairs it uses the expected value, taking into account how likely each action is under the current policy.
+	```{todo}
+	Turn expected Sarsa algo into book-similar image
+	```
 
-		- The fun part about Expected Sarsa is that **it can be both on- and off-policy**. The above algorithm is a on-policy setting, but in general expected sarsa might use a policy different from the target policy $\pi$ to generate behavior, in which case it becomes an off-policy algorithm. 
-			- For example, suppose $\pi$ is the greedy policy while behavior is more exploratory; then Expected Sarsa is then exactly Q-learning. 
+	- Algorithm parameter: step size $\alpha \in (0,1], \epsilon > 0$
+	- Initialize $Q(s,a)$, for all $s \in S^+, a \in A(s)$
+	- Loop for each episode:
+		- Initialize $S$
+		- Loop for each step of episode:
+			- Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+			- Take action $A$, observe $R, S'$
+			- $Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma \sum_{a}\pi(a|S') Q(S', a) - Q(S, A)]$
+			- $S \leftarrow S'$
+		- until $S$ is terminal
+
+	```{note}
+	- The algorithm is just like Q-learning except that instead of using the maximum over next state-action pairs it uses the expected value, taking into account how likely each action is under the current policy.
+
+	- The fun part about Expected Sarsa is that **it can be both on- and off-policy**. The above algorithm is a on-policy setting, but in general expected sarsa might use a policy different from the target policy $\pi$ to generate behavior, in which case it becomes an off-policy algorithm. 
+		- For example, suppose $\pi$ is the greedy policy while behavior is more exploratory; then Expected Sarsa is then exactly Q-learning. 
 			
-			- In the above sense Expected Sarsa subsumes and generalizes Q-learning while reliably improving over Sarsa. **Except for the small additional computational cost, Expected Sarsa may completely dominate both of the other more-well-known TD control algorithms.**
-
-- Comparison on Cliff Walking example:
+		- In the above sense Expected Sarsa subsumes and generalizes Q-learning while reliably improving over Sarsa. **Except for the small additional computational cost, Expected Sarsa may completely dominate both of the other more-well-known TD control algorithms.**
+	```
+		
+- **Comparison on Cliff Walking example**:
 
 	The figure below shows the interim and asymptotic performance of the three TD control methods on the cliff-walking task as a function of $\alpha$.
+
 	- All three algorithms use $\epsilon$-greedy policy with $\epsilon$=0.1
+
 	- Asymptotic performance is an average over 100,000 episodes, then averaged over 10 runs.
+
 	- Interim performance is an average over the first 100 episodes, then averaged over 50,000 runs.
 
 		<img src="../_static/img/chapter6/comparison_cliff_walking.png" alt="Comparison of three TD control methods on cliff walking task" style="width: 60%;">
@@ -240,13 +226,13 @@ The methods presented in this chapter are today the most widely used reinforceme
 
 The special cases of TD methods introduced in the present chapter should rightly be called $\textit{one-step, tabular, model-free}$ TD methods. In the next chapter we extend them to the form that include a model of the environment. But for now, a quick summary: 
 
-- Mindmap of where we are now
+- **Mindmap of where we are now**
 
 	<img src="../_static/img/chapter6/chapter6_mindmap.png" alt="Mindmap" style="width:100%;">
 
-- Key Takeaways
+- **Key Takeaways**
 
-	- TD Prediction (TD(0))
+	- **TD Prediction (TD(0))**
 
 		- Updates value estimates after each step:  
 
@@ -254,7 +240,7 @@ The special cases of TD methods introduced in the present chapter should rightly
 		- TD error ($δ_t$) measures the difference between predicted and updated values.
 		- Advantages: No model needed, incremental updates, faster convergence than MC.
 
-	- TD Control Methods
+	- **TD Control Methods**
 
 		- Sarsa (on-policy): Updates based on the current policy. Safer, but may not find the most optimal paths.  
 
@@ -268,7 +254,7 @@ The special cases of TD methods introduced in the present chapter should rightly
 		 
 		$$Q(S_t, A_t) ← Q(S_t, A_t) + α [R_{t+1} + γ Σ_a π(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)]$$
 
-	- Comparisons
+	- **Comparisons**
 
 		- Sarsa learns conservative policies, good for risky environments.
 
@@ -276,6 +262,6 @@ The special cases of TD methods introduced in the present chapter should rightly
 		
 		- Expected Sarsa balances both, offering stable performance with minimal extra computation.
 
-	- Convergence: All methods converge to optimal policies if exploration is sufficient, and learning rates are properly set.
+	- **Convergence**: All methods converge to optimal policies if exploration is sufficient, and learning rates are properly set.
 
-- Extra lecture video (optional): [Rich Sutton: The Importance of TD Learning](https://www.coursera.org/learn/sample-based-learning-methods/lecture/MgFyz/rich-sutton-the-importance-of-td-learning)
+- **Extra lecture video (optional)**: [Rich Sutton: The Importance of TD Learning](https://www.coursera.org/learn/sample-based-learning-methods/lecture/MgFyz/rich-sutton-the-importance-of-td-learning)

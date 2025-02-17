@@ -1,12 +1,12 @@
 # Chapter 9. On-policy Control with Approximation
 
-In this chapter we return to the control problem (policy improvement) and estimate action value function $\hat{q}(s, a, \boldsymbol{w}) \approx q_\star(s,a)$, and still restrict our attention to the on-policy case.  
+In this chapter **we return to the control problem** (policy improvement) and estimate action value function $\hat{q}(s, a, \boldsymbol{w}) \approx q_\star(s,a)$, and still restrict our attention to the on-policy case.  
 
 We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-gradient TD(0) (last chapter) to action values and to on-policy control. In the episodic case, the extension is straightforward, but in the continuing case we have to take a few steps backward and re-examine how we have used discounting to define an optimal policy. We will talk about how we would give up discounting and switch to a new “average-reward” formulation of the control problem, with new “differential” value functions.
 
 ## 9.1 Episodic semi-gradient control
 
-- How to compute action-value function (linear case)
+- **How to compute action-value function (linear case)**
 
     - Smilar to the last chapter in the linear case, the approximated action-value function is computed by 
 
@@ -20,7 +20,8 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
     - This [optional lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/z9xQJ/episodic-sarsa-with-function-approximation) gives a vivid illustration of the above notes, i.e., about how the computation is done, and especially, how the feature vector is constructed.
 
 
-- Gradient descent update:
+- **Gradient descent update**:
+
     - General update rule for action-value prediction
 
         $$
@@ -38,34 +39,10 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
             - note that the update target at time step $t+1$ is given by the action value function with weights from time step $t$.
         
         - Algorithm:
-            - Input: a differentiable action-value function parameterization $\hat{q}: S \times A \times \mathbb{R}^d \rightarrow \mathbb{R}$
-            - Algorithm parameter: step size $\alpha$, small $\epsilon > 0 $
-            - Initialize value function weights $\boldsymbol{w} \in \mathbb{R}^d arbitrarily$
-            - Loop for each episode:
-                - $S, A \leftarrow$ initial state and action of episode
-                - Loop for each step of the episode:
-                    - Take action $A$ according to the policy, observe $S\prime, R$
-                    - If $S\prime$ is terminal:
-                        - update weights:
 
-                        $$
-                        \boldsymbol{w} \dot= \boldsymbol{w} + \alpha [R - \hat{q}(S, A, \boldsymbol{w})]\nabla\hat{q}(S, A, \boldsymbol{w})
-                        $$
-
-                        - Go to the next episode
-
-                    - Choose $A\prime$ based on the function $\hat{q}(S, a, \boldsymbol{w})$ and the policy (e.g., $\epsilon-greedy$)
-                    - Update weights: 
-
-                        $$
-                        \boldsymbol{w} \dot= \boldsymbol{w} + \alpha [R + \gamma\hat{q}(S\prime, A\prime, \boldsymbol{w}) - \hat{q}(S, A, \boldsymbol{w})]\nabla\hat{q}(S, A, \boldsymbol{w})
-                        $$
-                    - Updata state and action:
-
-                        $$
-                        S \leftarrow S\prime \\
-                        A \leftarrow A\prime
-                        $$
+            <div style="display: flex; justify-content: center;">
+            <img src="../_static/img/chapter9/algo_episodic_semi_gradient_sarsa.png" alt="Algorithm: Episodic Semi-gradient Sarsa" style="width: 100%;">        
+            </div>
 
     - Update rule for semi-gradient Expected Sarsa:
 
@@ -80,7 +57,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         $$
 
 
-- Using gradient methods for on-policy control: Example of Mountain Car (lecture video)
+- **Gradient methods for on-policy control**: Example of Mountain Car (lecture video)
 
     <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/YgKc7/episodic-sarsa-in-mountain-car">
     <img src="../_static/img/chapter9/mountain_car_example.png" alt="Video: The Mountain Car Example" style="width:80%;">
@@ -106,9 +83,9 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         - We used 8 tilings, with each tile covering $1/8th$ of the bounded distance in each dimension
 
 
-- ${\star}$ Methods for improving exploration under function approximation
+- **${\star}$ Methods for improving exploration under function approximation**
 
-    - This is an apsect that is not included in Sutton's book (2018 edition), yet well covered by this [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/SCKKe/exploration-under-function-approximation). To put it in a nutshell, the two main methods for exploration improvement (not necessarily work well) are:
+    - This is an apsect that is **not included in Sutton's book** (2018 edition), yet well covered by this [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/SCKKe/exploration-under-function-approximation). To put it in a nutshell, the two main methods for exploration improvement (not necessarily work well) are:
 
         - **Optimistic Initial Values**: In tabular settings, initializing values higher than the true ones encourages exploration. This works well in tabular settings but is complex in function approximation (e.g., neural networks), where relationships between inputs and outputs are non-linear. While optimistic initialization can guide exploration, it may lose effectiveness due to generalization in networks or non-localized updates.
 
@@ -120,9 +97,9 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 ## 9.2 Average Reward: A New Way of Formulating Control Problems
 
 
-- Motivation: This [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/DXGwx/average-reward-a-new-way-of-formulating-control-problems) motivates the average reward setting and is optional to watch.
+- **Motivation**: This [lecture video](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/DXGwx/average-reward-a-new-way-of-formulating-control-problems) motivates the average reward setting and is optional to watch.
 
-- Definition: Like the discounted setting, the average reward setting **applies to continuing problems**, however, there is no discounting. In the average-reward setting, the average reward is defined as below, and reflects the quality of the policy $\pi$.
+- **Definition**: Like the discounted setting, the average reward setting **applies to continuing problems**, however, there is no discounting. In the average-reward setting, the average reward is defined as below, and reflects the quality of the policy $\pi$.
 
     $$
     \begin{align}
@@ -138,14 +115,15 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
 
     - Necessity for the average reward setting: the discounted setting is problematic with function approximation, readers of interests can refer to the book chapter 10.4
 
-- Derived definitions:
-    - Returns: returns are defined in terms of differences between rewards and the average reward:
+- **Derived definitions**:
+
+    - **Returns**: returns are defined in terms of differences between rewards and the average reward:
 
         $$
         G_t \doteq R_{t+1} - r(\pi) + R_{t+2} - r(\pi) + R_{t+3} - r(\pi) + \cdots.
         $$
 
-    - Bellman equations:
+    - **Bellman equations**:
 
         $$
         \begin{align}
@@ -154,7 +132,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         \end{align}
         $$
 
-    - Bellman Optimality equations:
+    - **Bellman Optimality equations**:
 
         $$
         \begin{align}
@@ -163,7 +141,7 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         \end{align}
         $$
 
-    - The two TD errors (differential form): 
+    - **The two TD errors (differential form)**: 
 
         $$
         \begin{align}
@@ -172,46 +150,30 @@ We now feature the semi-gradient Sarsa algorithm, the natural extension of semi-
         \end{align}
         $$
 
-- Derived Algorithm Example: 
+- **Derived Algorithm Example**: 
 
-    - Differential semi-gradient Sarsa for estimating $\hat{q} \approx q_*$
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter9/algo_differential_semi_gradient_sarsa.png" alt="Algorithm: Differential semi-gradient Sarsa" style="width: 100%;">        
+    </div>
 
-        - Input: a differentiable action-value function $\hat{q}: \mathcal{S} \times \mathcal{A} \times \mathbb{R}^d \rightarrow \mathbb{R}$ 
+    ```{note}
+    Unlike Sarsa, a key difference of differential Sarsa is that it has to track an estimate of the average reward under its policy and subtract it from the sample reward in its update as below:
 
-        - Algorithm parameters: step sizes $\alpha, \beta > 0$  
+    $$\bar{R} \leftarrow \bar{R} + \beta (R-\bar{R})$$ 
 
-        - Initialize:
+    In practice, the term $(R-\bar{R})$ is replaced with $\delta$ to achieve better performance (lower variance).
+    ```
 
-            - Value-function weights $\boldsymbol{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\boldsymbol{w = 0}$)  
-            - Average reward estimate $\bar{R} \in \mathbb{R}$ arbitrarily (e.g., $\bar{R} = 0$)  
-
-        - Initialize state $S$ and action $A$.  
-
-        - Loop forever (for each step):
-
-            - Take action $A$, observe $R$ and $S'$.  
-            - Choose $A'$ as a function of $\hat{q}(S', \cdot, \boldsymbol{w})$ (e.g., $\epsilon$-greedy).  
-            - Compute:  $\delta \leftarrow R - \bar{R} + \hat{q}(S', A', \boldsymbol{w}) - \hat{q}(S, A, \boldsymbol{w}) $
-            - Keep tracking the average reward:  $\bar{R} \leftarrow \bar{R} + \beta \delta$  
-            - Update value-function weights:  $\boldsymbol{w} \leftarrow \boldsymbol{w} + \alpha \delta \nabla \hat{q}(S, A, \boldsymbol{w})$  
-            - Update state and action:  $S \leftarrow S', A \leftarrow A'$ 
-
-    - Note: Unlike Sarsa, a key difference of differential Sarsa is that it has to track an estimate of the average reward under its policy and subtract it from the sample reward in its update as below:
-
-        $$\bar{R} \leftarrow \bar{R} + \beta (R-\bar{R})$$ 
-
-        In practice, the term $(R-\bar{R})$ is replaced with $\delta$ to achieve better performance (lower variance).
-
-- Optional Watching: [Satinder Singh on Intrinsic Rewards](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/TKPHV/satinder-singh-on-intrinsic-rewards)
+- **Extra lecture video (optional)**: [Satinder Singh on Intrinsic Rewards](https://www.coursera.org/learn/prediction-control-function-approximation/lecture/TKPHV/satinder-singh-on-intrinsic-rewards)
 
 ## 9.3 Summary
 In this chapter, we extended tabular control methods to function approximation, examined changes in exploration techniques, and introduced the average reward framework for continuous control. Detailed aspects are:
 
-- Mindmap of where we are now
+- **Mindmap of where we are now**
 
     <img src="../_static/img/chapter9/chapter9_mindmap.png" alt="Mindmap for semi-gradient control and average reward setting." style="width:100%;">
 
-- Key Takeaways
+- **Key Takeaways**
 
     1. **Action Value Estimation**: For discrete action spaces, state features can be stacked, while for continuous action spaces, the action can be treated as an input (to a neural network) along with other state variables.
     
