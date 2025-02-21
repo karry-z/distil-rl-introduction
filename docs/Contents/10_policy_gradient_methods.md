@@ -198,7 +198,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     
         For MDPs, the baseline should vary with state. In some states all actions have high values and we need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions will have low values and a low baseline is appropriate.
 
-        Therefore, a natural choice of the baseline is an estimate of the state value: $\hat{v}(S_t, \boldsymbol{w})$. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights $\boldsymbol{w}$. To this end, we give the algorithm of REINFORCE with Baseline as below.
+        Therefore, **a natural choice of the baseline is an estimate of the state value: $\hat{v}(S_t, \boldsymbol{w})$**. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights $\boldsymbol{w}$. To this end, we give the algorithm of REINFORCE with Baseline as below.
 
 - **Algorithm of REINFORCE with Baseline**: Monte-Carlo Policy-Gradient Control (episodic) for $\pi_\theta \approx \pi_{\star}$
 
@@ -214,7 +214,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     
 ## 10.4 Actor–Critic Methods
 
-At the beginning of this chapter, we briefly defined actor-critic methods, i.e., policy gradient methods that learn approximations to both policy and value functions. At this point, it is important to note that though REINFORCE with baseline method learns both, it is NOT considered to be an actor-critic method. The reason is that its state-value function is used only as a baseline, not as a critic. That is, the value function is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated. 
+At the beginning of this chapter, we briefly defined actor-critic methods, i.e., policy gradient methods that learn approximations to both policy and value functions. At this point, it is important to note that **though REINFORCE with baseline method learns both, it is NOT considered to be an actor-critic method**. The reason is that its state-value function is used only as a baseline, not as a critic. That is, the value function is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated. 
 
 Since REINFORCE with baseline is essentially a Monte Carlo method, it is unbiased and will converge asymptotically to a local minimum. As we learned from TD learning methods, **only through bootstrapping do we introduce bias, and an asymptotic dependence on the quality of the function approximation, and thereby reduce variance and accelerate learning**. In order to gain these advantages in the case of policy gradient methods we use actor–critic methods with a bootstrapping critic.
 
@@ -245,6 +245,8 @@ In AC methods, **the state-value function assigns credit to "critizes" the polic
     <img src="../_static/img/chapter10/algo_ac.png" alt="Algorithm: Actor-Critic" style="width: 100%;;">
     </div>
 
+
+![alt text](image-1.png)
 
 ### 10.4.2 AC methods for continuing tasks:
 
