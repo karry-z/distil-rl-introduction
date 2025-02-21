@@ -60,7 +60,7 @@ Recall that in bandit problems we estimated the value $q_{\star}(a)$ of each act
 
 - **Reward hypothesis**: The idea of maximizing the cumulative reward to allow the agent to show desirablt behaviour is based on the $\textit{reward hypothesis}$: that all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of the reward.
 
-### 2.2 Returns and Episodes
+### 3.2.2 Returns and Episodes
 
 - **Goal**: In general, we seek to maximize the $\textit{expected return} \ G_t$ of a sequence of rewards: 
 
@@ -301,15 +301,13 @@ and then we introduce Bellman equations and Bellman optimality equations for rec
     6. Bellman (optimality) Equations: refer to [section 3.3](#33-policies-and-value-functions) for their derivations
 
 ```{note}
-- **Final note:**
+Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. However, this solution is rarely directly useful - it relies on at least three assumptions that are rarely true in practice:
 
-    Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. However, this solution is rarely directly useful - it relies on at least three assumptions that are rarely true in practice:
+1) we accurately know the dynamics $p$ of the environment; 
+2) we have enough computational resources to complete the computation of the solution; and 
+3) the Markov property.
 
-    1) we accurately know the dynamics $p$ of the environment; 
-    2) we have enough computational resources to complete the computation of the solution; and 
-    3) the Markov property.
-
-    Even in a simple tabular setting where 1. and 3. are met, the number of states could easily scale beyond any current suptercomputer's ability. Therefore, there are other reinforcement learning methods that can be understood as **approximately solving the Bellman optimality equation**, and will be introduced in the following chapters.
+Even in a simple tabular setting where 1. and 3. are met, the number of states could easily scale beyond any current suptercomputer's ability. Therefore, there are other reinforcement learning methods that can be understood as **approximately solving the Bellman optimality equation**, and will be introduced in the following chapters.
 ```
 
 
