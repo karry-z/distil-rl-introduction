@@ -49,7 +49,7 @@ Basics of MC methods:
 Turn this algo below into a book-similar image
 ```
 
-- First-visit MC prediction, for estimating $Q \approx q_{\pi}$
+- **First-visit MC prediction, for estimating $Q \approx q_{\pi}$**
 
     - Algorithm: 
 
@@ -69,6 +69,11 @@ Turn this algo below into a book-similar image
 
     - Intuition: same as in [section 5.1.1](#511-mc-prediction-for-state-value-function), remember that $q(s,a) = E_\pi[G_t | S_t, A_t]$
 
+```{note}
+The Monte-Carlo return $G_t$ provides an **unbiased sample** of the expected return at a given state, but due to stochasticity from the dynamics of the environment and policy, each reward $R_t$ can be a random variable, the sum of which can result in a **high variance estimator** of the expected return. 
+
+Many modern RL methods (or at least the estimation of return) have been proposed aiming to alleviate this problem, several of them will be introduced in [Chapter 11](../Contents/11_modern_policy_gradient_methods.md). 
+```
 
 ## 5.2 Monte Carlo Control
 
@@ -92,15 +97,13 @@ Apparently, these two assumptions are hardly truth in practice, so we are now go
 
 - Monte Carlo ES (Exploring Starts), for estimating $\pi \approx \pi_{\star}$
 
-    - Algorithm:
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter5/algo_mc_es.png" alt="Algorithm: Monte Carlo with Exploring Starts" style="width: 100%;">
+    </div>
 
-        <div style="display: flex; justify-content: center;">
-        <img src="../_static/img/chapter5/algo_mc_es.png" alt="Algorithm: Monte Carlo with Exploring Starts" style="width: 100%;">
-        </div>
-
-```{note}
-The essential technique of above algorithm is that after each update of $Q(S_t,A_t)$, the improvement (greedification) will be made directly, which removes the second assumption.
-```
+    ```{note}
+    The essential technique of above algorithm is that after each update of $Q(S_t,A_t)$, the improvement (greedification) will be made directly, which removes the second assumption.
+    ```
 
 ### 5.2.2 Monte Carlo Control removing both assumptions
 
@@ -194,11 +197,13 @@ Let's recap On / Off-policy learning:
             \end{align*}
             $$
 
-		- Notes
+		```{note}
+        - The subscript of $\rho_{t: T-1}$ corresponds to the sequence of actions in the trajectory, i.e., {$A_{t+1}, ..., A_{T-1}$}, then the trajectory stops at the terminal state $S_T$
 
-            - the subscript of $\rho_{t: T-1}$ corresponds to the sequence of actions in the trajectory, i.e., {$A_{t+1}, ..., A_{T-1}$}, then the trajectory stops at the terminal state $S_T$
+        - $\rho_{t+1: T-1}$ only depends on the two policies, **not the dynamics of the environment**, which means importance sampling can be used in model-free RL problems.
+        ```
 
-            - $\rho_{t+1: T-1}$ only depends on the two policies, **not the dynamics of the environment**, which means importance sampling can be used in model-free RL problems.
+
 
     2. Estimating $q_{\pi}(s,a)$ given $q_b(s,a) = E_b[G_t|S_t = s, A_t = a]$ as:
 
@@ -282,15 +287,13 @@ Let's recap On / Off-policy learning:
 
 - **Off-policy MC prediction (policy evaluation) for estimating $Q \approx q_\pi$** 
 
-    - Algorithm: 
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter5/algo_off_policy_mc_prediction_action.png" alt="Algorithm: Off-policy Monte Carlo Prediction for Action Value" style="width: 100%;">
+    </div>
 
-        <div style="display: flex; justify-content: center;">
-        <img src="../_static/img/chapter5/algo_off_policy_mc_prediction_action.png" alt="Algorithm: Off-policy Monte Carlo Prediction for Action Value" style="width: 100%;">
-        </div>
-
-```{note}
-$W_{t+1} = \rho_{t+1:T(i)-1}$
-```
+    ```{note}
+    $W_{t+1} = \rho_{t+1:T(i)-1}$
+    ```
 
 
 ### 5.3.2 Off-policy Monte Carlo Control
@@ -298,16 +301,16 @@ $W_{t+1} = \rho_{t+1:T(i)-1}$
 - **Rule of thumb**: In Control, the target policy is typically the deterministic greedy policy with respect to the current estimate of the action-value function. This policy becomes as deterministic optimal policy while the behavior policy remains stochastic and more exploratory, for example, an $\epsilon$-greedy policy.  
 
 - **Off-policy MC prediction (policy evaluation) for estimating $\pi \approx \pi_\star$**
-    - Algorithm: 
-        <div style="display: flex; justify-content: center;">
-        <img src="../_static/img/chapter5/algo_off_policy_mc_control.png" alt="Algorithm: Off-policy Monte Carlo Control" style="width: 100%;">
-        </div>
 
-```{note}
-- The policy $\pi$ converges to optimal at all encountered states even though actions are selected according to a different soft policy $b$,which may change between or even within episodes.
+    <div style="display: flex; justify-content: center;">
+    <img src="../_static/img/chapter5/algo_off_policy_mc_control.png" alt="Algorithm: Off-policy Monte Carlo Control" style="width: 100%;">
+    </div>
 
-- A potential problem is that this method learns only from the tails of episodes, when all of the remaining actions in the episode are greedy. If nongreedy actions are common, then learning will be slow, particularly for states appearing in the early portions of long episodes. Potentially, this could greatly slow learning.
-```
+    ```{note}
+    - The policy $\pi$ converges to optimal at all encountered states even though actions are selected according to a different soft policy $b$,which may change between or even within episodes.
+
+    - A potential problem is that this method learns only from the tails of episodes, when all of the remaining actions in the episode are greedy. If nongreedy actions are common, then learning will be slow, particularly for states appearing in the early portions of long episodes. Potentially, this could greatly slow learning.
+    ```
     
 ## 5.4 Summary
 
