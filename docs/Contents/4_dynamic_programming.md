@@ -116,13 +116,13 @@ The key idea of DP, and of reinforcement learning generally, is the use of value
             The above last equation is exactly the bellman optimality equation, this means that when the policy can not get any better, $v_{\pi'}$ is $v_{\star}$, therefore, $\pi$ and $\pi'$ are both the optimal policy $\pi_{\star}$.
         - **if a policy is already the greedy policy with respect to its own value function, then this policy is the optimal policy**
 
-- **Gridworld Example from [section 4.1](#41-policy-evaluation-prediction-problem) (continue)**
+- **Gridworld Example from [section 4.1](#41-policy-evaluation-prediction-problem) (continue, lecture video optional)**
 
     - After getting the value function $v_{\pi}$ of the initial random policy $\pi$, we perform greedification to get the new policy $\pi'$ (illustrated by white arrows), which is strictly better than $\pi$ according to the nature of policy improvement. 
 
-        <div style="display: flex; justify-content: center;">
-        <img src="../_static/img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 500px;">        
-        </div>
+		<a href="https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/lecture/FVd6r/policy-improvement">
+		<img src="../_static/img/chapter4/example4.2.png" alt="Policy Improvement" style="width: 75%"> 
+		</a>
     
     - In doing so, we now have successfully improved our original policy (for one iteration).
 
