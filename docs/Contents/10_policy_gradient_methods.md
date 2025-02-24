@@ -245,9 +245,6 @@ In AC methods, **the state-value function assigns credit to "critizes" the polic
     <img src="../_static/img/chapter10/algo_ac.png" alt="Algorithm: Actor-Critic" style="width: 100%;;">
     </div>
 
-
-![alt text](image-1.png)
-
 ### 10.4.2 AC methods for continuing tasks:
 
 - **Setup**: 
