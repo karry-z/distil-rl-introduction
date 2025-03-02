@@ -48,3 +48,4 @@ III. Approximate Solution Methods
    :caption: III.2. Policy Approximation
 
    Contents/10_policy_gradient_methods
+   Contents/11_modern_policy_gradient_methods
