@@ -29,7 +29,6 @@ extensions = [
     "sphinx_thebe",
     "sphinx_togglebutton",
     "sphinxcontrib.pseudocode",
-    # "sphinxcontrib.bibtex",
     "sphinx.ext.todo",  
 ]
 
@@ -90,7 +89,7 @@ html_theme_options = {
     "use_sidenotes": True,
     "announcement": (
         "⚠️This is an ongoing project and is currectly "
-        "still under development. ⚠️"
+        "still under development (Chinese version on its way). ⚠️"
     ),
 }
 
