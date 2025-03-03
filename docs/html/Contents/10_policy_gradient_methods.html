@@ -1,0 +1,1025 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 10. Policy Gradient Methods &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/10_policy_gradient_methods';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 11. Modern Policy Gradient Methods" href="11_modern_policy_gradient_methods.html" />
+    <link rel="prev" title="Chapter 9. On-policy Control with Approximation" href="9_on_policy_control_with_approximation.html" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />   
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">⚠️This is an ongoing project and is currectly still under development (Chinese version on its way). ⚠️</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="DistilRLIntro 0.1 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="DistilRLIntro 0.1 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">I. Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Chapter 0. Prelude</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">II.1. Fundamentals of Reinforcement Learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">II.2. Sample-based Learning Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">III.1. Value Function Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">III.2. Policy Approximation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 10. Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_modern_policy_gradient_methods.html">Chapter 11. Modern Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/blob/master/Contents/10_policy_gradient_methods.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/edit/master/Contents/10_policy_gradient_methods.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/issues/new?title=Issue%20on%20page%20%2FContents/10_policy_gradient_methods.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/10_policy_gradient_methods.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 10. Policy Gradient Methods</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-approximation-and-its-advantages">10.1 Policy Approximation and its Advantages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-poliy-gradient-theorem">10.2 The Poliy Gradient Theorem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforce-with-baseline-monte-carlo-policy-gradient">10.3 REINFORCE (with Baseline): Monte Carlo Policy Gradient</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforce">10.3.1 REINFORCE</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforce-with-baseline">10.3.2 REINFORCE with Baseline</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actorcritic-methods">10.4 Actor–Critic Methods</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ac-methods-for-episodic-tasks">10.4.1 AC methods for episodic tasks:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ac-methods-for-continuing-tasks">10.4.2 AC methods for continuing tasks:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-parameterization-for-continuous-actions">10.5 Policy Parameterization for Continuous Actions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">10.6 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                   <section class="tex2jax_ignore mathjax_ignore" id="chapter-10-policy-gradient-methods">
+<h1>Chapter 10. Policy Gradient Methods<a class="headerlink" href="#chapter-10-policy-gradient-methods" title="Link to this heading">#</a></h1>
+<p>So far in this book almost all the methods have been action-value methods, i.e., they try to learn the values of actions and then selected actions based on their estimated action values. We now consider methods that instead learn a parameterized policy that can select actions without consulting a value function. Note that a value function may still be used to <span class="math notranslate nohighlight">\(\textit{learn}\)</span> the policy parameter (denoted by <span class="math notranslate nohighlight">\(\theta \in \mathbb{R}^{d'}\)</span>), but is not required for action selection.</p>
+<p>This chapter considers methods for learning the policy parameter (the policy is represented as <span class="math notranslate nohighlight">\(\pi(a \mid s, \theta) = \Pr\{ A_t = a \mid S_t = s, \theta_t = \theta \}\)</span>) based on the gradient of some scalar performance measure <span class="math notranslate nohighlight">\(J(\theta)\)</span>, which we aim to maximize. Therefore the update of policy parameter follows gradient ascent:</p>
+<div class="math notranslate nohighlight">
+\[\theta_{t+1} = \theta_t + \alpha \nabla \widehat{J}(\theta_t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla \widehat{J}(\theta_t)\)</span> is a stohastic estimate whose expectation approximates the gradient of the performance measure with respect to its argument <span class="math notranslate nohighlight">\(\theta_t\)</span>. All methods that follow this general schema are called <span class="math notranslate nohighlight">\(\textit{policy gradient methods}\)</span>.</p>
+<p>Among <span class="math notranslate nohighlight">\(\textit{policy gradient methods}\)</span>, methods that learn approximations to both policy and value functions are often called <span class="math notranslate nohighlight">\(\textit{actor–critic methods}\)</span>, where <span class="math notranslate nohighlight">\(\textit{'actor'}\)</span> is a reference to the learned policy, and <span class="math notranslate nohighlight">\(\textit{'critic'}\)</span> refers to the learned value function.</p>
+<section id="policy-approximation-and-its-advantages">
+<h2>10.1 Policy Approximation and its Advantages<a class="headerlink" href="#policy-approximation-and-its-advantages" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Setup</strong>: In policy gradient methods, the policy can be parameterized in any way, as long as <span class="math notranslate nohighlight">\(\pi(a|s, \theta)\)</span> is differentiable with respect to its parameters, In practice, to ensure exploration we generally require that the policy never becomes deterministic (i.e., that <span class="math notranslate nohighlight">\(\pi(a|s, \theta) \in (0, 1)\)</span>, for all <span class="math notranslate nohighlight">\(s, a, \theta\)</span>)</p></li>
+<li><p><strong>Approximation example for discrete and small (not too large) action space</strong>:</p>
+<ul>
+<li><p><strong>Parameterization of the policy</strong>: in this setting, we first parameterize numerical <span class="math notranslate nohighlight">\(\textit{action preferences}\)</span> <span class="math notranslate nohighlight">\(h(s, a, \theta) \in R\)</span> for each state–action pair. The actions with the highest preferences in each state are given the highest probabilities of being selected, according to an e.g., exponential soft-max distribution:</p>
+<div class="math notranslate nohighlight">
+\[\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}\]</div>
+<p>We call this kind of policy parameterization soft-max in action preferences.</p>
+</li>
+<li><p><strong>Parameterization of the state-action pair</strong>: The action preferences <span class="math notranslate nohighlight">\(h(s, a, \theta) \in R\)</span> themselves can be parameterized arbitrarily. For exapmle, by:</p>
+<ul>
+<li><p>a deep artificial network (ANN), where <span class="math notranslate nohighlight">\(\theta\)</span> is the vector of all the connection weights of the network (as in the AlphaGo system, readers of interest can refer to the book section 16.6), or</p></li>
+<li><p>a linear system in features as</p>
+<div class="math notranslate nohighlight">
+\[h(s, a, \theta) = \theta^\top x(s, a)\]</div>
+<p>using feature vectors <span class="math notranslate nohighlight">\(x(s, a) \in \mathbb{R}^{d'}\)</span> constructed by any of the methods described in Chapter 9.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Advantages of parameterizing policies</strong></p>
+<ul class="simple">
+<li><p><strong>Allowing Determinism</strong>: Unlike the traditional epsilon-greedy approach, which caps exploration, parameterized policies can start stochastic and naturally converge to a greedy policy, i.e., if the optimal policy is deterministic, then the preferences of the optimal actions will be driven infinitely higher than all suboptimal actions (if permitted by the parameterization). This avoids the need for external decisions about when exploration is complete.</p></li>
+<li><p><strong>Allowing Stochasticity</strong>:  Parameterization of policies enables the selection of actions with arbitrary probabilities. In problems with significant function approximation, a deterministic policy might not always be feasible. A stochastic policy can often perform better, as demonstrated below in the corridor example, stochastic actions help the agent achieve higher returns.</p></li>
+</ul>
+</li>
+<li><p><strong>Example: Short corridor with switched actions</strong></p>
+  <img src="../_static/img/chapter10/short_corridor.png" alt="Example of short corridor with switched actions" style="width:60%;">
+<ul class="simple">
+<li><p><strong>Setup</strong>:</p>
+<ul>
+<li><p>As shown in the image, there are three nonterminal states, the reward is 1 per step.</p></li>
+<li><p>In the first state, left action causes no movement.</p></li>
+<li><p>In the second state actions are reversed, right actions takes the agent to the left and left to the right.</p></li>
+</ul>
+</li>
+<li><p><strong>Comparison between action-value method and policy approximation</strong>:</p>
+<ul>
+<li><p>An action-value method with <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy action selection is forced to choose between just two policies. For example, if <span class="math notranslate nohighlight">\(\epsilon = 0.1\)</span>, then either left of right action gets the probability of <span class="math notranslate nohighlight">\(1 - \frac{\epsilon}{2} = 0.95\)</span>, and the other gets only <span class="math notranslate nohighlight">\(0.05\)</span>. These two <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy policies achieve a value (at the start state <span class="math notranslate nohighlight">\(S\)</span>) of less than <span class="math notranslate nohighlight">\(-44\)</span> and <span class="math notranslate nohighlight">\(-82\)</span>.</p></li>
+<li><p>Policy approximation can do significantly better since it learns a specific probability with which to select right (allowing more stochasticity). As shown in the image, the best probability of selecting the right action with policy approximation is about <span class="math notranslate nohighlight">\(0.59\)</span>, which achieves a value of about <span class="math notranslate nohighlight">\(-11.6\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="the-poliy-gradient-theorem">
+<h2>10.2 The Poliy Gradient Theorem<a class="headerlink" href="#the-poliy-gradient-theorem" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Policy Gradient Objective</strong>:</p>
+<p>When we parameterize our policy directly, we can use the ultimate goal of reinforcement learning directly as the learning objective, i.e., to learn a policy that obtains as much reward as possible in the long run. Recall that our three form of reward formulations are:</p>
+<ul class="simple">
+<li><p>Episodic Setting: <span class="math notranslate nohighlight">\(G_t = \sum_{t=0}^{T} R_t\)</span></p></li>
+<li><p>Continuing Setting with Discounted Return: <span class="math notranslate nohighlight">\(G_t = \sum_{t=0}^{\infty} \gamma^t R_t\)</span></p></li>
+<li><p>Continuing Setting with Average Reward Formulation: <span class="math notranslate nohighlight">\(G_t = \sum_{t=0}^{\infty} R_t - r(\pi)\)</span></p></li>
+</ul>
+<p>In this chapter, <strong>we focus on the continuing setting with average reward as the objective</strong> (only for continuing tasks, of course). The average reward for a policy <span class="math notranslate nohighlight">\(\pi\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    r(\pi) &amp;= \sum_{s}\mu(s) v(s) \\
+    &amp;= \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) q(s,a) \\
+    \end{align*}
+    \end{split}\]</div>
+<p>Therefore, the goal is to find a policy that maximizes this average reward, so the gradient ascent update we introduced at the beginning of this chapter can be formulated as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \theta_{t+1} &amp;= \theta_t + \alpha \nabla \widehat{J}(\theta_t) \\
+    &amp;= \theta_t + \alpha \nabla r(\pi) \\
+    &amp;= \theta_t + \alpha \nabla \sum_{s}\mu(s) \sum_{a} \pi(a \vert s, \theta) q(s,a) 
+    \end{align*}
+    \end{split}\]</div>
+<p>However, Unlike value function approximation (where <span class="math notranslate nohighlight">\(\mu(s)\)</span> was fixed), here <span class="math notranslate nohighlight">\(\mu(s)\)</span> depends on the policy, which in return changes the distribution <span class="math notranslate nohighlight">\(\mu(s)\)</span> when it gets updated. We need a update rule for parameterizing the policy model without depending on <span class="math notranslate nohighlight">\(\mu(s)\)</span>, and that is when the policy gradient theorem comes to the rescue.</p>
+</li>
+<li><p><strong>Policy Gradient Theorem</strong>:</p>
+<p>The theorem provides an analytic expression for the gradient of performance (average reward) with respect to the policy parameter that does not involve the derivative of the state distribution, and it has proved:</p>
+<div class="math notranslate nohighlight">
+\[
+    \nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
+    \]</div>
+<p>The symbol <span class="math notranslate nohighlight">\(\propto\)</span> here means “proportional to”. In the episodic case, the constant of proportionality is the average length of an episode, and in the continuing case it is 1. The distribution <span class="math notranslate nohighlight">\(\mu\)</span> hereis the on-policy distribution under <span class="math notranslate nohighlight">\(\pi\)</span> as introduced in the last chapter.</p>
+<p>This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/Wv6wa/the-policy-gradient-theorem">optional lecture video</a> (between 2:08 - 4:27) provides an intuition of what the term <span class="math notranslate nohighlight">\(\sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)\)</span> does. For a detailed derivation of the policy gradient theorem, please refer to the book chapter 13.2, page 325.</p>
+</li>
+</ul>
+</section>
+<section id="reinforce-with-baseline-monte-carlo-policy-gradient">
+<h2>10.3 REINFORCE (with Baseline): Monte Carlo Policy Gradient<a class="headerlink" href="#reinforce-with-baseline-monte-carlo-policy-gradient" title="Link to this heading">#</a></h2>
+<section id="reinforce">
+<h3>10.3.1 REINFORCE<a class="headerlink" href="#reinforce" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Derivation of REINFORCE’s update rule</strong>:</p>
+<p>The strategy of stohastic gradient ascent requires a way to obtain samples such that the expectation of the sample gradient is proportional to the actual gradient of the performance measure, i.e., we need some way of sampling whose expectation equals or approximates the expression given by the policy gradient theorem.</p>
+<p>Naturally, we can reformulate the policy gradient theorem as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \nabla J(\theta) &amp;\propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta) \\
+        &amp;= \mathbb{E}_{\pi} \left[ \sum_a q_{\pi}(S_t, a) \nabla \pi(a | S_t, \theta) \right],
+        \end{align*}
+    \end{split}\]</div>
+<p>and we can just stop here and instantiate the stochastic gradient-ascent algorithm as</p>
+<div class="math notranslate nohighlight">
+\[
+        \theta_{t+1} \doteq \theta_t + \alpha \sum_a \hat{q}(S_t, a, \mathbf{w}) \nabla \pi(a | S_t, \theta),
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{q}\)</span> is some learned approximation to <span class="math notranslate nohighlight">\(q_\pi\)</span>. This update algorithm is called an <span class="math notranslate nohighlight">\(\textit{all-actions}\)</span> method because its update involves all of the actions. The algorithm is promising and deserves further study, but our current interest is the classical REINFORCE algorithm, which continues the above transformation as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \nabla J(\theta) &amp;= \mathbb{E}_{\pi} \left[ \sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a) \frac{\nabla \pi(a|S_t, \theta)}{\pi(a|S_t, \theta)} \right] \\
+        &amp;= \mathbb{E}_{\pi} \left[ q_{\pi}(S_t, A_t) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \ \text{(replacing \( a \) by a sample \( A_t \sim \pi \))}\\
+        &amp;= \mathbb{E}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \right]  \  \text{(because \( \mathbb{E}_{\pi} [ G_t | S_t, A_t] = q_{\pi}(S_t, A_t) \))}
+        \end{align*} \\
+    \end{split}\]</div>
+<p>The stochastic gradient-ascent update of REINFORCE can therefore be instantiated as</p>
+<div class="math notranslate nohighlight">
+\[\theta_{t+1} \doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}\]</div>
+</li>
+<li><p><strong>Intuition on REINFORCE</strong></p>
+<ul>
+<li><p><strong>The derivation</strong>: note that during derivation, we used a sample <span class="math notranslate nohighlight">\(A_t \sim \pi\)</span> to replace the the expectation term <span class="math notranslate nohighlight">\(\sum_a \pi(a|S_t, \theta) q_{\pi}(S_t, a)\)</span>. This strategy shares similarity as we change from Monte Carlo methods to TD methods. Similarly, this replacement brings more bias yet lower the variance at the same time.</p></li>
+<li><p><strong>The final update form</strong>: the increment of REINFORCE is proportional to the product of a return <span class="math notranslate nohighlight">\(G_t\)</span> and a vector (called the <span class="math notranslate nohighlight">\(\textit{eligibility vector}\)</span>) - the gradient of the probability of taking the action actually taken divided by the probability of taking that action. The latter may sound horrible when first hearing it, so let’s shed some light on what this increment indicates:</p>
+<ul>
+<li><p>The return <span class="math notranslate nohighlight">\(G_t\)</span> in the incremental term causes the parameter to move most in the directions that favor actions that yield the highest return. (This is where the name REINFORCE comes from, because the algorithm reinforces good actions and discourages bad ones.)</p></li>
+<li><p>The vector <span class="math notranslate nohighlight">\(\frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}\)</span>, on the other hand, is a typical form of what is called <span class="math notranslate nohighlight">\(\textit{relative rate of change}\)</span>. In this case, it indicates the direction in parameter space that most increases the probability of repeating the action <span class="math notranslate nohighlight">\(A_t\)</span> on future visits to state <span class="math notranslate nohighlight">\(S_t\)</span>.</p>
+<p>Moreover, the update is inversely proportional to the action probability, giving actions that are less frequently selected an advantag, i.e., encouraging exploration.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Why Monte Carlo</strong>: Note that REINFORCE uses the complete return <span class="math notranslate nohighlight">\(G_t\)</span> from time <span class="math notranslate nohighlight">\(t\)</span>, which includes all future rewards up until the end of the episode. In this sense it is a Monte Carlo algorithm and is well defined <strong>only for the episodic case</strong>.</p></li>
+</ul>
+</li>
+<li><p><strong>Algorithm of REINFORCE:</strong> Monte-Carlo Policy-Gradient Control (episodic) for <span class="math notranslate nohighlight">\(\pi_{\star}\)</span></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter10/algo_reinforce.png" alt="Algorithm: REINFORCE" style="width: 100%;;">
+  </div>
+</li>
+<li><p><strong>Performance of REINFORCE on the short-corridor example</strong></p>
+  <img src="../_static/img/chapter10/reinforce_performance.png" alt="Performance of REINFORCE on the short corridor example with different step sizes" style="width:70%;">
+<ul class="simple">
+<li><p>Results: as shown, with a good step size, the total reward per episode approaches the optimal value of the start state (<span class="math notranslate nohighlight">\(v_\star(s_0)\)</span>).</p></li>
+<li><p>Properties of REINFORCE: for suffciently small <span class="math notranslate nohighlight">\(\alpha\)</span>, the improvement in expected performance is assured, and convergence to a local optimum under standard stochastic approximation conditions happens for decreasing <span class="math notranslate nohighlight">\(\alpha\)</span>. However, as a Monte Carlo method REINFORCE may be of high variance and thus produce slow learning.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="reinforce-with-baseline">
+<h3>10.3.2 REINFORCE with Baseline<a class="headerlink" href="#reinforce-with-baseline" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Derivation of REINFORCE with Baseline</strong></p>
+<p>We now generalize the policy gradient theorem to include a comparison of the action value <span class="math notranslate nohighlight">\(q_{\pi}(s, a)\)</span> to an arbitrary <span class="math notranslate nohighlight">\(baseline \ b(s)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+    \nabla J(\theta) \propto \sum_{s} \mu(s) \sum_{a} \left( q_{\pi}(s, a) - b(s) \right) \nabla \pi(a \mid s, \theta).
+    \]</div>
+<p>The baseline can be any function, even a random variable, <strong>as long as it does not vary with <span class="math notranslate nohighlight">\(a\)</span></strong>, and the equation remains valid because the subtracted quantity is zero:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \sum_{a} b(s) \nabla \pi(a \mid s, \theta) &amp;= b(s) \nabla \sum_{a} \pi(a \mid s, \theta) \\
+    &amp;= b(s) \nabla 1 \\
+    &amp;= 0.
+    \end{align*}
+    \end{split}\]</div>
+<p>Therefore, we now have a new update rule that includes a general baseline, which is a strict generalization of REINFORCE (since the baseline could be uniformly zero):</p>
+<div class="math notranslate nohighlight">
+\[
+    \theta_{t+1} \doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+    \]</div>
+</li>
+<li><p><strong>Justification for adding the baseline</strong></p>
+<ul>
+<li><p><strong>Lower the variance</strong>: In general, the baseline leaves the expected value of the update unchanged, but it can have a large effect on its variance. Adding a baseline can significantly reduce the variance (and thus speed the learning).</p></li>
+<li><p><strong>Setting of the baseline:</strong></p>
+<p>For MDPs, the baseline should vary with state. In some states all actions have high values and we need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions will have low values and a low baseline is appropriate.</p>
+<p>Therefore, <strong>a natural choice of the baseline is an estimate of the state value: <span class="math notranslate nohighlight">\(\hat{v}(S_t, \boldsymbol{w})\)</span></strong>. Because REINFORCE is a Monte Carlo method, is it also natural to use a Monte Carlo method to learn the state-value weights <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>. To this end, we give the algorithm of REINFORCE with Baseline as below.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Algorithm of REINFORCE with Baseline</strong>: Monte-Carlo Policy-Gradient Control (episodic) for <span class="math notranslate nohighlight">\(\pi_\theta \approx \pi_{\star}\)</span></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter10/algo_reinforce_baseline.png" alt="Algorithm: REINFORCE with baseline" style="width: 100%;;">
+  </div>
+</li>
+<li><p><strong>Performance of REINFORCE with Baseline on the short-corridor example</strong></p>
+  <img src="../_static/img/chapter10/reinforce_baseline_performance.png" alt="Performance of REINFORCE with Baseline on the short corridor example compared to REINFORCE" style="width:70%;">
+<p>Adding a baseline to REINFORCE can make it learn much faster. The step size used here for plain REINFORCE is that at which it performs best.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="actorcritic-methods">
+<h2>10.4 Actor–Critic Methods<a class="headerlink" href="#actorcritic-methods" title="Link to this heading">#</a></h2>
+<p>At the beginning of this chapter, we briefly defined actor-critic methods, i.e., policy gradient methods that learn approximations to both policy and value functions. At this point, it is important to note that <strong>though REINFORCE with baseline method learns both, it is NOT considered to be an actor-critic method</strong>. The reason is that its state-value function is used only as a baseline, not as a critic. That is, the value function is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated.</p>
+<p>Since REINFORCE with baseline is essentially a Monte Carlo method, it is unbiased and will converge asymptotically to a local minimum. As we learned from TD learning methods, <strong>only through bootstrapping do we introduce bias, and an asymptotic dependence on the quality of the function approximation, and thereby reduce variance and accelerate learning</strong>. In order to gain these advantages in the case of policy gradient methods we use actor–critic methods with a bootstrapping critic.</p>
+<p>In AC methods, <strong>the state-value function assigns credit to “critizes” the policy’s action selections, and accordingly the former is termed the critic and the latter the actor</strong>, more details on this can be found in the algorithms later in this section.</p>
+<section id="ac-methods-for-episodic-tasks">
+<h3>10.4.1 AC methods for episodic tasks:<a class="headerlink" href="#ac-methods-for-episodic-tasks" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Derivation</strong></p>
+<p>One-step actor–critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \theta_{t+1} &amp;\doteq \theta_t + \alpha \ G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \quad \quad \quad \quad \quad \quad \quad \text{(REINFORCE)} \\
+        &amp;\doteq \theta_t + \alpha \ (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)} \quad \quad \quad \text{(REINFORCE with Baseline)} \\
+        &amp;\doteq \theta_t + \alpha \left( G_{t:t+1} - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \quad \quad \quad \quad \quad \quad \text{(Actor-Critic)} \\
+        &amp;= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}) - \hat{v}(S_t, \mathbf{w}) \right) \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \text{(Actor-Critic)} \\
+        &amp;= \theta_t + \alpha \delta_t \frac{\nabla \pi(A_t | S_t, \theta_t)}{\pi(A_t | S_t, \theta_t)} \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \text{(Actor-Critic)}.
+        \end{align*}
+    \end{split}\]</div>
+<p>The natural state-value-function learning method to pair with this is semi-gradient TD(0) as given in the following algorithm. Note that <strong>it is now a fully online, incremental algorithm</strong>, with states, actions, and rewards processed as they occur and then never revisited.</p>
+</li>
+<li><p><strong>Algorithm: One-step Actor-Critic (episodic) for estimating <span class="math notranslate nohighlight">\(\pi_\theta \approx \pi_{\star}\)</span></strong></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter10/algo_ac.png" alt="Algorithm: Actor-Critic" style="width: 100%;;">
+  </div>
+</li>
+</ul>
+</section>
+<section id="ac-methods-for-continuing-tasks">
+<h3>10.4.2 AC methods for continuing tasks:<a class="headerlink" href="#ac-methods-for-continuing-tasks" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Setup</strong>:</p>
+<p>For continuing problems, we define the performance <span class="math notranslate nohighlight">\(J(\theta)\)</span> in terms of the average rate of reward per time step <span class="math notranslate nohighlight">\(r(\pi)\)</span>. The definition of <span class="math notranslate nohighlight">\(r(\pi)\)</span> can be found in Chapter 9 <a class="reference internal" href="9_on_policy_control_with_approximation.html#average-reward-a-new-way-of-formulating-control-problems"><span class="std std-ref">section 9.2</span></a>.</p>
+<p>Note that the policy gradient theorem as given for the episodic case remains true for the continuing case, a proof can be found in the book chapter 13.6 on page 334. Therefore, we are now able to adapt the algorithm for AC methods with average reward setting as demonstrated below.</p>
+</li>
+<li><p><strong>Algorithm of Actor-Critic (continuing), for estimating <span class="math notranslate nohighlight">\(\pi_\theta \approx \pi_{\star}\)</span></strong></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter10/algo_ac_continuing.png" alt="Algorithm: Actor-Critic (continuing)" style="width: 100%;;">
+  </div>
+</li>
+<li><p><strong>More on Actor-Critic algorithm (continuing)</strong>:</p>
+<ul class="simple">
+<li><p>Interaction between actor and critic: This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/h9nDv/actor-critic-algorithm">optional lecture video</a> (starting from 2:56 - 3:49) gives a vivid explanation of how the actor and the critic interact with each other.</p></li>
+<li><p>Approximation of value function and policy: This <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/OO2jp/actor-critic-with-softmax-policies">optional lecture video</a> offers an example of how to approximate <span class="math notranslate nohighlight">\(\pi(A | S, \theta)\)</span> with softmax policy as described in the beginning of this chapter, and <span class="math notranslate nohighlight">\(\hat{v}(S, \mathbf{w})\)</span> and action preference <span class="math notranslate nohighlight">\(h(s,a,\theta)\)</span> with linear methods.</p></li>
+</ul>
+</li>
+<li><p><strong>Example of AC method: Pendulum Swing-up (continuing task)</strong></p>
+  <img src="../_static/img/chapter10/pendulum_swing_up.png" alt="Pendulum example" style="width:50%;">
+<ul>
+<li><p><strong>Setup</strong>: an agent must balance a pendulum upright by applying torque to a pivot point, the pendulum starts from rest position (hanging down) with zero velocity and can move freely under the influence of gravity and the applied actions.</p>
+<ul class="simple">
+<li><p>States: Angular position <span class="math notranslate nohighlight">\(\beta\)</span> and angular velocity <span class="math notranslate nohighlight">\(\dot{\beta}\)</span> with <span class="math notranslate nohighlight">\(-2\pi &lt; \dot{\beta} &lt; 2\pi\)</span> (as high angular velocity could damage the system).</p></li>
+<li><p>Actions: Apply torque in one of three ways: 1) Clockwise torque, 2)Counterclockwise torque and 3) No torque</p></li>
+<li><p>Reward: <span class="math notranslate nohighlight">\(r=−∣\beta∣\)</span>, i.e., staying upright gives the highest reward zero.</p></li>
+</ul>
+</li>
+<li><p><strong>Parameterization and Features</strong>:</p>
+<ul class="simple">
+<li><p>State-value function: <span class="math notranslate nohighlight">\(\hat{v}(s, \mathbf{w}) \dot= \mathbf{w}^{\intercal} x(s)\)</span></p></li>
+<li><p>Softmax policy: <span class="math notranslate nohighlight">\(\pi(a|s,\theta) \ \dot= \ \frac{e^{h(s,a,\theta)}}{\sum_b e^{h(s,b,\theta)}}\)</span> with <span class="math notranslate nohighlight">\(h(s, a, \theta) = \theta^\top x_h(s, a)\)</span></p></li>
+<li><p>Feature construction: Since state is two-dimensional, we can easily use tile coding with 32 tilings of size 8×8.</p></li>
+</ul>
+</li>
+<li><p><strong>Learning</strong>: generally, we want <span class="math notranslate nohighlight">\(\alpha^\theta &lt; \alpha^\mathbf{w}\)</span>, namely <strong>to let the critic to have a bigger step size than the actor</strong> (learning rate) to allow it to update at a faster rate. That way, the critic can accurately critique the more slowly changing policy.</p></li>
+<li><p><strong>Performance</strong>: Training was repeated 100 times, and an exponentially weighted reward plot was used to evaluate performance. As shown by the figure below, the learned policy is quite stable and reliable</p>
+  <img src="../_static/img/chapter10/ac_performance_on_pendulum.png" alt="Pendulum example" style="width:75%;">
+<ul>
+<li><p>Optional: The Exponentially Weighted Moving Average (EWMA) for reward is commonly used in reinforcement learning to reduce noise and better observe trends in an agent’s learning progress, it is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[
+            R_t^{EW} = \lambda R_{t-1}^{EW} + (1 - \lambda) R_t
+            \]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(R_t^{EW}\)</span> is the exponentially weighted reward at time step <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R_t\)</span> is the actual reward received at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> is the smoothing factor (typically between 0 and 1).</p></li>
+<li><p><span class="math notranslate nohighlight">\(R_0^{EW}\)</span> is initialized to the first reward.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="policy-parameterization-for-continuous-actions">
+<h2>10.5 Policy Parameterization for Continuous Actions<a class="headerlink" href="#policy-parameterization-for-continuous-actions" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Setup of Gausssian Policies for Continuous Actions</strong>:</p>
+<p>We now turn out attention to continuous actions spaces with an infinite number of actions. For such problems, instead of computing learned probabilities for each of the many actions, we instead learn statistics of the probability distribution, and choose actions by sampling from this distribution.</p>
+<p>Assume the distribution is normal, to produce a policy parameterization, the policy can be defined as the normal probability density over a real-valued scalar action, with mean and standard deviation given by parametric function approximators that depend on the state, as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+    \pi(a | s, \theta) \doteq \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right),
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu : \mathcal{S} \times \mathbb{R}^{d'} \to \mathbb{R}\)</span> and <span class="math notranslate nohighlight">\(\sigma : \mathcal{S} \times \mathbb{R}^{d'} \to \mathbb{R}^+\)</span> are two parameterized function approximators. Therefore, the policy has two parts of parameters to learn <span class="math notranslate nohighlight">\(\theta = [\theta_\mu, \theta_\sigma]^\top\)</span>.</p>
+<p>The mean can be approximated as a linear function. The standard deviation must always be positive and is better approximated as the exponential of a linear function. Thus</p>
+<div class="math notranslate nohighlight">
+\[
+    \mu(s, \theta) \doteq \theta_{\mu}^{\top} \mathbf{x}_{\mu}(s) 
+    \quad \text{and} \quad 
+    \sigma(s, \theta) \doteq \exp \left( \theta_{\sigma}^{\top} \mathbf{x}_{\sigma}(s) \right),
+    \]</div>
+<p>With these definitions, all the algorithms described in the rest of this chapter can be applied to learn to select real-valued actions.</p>
+</li>
+<li><p><strong>Gaussian Policies applied to the Pendulum Swing-Up Task</strong>:</p>
+<ul>
+<li><p><strong>States and Reward</strong>: Remain the same</p></li>
+<li><p><strong>Actions</strong>: Instead of three discrete actions, the agent now selects continuous angular acceleration in the range [-3, 3].</p></li>
+<li><p><strong>Parameterization</strong>: We now use Gaussian policy and draw actions from a state-dependent Gaussian distribution. <span class="math notranslate nohighlight">\(\mu(s)\)</span> and <span class="math notranslate nohighlight">\(\sigma(s)\)</span> are modeled as linear and exponential functions as mentioned above respectively.</p></li>
+<li><p><strong>Action selection</strong>: 1) Compute <span class="math notranslate nohighlight">\(\mu(s)\)</span> and <span class="math notranslate nohighlight">\(\sigma(s)\)</span> based on the current state <span class="math notranslate nohighlight">\(s\)</span>. 2) Sample an action from the Gaussian poliyc with these parameters.</p>
+<p>During selection, <span class="math notranslate nohighlight">\(\sigma(s)\)</span> controls exploration: large <span class="math notranslate nohighlight">\(\sigma\)</span> means high variance and leads to high exploration, in contrast, small <span class="math notranslate nohighlight">\(\sigma\)</span> leads to low exploration. We typically initialize <span class="math notranslate nohighlight">\(\sigma(s)\)</span> to be large and as learning progresses, we expect the variance to shrink and the policy to concentrate around the best action in each state.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Why Continuous Action Policies</strong>:</p>
+<ul class="simple">
+<li><p>More Flexible Action Selection: The agent can apply fine-grained adjustments rather than picking from a fixed set of actions.</p></li>
+<li><p>Generalization Over Actions: If an action is found to be good, nearby actions also gain probability, reducing the need for extensive exploration.</p></li>
+<li><p>Handling Large or Infinite Action Spaces: Even if the true action space is discrete but large, treating it as continuous helps avoid the cost of exploring every action separately.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="summary">
+<h2>10.6 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>This chapter introduces policy gradient methods, a family of reinforcement learning techniques that directly parameterize and optimize policies, as opposed to traditional action-value methods that estimate action values and derive policies from them. A quick summary:</p>
+<ul>
+<li><p><strong>Mindmap of where we are now</strong></p>
+  <img src="../_static/img/chapter10/chapter10_mindmap.png" alt="Mindmap" style="width:100%;">
+</li>
+<li><p><strong>Key Takeaways</strong></p>
+<ol class="arabic">
+<li><p>Introduction to Policy Gradient Methods</p>
+<ul class="simple">
+<li><p>Direct Policy Optimization: Unlike action-value methods, policy gradient methods directly parameterize and optimize the policy <span class="math notranslate nohighlight">\(\pi(a|s, \theta)\)</span>.</p></li>
+<li><p>Gradient Ascent: Policies are updated by ascending the gradient of a performance measure <span class="math notranslate nohighlight">\(J(\theta)\)</span>.</p></li>
+</ul>
+</li>
+<li><p>Advantages of Policy Parameterization</p>
+<ul class="simple">
+<li><p>Flexibility: Policies can be stochastic or deterministic, allowing natural convergence to optimal behaviors.</p></li>
+<li><p>Improved Exploration: Stochastic policies enable better exploration compared to <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy approaches.</p></li>
+</ul>
+</li>
+<li><p>Policy Gradient Theorem</p>
+<ul>
+<li><p>Objective: Maximize average reward <span class="math notranslate nohighlight">\(r(\pi)\)</span> in continuing tasks.</p></li>
+<li><p>Gradient Expression:</p>
+<div class="math notranslate nohighlight">
+\[
+            \nabla J(\theta) \propto \sum_s \mu(s) \sum_a q_{\pi}(s, a) \nabla \pi(a | s, \theta)
+            \]</div>
+</li>
+<li><p>Avoids differentiating the state distribution <span class="math notranslate nohighlight">\(\mu(s)\)</span>.</p></li>
+</ul>
+</li>
+<li><p>REINFORCE Algorithm</p>
+<ul>
+<li><p>Monte Carlo Policy Gradient: Uses full returns from episodes to update policies.</p></li>
+<li><p>Update Rule:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta_{t+1} = \theta_t + \alpha G_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+            \]</div>
+</li>
+<li><p>Limitations: High variance and slow learning in some cases.</p></li>
+</ul>
+</li>
+<li><p>REINFORCE with Baseline</p>
+<ul>
+<li><p>Variance Reduction: Introduces a baseline <span class="math notranslate nohighlight">\(b(s)\)</span>, typically the state-value estimate <span class="math notranslate nohighlight">\(\hat{v}(s)\)</span>, to reduce variance.</p></li>
+<li><p>Update Rule with Baseline:</p>
+<div class="math notranslate nohighlight">
+\[
+            \theta_{t+1} = \theta_t + \alpha (G_t - b(S_t)) \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+            \]</div>
+</li>
+<li><p>Performance: Faster learning and improved stability compared to plain REINFORCE.</p></li>
+</ul>
+</li>
+<li><p>Actor-Critic Methods</p>
+<ul>
+<li><p>Combines Policy and Value Learning* The <strong>actor</strong> updates the policy, while the <strong>critic</strong> evaluates actions using bootstrapped value estimates.</p></li>
+<li><p>Update Rules:</p>
+<ul>
+<li><p>Policy (Actor):</p>
+<div class="math notranslate nohighlight">
+\[
+                \theta \leftarrow \theta + \alpha^\theta \delta \nabla \ln \pi(A_t|S_t, \theta)
+                \]</div>
+</li>
+<li><p>Value Function (Critic):</p>
+<div class="math notranslate nohighlight">
+\[
+                \mathbf{w} \leftarrow \mathbf{w} + \alpha^w \delta \nabla \hat{v}(S_t, \mathbf{w})
+                \]</div>
+</li>
+<li><p>TD Error:</p>
+<div class="math notranslate nohighlight">
+\[
+                \delta = R_{t+1} + \gamma \hat{v}(S_{t+1}) - \hat{v}(S_t)
+                \]</div>
+</li>
+</ul>
+</li>
+<li><p>Advantages: Lower variance, faster convergence, and fully online learning.</p></li>
+</ul>
+</li>
+<li><p>Continuous Action Spaces and Gaussian Policies</p>
+<ul>
+<li><p>Gaussian Policy Parameterization: For continuous actions, policies are modeled as Gaussian distributions with learnable mean <span class="math notranslate nohighlight">\(\mu(s)\)</span> and standard deviation <span class="math notranslate nohighlight">\(\sigma(s)\)</span>.</p></li>
+<li><p>Update Flexibility:</p>
+<div class="math notranslate nohighlight">
+\[
+            \pi(a | s, \theta) = \frac{1}{\sigma(s, \theta) \sqrt{2\pi}} \exp \left( -\frac{(a - \mu(s, \theta))^2}{2\sigma(s, \theta)^2} \right)
+            \]</div>
+</li>
+<li><p>Benefits: Enables fine-grained control, efficient exploration, and generalization over large or infinite action spaces.</p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "Dong237/DistilRLIntroduction",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./Contents"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+<div class="section ablog__blog_comments">
+   
+</div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="9_on_policy_control_with_approximation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 9. On-policy Control with Approximation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="11_modern_policy_gradient_methods.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 11. Modern Policy Gradient Methods</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-approximation-and-its-advantages">10.1 Policy Approximation and its Advantages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-poliy-gradient-theorem">10.2 The Poliy Gradient Theorem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforce-with-baseline-monte-carlo-policy-gradient">10.3 REINFORCE (with Baseline): Monte Carlo Policy Gradient</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforce">10.3.1 REINFORCE</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforce-with-baseline">10.3.2 REINFORCE with Baseline</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actorcritic-methods">10.4 Actor–Critic Methods</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ac-methods-for-episodic-tasks">10.4.1 AC methods for episodic tasks:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ac-methods-for-continuing-tasks">10.4.2 AC methods for continuing tasks:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-parameterization-for-continuous-actions">10.5 Policy Parameterization for Continuous Actions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">10.6 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

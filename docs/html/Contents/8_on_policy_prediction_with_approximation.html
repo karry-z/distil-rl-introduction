@@ -1,0 +1,916 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 8. On-policy Prediction with Approximation &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/8_on_policy_prediction_with_approximation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 9. On-policy Control with Approximation" href="9_on_policy_control_with_approximation.html" />
+    <link rel="prev" title="Chapter 7. Planning and Learning with Tabular Methods" href="7_planning_learning_acting.html" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />   
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">⚠️This is an ongoing project and is currectly still under development (Chinese version on its way). ⚠️</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="DistilRLIntro 0.1 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="DistilRLIntro 0.1 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">I. Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Chapter 0. Prelude</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">II.1. Fundamentals of Reinforcement Learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">II.2. Sample-based Learning Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">III.1. Value Function Approximation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">III.2. Policy Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_modern_policy_gradient_methods.html">Chapter 11. Modern Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/blob/master/Contents/8_on_policy_prediction_with_approximation.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/edit/master/Contents/8_on_policy_prediction_with_approximation.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/issues/new?title=Issue%20on%20page%20%2FContents/8_on_policy_prediction_with_approximation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/8_on_policy_prediction_with_approximation.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 8. On-policy Prediction with Approximation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#value-function-approximation">8.1 Value-function Approximation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-and-semi-gradient-methods">8.2 Stochastic-gradient and Semi-gradient Methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-models">8.3 Linear Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-construction-for-linear-methods">8.4 Feature Construction for Linear Methods</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coarse-coding">8.4.1 Coarse Coding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tile-coding">8.4.2 Tile Coding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">8.5 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                   <section class="tex2jax_ignore mathjax_ignore" id="chapter-8-on-policy-prediction-with-approximation">
+<h1>Chapter 8. On-policy Prediction with Approximation<a class="headerlink" href="#chapter-8-on-policy-prediction-with-approximation" title="Link to this heading">#</a></h1>
+<p>In this chapter, we now focus on estimating the state-value function from on-policy data. The approximate value function will be represented not as a table but <strong>as a parameterized functional form, written as <span class="math notranslate nohighlight">\(\hat{v}(s, w) \approx v_\pi(s)\)</span>, with weight vector <span class="math notranslate nohighlight">\(w \in \mathbb{R}^d\)</span></strong>.</p>
+<p>For example, <span class="math notranslate nohighlight">\(\hat{v}\)</span> might be a linear function in features of the state, with <span class="math notranslate nohighlight">\(w\)</span> being the vector of feature weights. More generally, <span class="math notranslate nohighlight">\(\hat{v}\)</span> might be the function computed by a multi-layer artificial neural network, with <span class="math notranslate nohighlight">\(w\)</span> the vector of connection weights in all the layers.</p>
+<p><strong>Typically, the number of weights (the dimensionality of <span class="math notranslate nohighlight">\(w\)</span>) is much less than the number of states (<span class="math notranslate nohighlight">\(d &lt;&lt; |S|\)</span>)</strong>, and changing one weight changes the estimated value of many states. Consequently, when a single state is updated, the change generalizes from that state to affect the values of many other states. Such generalization makes the learning potentially more powerful but also potentially more diffcult to manage and understand.</p>
+<section id="value-function-approximation">
+<h2>8.1 Value-function Approximation<a class="headerlink" href="#value-function-approximation" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Update rules recap</strong>:</p>
+<ul class="simple">
+<li><p>Dynamic programming:
+<span class="math notranslate nohighlight">\(s \rightarrow E_\pi[R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)|S_t = s]\)</span></p></li>
+<li><p>Monte Carlo:
+<span class="math notranslate nohighlight">\(s \rightarrow G_t\)</span></p></li>
+<li><p>Temperal Difference:
+<span class="math notranslate nohighlight">\(s \rightarrow R_{t+1} + \gamma \hat{v}(S_{t+1}, w_t)\)</span></p></li>
+</ul>
+</li>
+<li><p><strong>Supervised learning for function approximation</strong></p>
+<ul class="simple">
+<li><p>We interpret each update as specifying an example of the desired input-output (<span class="math notranslate nohighlight">\(s\rightarrow u\)</span>) behavior of the value function, with <span class="math notranslate nohighlight">\(u\)</span> indicating the <span class="math notranslate nohighlight">\(\textit{udpate target}\)</span>.</p></li>
+<li><p>In function approximation, we pass the input–output behavior <span class="math notranslate nohighlight">\(s\rightarrow u\)</span> of each update as a training example, then interpret the approximate function they produce (after training) as an estimated value function</p></li>
+</ul>
+</li>
+<li><p><strong>The Prediction Objective (<span class="math notranslate nohighlight">\(\overline{VE}\)</span>)</strong></p>
+<ul>
+<li><p><strong>Motivation</strong>: by assumption we have far more states than weights, so making one state’s estimate more accurate invariably means making others’ less accurate. We are obligated then to say which states we care most about.</p></li>
+<li><p><strong>Measure</strong>: Mean Squared Value Error (<span class="math notranslate nohighlight">\(\overline{VE}\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[
+        \overline{VE}(w) = \sum_{s \in S} u(s)[v_\pi(s) - \hat{v}(s,w)]^2
+        \]</div>
+<ul class="simple">
+<li><p>The state distribution <span class="math notranslate nohighlight">\(u(s) \ge 0, \sum_s u(s)=1\)</span> is called <span class="math notranslate nohighlight">\(\textit{on-policy distribution}\)</span>, and denotes how much we care about the error in each state <span class="math notranslate nohighlight">\(s\)</span>. “Often <span class="math notranslate nohighlight">\(μ(s)\)</span> is chosen to be the fraction of time spent in <span class="math notranslate nohighlight">\(s\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The best value function for finding a better policy in control is not necessarily the best for minimizing <span class="math notranslate nohighlight">\(\overline{VE}\)</span>. Nevertheless, it is not yet clear what a more useful alternative goal for value prediction might be. For now, we will focus on <span class="math notranslate nohighlight">\(\overline{VE}\)</span>.</p></li>
+<li><p>Often times, for complex function approximators such as Neural Networks, we can not find a global optimum of <span class="math notranslate nohighlight">\(w_\star\)</span>, for which  <span class="math notranslate nohighlight">\(\overline{VE}(w_\star) \le \overline{VE}(w)\)</span> for all <span class="math notranslate nohighlight">\(w\)</span>. Rather, we can only find a local optimum for which  <span class="math notranslate nohighlight">\(\overline{VE}(w_\star) \le \overline{VE}(w)\)</span> for all <span class="math notranslate nohighlight">\(w\)</span> in some neighborhood of <span class="math notranslate nohighlight">\(w_\star\)</span>, but oftern this is enough.</p></li>
+</ul>
+</div>
+</li>
+</ul>
+</section>
+<section id="stochastic-gradient-and-semi-gradient-methods">
+<h2>8.2 Stochastic-gradient and Semi-gradient Methods<a class="headerlink" href="#stochastic-gradient-and-semi-gradient-methods" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Setup for gradient descent methods</strong>:</p>
+<ul class="simple">
+<li><p>the weight vector is a column vector with a fixed number of real valued components, <span class="math notranslate nohighlight">\(w \dot= (w_1,w_2,...,w_d)^T\)</span>. (Note that in this book vectors are generally taken to be column vectors unless explicitly written out horizontally or transposed.)</p></li>
+<li><p>the approximate value function <span class="math notranslate nohighlight">\(v(s,w)\)</span> is a differentiable function of <span class="math notranslate nohighlight">\(w\)</span> for all <span class="math notranslate nohighlight">\(s \in S\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>Sotchastic gradient method (SGD)</strong></p>
+<ul>
+<li><p><strong>Setup</strong>: assume that on each step, we observe a new example <span class="math notranslate nohighlight">\(S_t \rightarrow v_\pi(S_t)\)</span> consisting of a (possibly randomly selected) state <span class="math notranslate nohighlight">\(S_t\)</span> and its true value under the policy.</p></li>
+<li><p><strong>SGD method</strong>:</p>
+<ul>
+<li><p>update rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+            \begin{align}
+            \boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
+            &amp;= \boldsymbol{w_t} + \alpha [v_\pi(S_t) - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            \end{align}
+            \end{split}\]</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The assumption of available <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span> is clearly impossible in practice. In fact, as long as the target is an unbiased estimate of <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span>, i.e., <span class="math notranslate nohighlight">\(E[Target | S_t=s] = v_\pi(S_t)\)</span>, then <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span> is guaranteed to converge to a local optimum under the usual stochastic approximation condition for decreasing <span class="math notranslate nohighlight">\(\alpha\)</span> (topics of convergence are not included in DistilRL, please refer to the book chapter 2.7 for details.)</p></li>
+<li><p>By definition, the Monte Carlo target <span class="math notranslate nohighlight">\(G_t\)</span> is an unbiased estimator of <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span>.</p></li>
+</ul>
+</div>
+</li>
+<li><p><strong>Gradient Monte Carlo Algorithm for estimating <span class="math notranslate nohighlight">\(\hat{v} \approx v_\pi\)</span></strong></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter8/algo_gradient_mc.png" alt="Algorithm: Gradient Monte Carlo" style="width: 100%;">        
+  </div>
+</li>
+</ul>
+</li>
+<li><p><strong>Semi-gradient method</strong>:</p>
+<ul>
+<li><p><strong>Setup</strong>: the training example <span class="math notranslate nohighlight">\(S_t \rightarrow U_t\)</span> with <span class="math notranslate nohighlight">\(U_t \in \mathbb{R}\)</span> is not the true value <span class="math notranslate nohighlight">\(v_\pi(S_t)\)</span> but a <strong>boostraping target</strong> using <span class="math notranslate nohighlight">\(\hat{v}\)</span></p></li>
+<li><p><strong>Semi-gradient methods</strong>:</p>
+<ul>
+<li><p>update rule</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+            \begin{align}
+            \boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} - \frac{1}{2} \alpha \nabla[U_t - \hat{v}(S_t, \boldsymbol{w_t})]^2 \\
+            &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t})
+            \end{align} 
+            \end{split}\]</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>There is no guarantees for convergence as for stochastic gradient methods if a bootstrapping estimate of <span class="math notranslate nohighlight">\(v(S_t)\)</span> is used as the target <span class="math notranslate nohighlight">\(U­_t\)</span>. Boostrapping methods use <span class="math notranslate nohighlight">\(\hat{v}(S_{t+1}, \boldsymbol{w_t})\)</span> as the target, which depends on the current <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span>. Yet the derivation from equation <span class="math notranslate nohighlight">\((1)\)</span> to <span class="math notranslate nohighlight">\((2)\)</span> requires independence regarding <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span>.</p>
+<p>In other words, bootstrapping methods take into account the effect of changing the weight vector <span class="math notranslate nohighlight">\(\boldsymbol{w_t}\)</span> on the estimate, but ignore its effect on the target. They include only a part of the gradient and, accordingly, we call them <span class="math notranslate nohighlight">\(\textit{semi-gradient methods}\)</span>.</p>
+</li>
+<li><p>Although semi-gradient (bootstrapping) methods do not converge as robustly as gradient methods, they do converge reliably in important cases such as the linear case, and they are usually preferred in practice due to the boostrapping advantage against monte carlo methods.</p></li>
+</ul>
+</div>
+</li>
+<li><p><strong>Semi-gradient TD(0) for estimating <span class="math notranslate nohighlight">\(\hat{v} \approx v_\pi\)</span></strong></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter8/algo_semi_gradient_td.png" alt="Algorithm: Semi-gradient TD" style="width: 100%;">        
+  </div>
+</li>
+</ul>
+</li>
+<li><p><strong>Example: State Aggregatioin</strong>:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\textit{State Aggregation}\)</span>: a method for generalizing function approximation by grouping states together, each group of states share one estimated value.</p></li>
+<li><p>Using state aggregation for gradent MC (Lecture video):</p>
+  <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/aJ9j6/state-aggregation-with-monte-carlo">
+  <img src="../_static/img/chapter8/state_aggregation_mc.png" alt="Video: State Aggregation for MC" style="width:60%;">
+  </a>
+</li>
+<li><p>Using state aggregation for semi-gradient TD (Lecture video):</p>
+  <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/jS4tj/comparing-td-and-monte-carlo-with-state-aggregation">
+  <img src="../_static/img/chapter8/state_aggregation_td.png" alt="Video: State Aggregation for TD" style="width:60%;">
+  </a>
+</li>
+</ul>
+</li>
+<li><p><strong>Extra lecture video (optional)</strong>: <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ipyWM/doina-precup-building-knowledge-for-ai-agents-with-reinforcement-learning">Doina Precup: Building Knowledge for AI Agents with Reinforcement Learning</a></p></li>
+</ul>
+</section>
+<section id="linear-models">
+<h2>8.3 Linear Models<a class="headerlink" href="#linear-models" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Linear Methods</strong>: methods that approximate the value function <span class="math notranslate nohighlight">\(\hat{v}(s, \boldsymbol{w})\)</span> as a linear function, i.e., the inner product between <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{x}(s)\)</span> - a feature vector, as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+    \hat{v}(s, \boldsymbol{w}) \dot= \boldsymbol{w}^{\intercal} \boldsymbol{x}(s) \dot= \sum_{i=1}^d w_i x_i(s)
+    \]</div>
+<ul class="simple">
+<li><p>In this case the approximate value function is said to be <span class="math notranslate nohighlight">\(\textit{linear in the weights}\)</span>, or simply <span class="math notranslate nohighlight">\(\textit{linear}\)</span>.</p></li>
+<li><p>the feature vector <span class="math notranslate nohighlight">\(\boldsymbol{x}(s) \dot= (x_1(s), x_2(s), ... x_d(s))^{\intercal}\)</span> has the same dimension <span class="math notranslate nohighlight">\(d\)</span> as the weight vector <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>. Each feature <span class="math notranslate nohighlight">\(x_i: S \rightarrow \mathbb{R}\)</span> is a socalled <span class="math notranslate nohighlight">\(\textit{basis function}\)</span> which assigns a value (<span class="math notranslate nohighlight">\(x_i(s)\)</span>) to the state <span class="math notranslate nohighlight">\(s\)</span> (the feature of <span class="math notranslate nohighlight">\(s\)</span>)</p></li>
+</ul>
+</li>
+<li><p><strong>(Semi-)Gradient methods for linear value function</strong></p>
+<ul>
+<li><p>Update rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \boldsymbol{w_{t+1}} &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\nabla\hat{v}(S_t, \boldsymbol{w_t}) \\
+        &amp;= \boldsymbol{w_t} + \alpha [U_t - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x}(S_t) \\
+        \end{align*} 
+        \end{split}\]</div>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\star\)</span> Convergence</p>
+<ul>
+<li><p>MC method: the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the <span class="math notranslate nohighlight">\(\overline{VE}\)</span> under linear function approximation if <span class="math notranslate nohighlight">\(\alpha\)</span> is reduced over time according to the usual conditions.</p></li>
+<li><p>TD(0) method: weight vector eventually converges to a point near the local optimum.</p>
+<ul>
+<li><p>update rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+                \begin{align*}
+                \boldsymbol{w_{t+1}} &amp;\dot= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \hat{v}(S_{t+1}, \boldsymbol{w_t}) - \hat{v}(S_t, \boldsymbol{w_t})]\boldsymbol{x_t} \\
+                &amp;= \boldsymbol{w_t} + \alpha [R_{t+1} + \gamma \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t+1}} - \boldsymbol{w_t}^{\intercal}\boldsymbol{x_{t}}]\boldsymbol{x_t} \\
+                &amp;= \boldsymbol{w_t} + \alpha [R_{t+1}\boldsymbol{x_{t}} - \boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}\boldsymbol{w_{t}}]\\
+                \end{align*} 
+                \end{split}\]</div>
+<ul class="simple">
+<li><p>Note: <span class="math notranslate nohighlight">\(\boldsymbol{x_t}\)</span> is used to represent <span class="math notranslate nohighlight">\(\boldsymbol{x}(S_t)\)</span> for simplicity</p></li>
+</ul>
+</li>
+<li><p>in steady state (convergence):</p>
+<div class="math notranslate nohighlight">
+\[
+                E[\boldsymbol{w_{t+1}}|\boldsymbol{w_{t}}] = \boldsymbol{w_{t}} + \alpha(\boldsymbol{b - Aw_{t+1}})
+                \]</div>
+<p>with  <span class="math notranslate nohighlight">\(\boldsymbol{b} \dot= E[R_{t+1}\boldsymbol{x_{t}}] \in \mathbb{R}^d\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{A} \dot= E[\boldsymbol{x_{t}}(\boldsymbol{x_{t}} - \gamma \boldsymbol{x_{t+1}})^{\intercal}] \in \mathbb{R}^d \times \mathbb{R}^d\)</span></p>
+<p>And at converge:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+                \begin{align*}
+                &amp; \Rightarrow \quad \mathbf{b} - \mathbf{A}\mathbf{w}_{\text{TD}} = \mathbf{0} \\
+                &amp; \Rightarrow \quad \mathbf{b} = \mathbf{A}\mathbf{w}_{\text{TD}} \\
+                &amp; \Rightarrow \quad \mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}.
+                \end{align*}
+                \end{split}\]</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>The quantity <span class="math notranslate nohighlight">\(\mathbf{w}_{\text{TD}} \dot= \mathbf{A}^{-1}\mathbf{b}\)</span> is called the <span class="math notranslate nohighlight">\(\textit{TD fixed point}\)</span>. Linear semi-gradient TD(0) converges to this point.</p></li>
+<li><p>At the TD fixed point, it has also been proven (in the continuing case) that the <span class="math notranslate nohighlight">\(\overline{VE}\)</span> is within a bounded expansion of the lowest possible error:</p>
+<div class="math notranslate nohighlight">
+\[
+    \overline{VE}(\mathbf{w}_{\text{TD}}) \le \frac{1}{1-\gamma} \underset{w}{min}\overline{VE}(\mathbf{w})
+    \]</div>
+<p>Because <span class="math notranslate nohighlight">\(\gamma\)</span> is often near one, this expansion factor can be quite large, so there is substantial potential loss in asymptotic performance with the TD method.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="feature-construction-for-linear-methods">
+<h2>8.4 Feature Construction for Linear Methods<a class="headerlink" href="#feature-construction-for-linear-methods" title="Link to this heading">#</a></h2>
+<p>Choosing features appropriate to the task is an important way of adding prior domain knowledge to reinforcement learning systems. Intuitively, the features should correspond to the aspects of the state space along which generalization may be appropriate.</p>
+<p>A limitation of the linear form is that it cannot take into account any interactions between features, such as the presence of feature <span class="math notranslate nohighlight">\(i\)</span> being good only in the absence of feature <span class="math notranslate nohighlight">\(j\)</span>, or to put it in another word, we need features that can take the combinations of different states or state dimensions into consideration.</p>
+<p>In this last section we study <strong>how to construct such <span class="math notranslate nohighlight">\(x(s)\)</span></strong> for approximating the value function and balancing between generalization and discrimination.</p>
+<section id="coarse-coding">
+<h3>8.4.1 Coarse Coding<a class="headerlink" href="#coarse-coding" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Introduction</strong>:</p>
+<ul>
+<li><p><strong>Scenario</strong>: assume the natural representation of the state set is a continuous two-dimensional space, one possible kind of representation of features can be <span class="math notranslate nohighlight">\(\textit{circles}\)</span> in state space.</p></li>
+<li><p><strong>Feature construction</strong>: If the state is inside a circle, then the corresponding feature has the value 1 and is said to be present; otherwise the feature is 0 and is said to be absent. (This kind of 1–0-valued feature is called a <span class="math notranslate nohighlight">\(\textit{binary feature}\)</span>.)</p>
+  <img src="../_static/img/chapter8/coarse_coding.png" alt="Demostration for Coarse Coding" style="width:45%;">
+<p>Corresponding to each circle / feature is a single weight (a component of <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>) that is affected by learning.</p>
+<p>Performing an update to the weights in one state changes the value estimate for all states within the <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span> (in this case, circles) of the active features. In the above image, update for state <span class="math notranslate nohighlight">\(s\)</span> also changes the value estimate for state <span class="math notranslate nohighlight">\(s\prime\)</span></p>
+</li>
+<li><p><strong>Definition</strong>: Representing a state with features that overlap in the above way (although they need not be circles or binary) is known as <strong>coarse coding</strong>.</p></li>
+</ul>
+</li>
+<li><p><strong>Generalization and Discrimination</strong></p>
+<ul>
+<li><p>You may choose to watch this <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/JnNF5/generalization-properties-of-coarse-coding">lecture video</a> instead, since the following content is well covered in it and if you prefer visual&amp;audio contents over texts.</p></li>
+<li><p><strong>Demostration</strong>:</p>
+<p>Intuitively, if the circles are small, then the generalization will be over a short distance, as in the below Figure on the left, whereas if they are large, it will be over a large distance, as in the middle. And the shape of the features will also determine the nature of the generalization (on the right side).</p>
+  <img src="../_static/img/chapter8/coarse_coding_generalization.png" alt="Generalization for Coarse Coding" style="width:90%;">
+<p>As above, features with large <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span> give broad generalization, and might seem to fall short with discrimination, but conterintuitively, this is not true. Initial generalization from one point to another is indeed controlled by the size and shape of the <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span>, but finest discrimination is ultimately  controlled more <strong>by the total number of features</strong>, as shown by the next example.</p>
+</li>
+<li><p><strong>Example: Coarseness of Coarse Coding</strong></p>
+<ul>
+<li><p>Setup: Linear function approximation based on coarse coding and Semi-Gradient method was used to learn a one-dimensional square-wave function, the values of this function were used as the targets, <span class="math notranslate nohighlight">\(U_t\)</span>.</p></li>
+<li><p>Results: as below, the width of the features had a strong e↵ect early in learning. However, the final function learned was a↵ected only slightly by the width of the features</p>
+  <img src="../_static/img/chapter8/coarseness.png" alt="Example of Generalization for Coarse Coding" style="width:77%;">
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="tile-coding">
+<h3>8.4.2 Tile Coding<a class="headerlink" href="#tile-coding" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Introduction</strong></p>
+<ul>
+<li><p><strong>Description</strong>: Tile coding is <strong>a form of coarse coding</strong> for multi-dimensional continuous spaces. In tile coding the <span class="math notranslate nohighlight">\(\textit{receptive fields}\)</span> of the features are grouped into partitions of the state space. Each such partition is called a <span class="math notranslate nohighlight">\(\textit{tiling}\)</span>, and each element of the partition is called a <span class="math notranslate nohighlight">\(\textit{tile}\)</span>.</p></li>
+<li><p><strong>Demonstration</strong>:</p>
+  <img src="../_static/img/chapter8/tile_coding.png" alt="Demonstration for Tile Coding" style="width:85%;">
+<ul class="simple">
+<li><p>The simplest tiling of a two-dimensional state space is a uniform grid such as that shown on the left side of figure above. Note that with just one tiling, we would not have coarse coding but just a case of state aggregation.</p></li>
+<li><p>To get true coarse coding with tile coding, multiple tilings are used, each offset by a fraction of a tile width (shown on the right side of the figure). Every state (indicated by the white spot) falls in exactly one tile in each of the four tilings. These four tiles correspond to four features that become active when the state occurs. In this example there are <span class="math notranslate nohighlight">\(4 \times 4 \times 4 = 64\)</span> components, all of which will be 0 except for the four corresponding to the tiles that the state <span class="math notranslate nohighlight">\(s\)</span> falls within.</p></li>
+</ul>
+</li>
+<li><p><strong>Advantages</strong>:</p>
+<ul class="simple">
+<li><p>Allowing for the learning rate <span class="math notranslate nohighlight">\(\alpha\)</span> to be set in an easy, intuitive way: The overall number of features that are active at one time is the same for any state, so the total number of features present is always the same as the number of tilings. This allows the step-size parameter, <span class="math notranslate nohighlight">\(\alpha\)</span> ,to be set in an easy, intuitive way, for example, choosing <span class="math notranslate nohighlight">\(\alpha = \frac{1}{n}\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of tilings, results in exact one-trial learning.</p></li>
+<li><p>Computational advantages: during computation of <span class="math notranslate nohighlight">\(\sum_{i=1}^d w_i x_i(s)\)</span> one simply computes the indices of the <span class="math notranslate nohighlight">\(n \ll d\)</span> active features (n is equal to the number of tilings) and then adds up the n corresponding components of the weight vector.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>How it works</strong>: It is recommended to watch the lecture video below since it offers a more comprehensive explanation of how tile code works with TD.</p>
+  <a href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/ZR42J/using-tile-coding-in-td">
+  <img src="../_static/img/chapter8/tile_coding_example.png" alt="Example for Tile Coding" style="width:50%;">
+  </a>
+</li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h2>8.5 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>In this chapter, we focused on extending reinforcement learning (RL) from the tabular case to function approximation, a crucial step for handling large state spaces in real-world problems. A quick summary:</p>
+<ul>
+<li><p><strong>Mindmap of where we are now</strong></p>
+  <img src="../_static/img/chapter8/chapter8_mindmap.png" alt="Mindmap for non-tabular methods" style="width:100%;">
+</li>
+<li><p><strong>Key Takeaways</strong></p>
+<ol class="arabic simple">
+<li><p>Transition to Function Approximation:</p>
+<ul class="simple">
+<li><p>Moving away from tabular methods allows RL to be applied in more complex problems where it’s impractical to enumerate every state.</p></li>
+<li><p>The conceptual shift involves parameterized function approximation, where we no longer store state values in a table.</p></li>
+<li><p>We aim to minimize the <strong>Mean Squared Value Error</strong>, which measures the difference between the true state values and our approximations, weighted by visitation frequency <span class="math notranslate nohighlight">\(u(s)\)</span>.</p></li>
+</ul>
+</li>
+<li><p>Gradient Methods:</p>
+<ul class="simple">
+<li><p><strong>Gradient Monte Carlo</strong>: Updates are made at the end of each episode using the sampled returns.</p></li>
+<li><p><strong>Semi-Gradient TD</strong>: Uses bootstrapping with value estimates at the next time step, enabling updates during episodes and faster learning.</p>
+<ul>
+<li><p>We also introduced <strong>Linear TD</strong> with function approximation, which provably converges to a well-understood solution.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Generalization and Discrimination:</p>
+<ul class="simple">
+<li><p><strong>Generalization</strong> allows updates for one state to improve value estimates for other similar states, speeding up learning.</p></li>
+<li><p><strong>Discrimination</strong> ensures that distinct states are assigned different values, preventing overgeneralization.</p></li>
+</ul>
+</li>
+<li><p>Feature Construction and Representation:</p>
+<ul class="simple">
+<li><p><strong>Coarse coding</strong> groups neighboring states into arbitrary-shaped features, such as overlapping circles where each circle is active (1) if the state is inside it and inactive (0) otherwise.</p></li>
+<li><p><strong>Tile Coding</strong>:</p>
+<ul>
+<li><p>A specialized form of coarse coding that uses <strong>overlapping grids (tilings)</strong>.</p></li>
+<li><p>Each tiling is non-overlapping, with one active feature per grid, but multiple offset tilings allow for finer state discrimination.</p></li>
+<li><p>The design of tilings balances generalization, discrimination, and efficiency.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p><strong>Extra Lecture Video (optional)</strong>: <a class="reference external" href="https://www.coursera.org/learn/prediction-control-function-approximation/lecture/xZuSl/david-silver-on-deep-learning-rl-ai">David Silver on Deep Learning + RL = AI?</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "Dong237/DistilRLIntroduction",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./Contents"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+<div class="section ablog__blog_comments">
+   
+</div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="7_planning_learning_acting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 7. Planning and Learning with Tabular Methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="9_on_policy_control_with_approximation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 9. On-policy Control with Approximation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#value-function-approximation">8.1 Value-function Approximation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-and-semi-gradient-methods">8.2 Stochastic-gradient and Semi-gradient Methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-models">8.3 Linear Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-construction-for-linear-methods">8.4 Feature Construction for Linear Methods</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coarse-coding">8.4.1 Coarse Coding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tile-coding">8.4.2 Tile Coding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">8.5 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

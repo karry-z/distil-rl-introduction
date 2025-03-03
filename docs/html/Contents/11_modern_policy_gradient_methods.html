@@ -1,0 +1,1105 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 11. Modern Policy Gradient Methods &#8212; DistilRLIntro 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=e1a75a79"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Contents/11_modern_policy_gradient_methods';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Chapter 10. Policy Gradient Methods" href="10_policy_gradient_methods.html" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />   
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">⚠️This is an ongoing project and is currectly still under development (Chinese version on its way). ⚠️</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="DistilRLIntro 0.1 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="DistilRLIntro 0.1 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">I. Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_prelude.html">Chapter 0. Prelude</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_intro.html">Chapter 1. Introduction to RL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">II.1. Fundamentals of Reinforcement Learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_multi_armed_bandits.html">Chapte 2. Multi-armed Bandit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_markov_decision_process.html">Chapter 3. Finite Markov Decision Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_dynamic_programming.html">Chapter 4. Dynamic Programming</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">II.2. Sample-based Learning Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="5_monte_carlo_methods.html">Chapter 5. Monte Carlo Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_temporal_difference_learning.html">Chapter 6. Temporal-Difference Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_planning_learning_acting.html">Chapter 7. Planning and Learning with Tabular Methods</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">III.1. Value Function Approximation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="8_on_policy_prediction_with_approximation.html">Chapter 8. On-policy Prediction with Approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9_on_policy_control_with_approximation.html">Chapter 9. On-policy Control with Approximation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">III.2. Policy Approximation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_policy_gradient_methods.html">Chapter 10. Policy Gradient Methods</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 11. Modern Policy Gradient Methods</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/blob/master/Contents/11_modern_policy_gradient_methods.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/edit/master/Contents/11_modern_policy_gradient_methods.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Dong237/DistilRLIntroduction/issues/new?title=Issue%20on%20page%20%2FContents/11_modern_policy_gradient_methods.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/Contents/11_modern_policy_gradient_methods.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 11. Modern Policy Gradient Methods</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-concept-of-advantage">11.1 The Concept of Advantage</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">11.1.1 Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#justification-of-existence">11.1.2 Justification of Existence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-of-advantage">11.1.3 Estimation of Advantage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asynchronous-advantage-actor-critic-a3c">11.2 Asynchronous Advantage Actor-Critic (A3C)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#background">11.2.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-and-gradient-estimator">11.2.2 Advantage and Gradient Estimator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3c-algorithm">11.2.3 A3C Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-a3c">11.2.4 Properties of A3C</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-actor-critic-a2c">11.3 Advantage Actor-Critic (A2C)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">11.3.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-ideas-of-a2c">11.3.2 Core ideas of A2C</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-a2c">11.3.3 Properties of A2C</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-policy-optimization-ppo">11.4 Proximal Policy Optimization (PPO)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">11.4.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#objective-of-proximal-policy-optimization">11.4.2 Objective of Proximal Policy Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo-algorithm">11.4.3 PPO algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-ppo">11.4.4 Properties of PPO</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#group-relative-policy-optimization-grpo">11.5 Group Relative Policy Optimization (GRPO)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">11.5.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-objective">11.5.2 Optimization Objective</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grpo-algorithm">11.5.2 GRPO Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-grpo">11.5.3 Properties of GRPO</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">11.6 Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-resoures">Extra Resoures</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                   <section class="tex2jax_ignore mathjax_ignore" id="chapter-11-modern-policy-gradient-methods">
+<h1>Chapter 11. Modern Policy Gradient Methods<a class="headerlink" href="#chapter-11-modern-policy-gradient-methods" title="Link to this heading">#</a></h1>
+<p>The algorithms introduced in this chapter is not included in Sutton’s book, yet each one of them marks a great milestone in the journey of RL, and is still inspiring further development in the field.  I use the term “modern” to separate these algorithms from these in Chapter 10, yet during learning, you will be surprised to find that all these policy approximation methods share similarities to a significant level.</p>
+<p>In this chapter, for algorithms that can be traced back to their original publications, the notations used are consistent with those in the respective papers. Although different sections may employ varying notational conventions, these notations are grounded in the same fundamental concepts which we have introduced throughout this tutorial, and as such, readers should expect no significant difficulty in understanding them. Also be advised that a fundamental understanding of neural networks is assumed for the study of the content in this chapter.</p>
+<section id="the-concept-of-advantage">
+<h2>11.1 The Concept of Advantage<a class="headerlink" href="#the-concept-of-advantage" title="Link to this heading">#</a></h2>
+<section id="definition">
+<h3>11.1.1 Definition<a class="headerlink" href="#definition" title="Link to this heading">#</a></h3>
+<p>Advantage (function) is a concept that compares the Q-value of an action to the Value function of a state, it measures how much better or worse the action <span class="math notranslate nohighlight">\(a_t​\)</span> is compared to the average behavior of the agent in that state. It is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+A(s_t, a_t) \ \dot= \ q(s_t, a_t) - v(s_t)
+\]</div>
+<ul class="simple">
+<li><p>Intuition: Advantage quantifies how much better or worse the action <span class="math notranslate nohighlight">\(a_t\)</span> is than the expected return <span class="math notranslate nohighlight">\(E_\pi[G_t \vert s_t]\)</span> of being in state <span class="math notranslate nohighlight">\(s_t\)</span>.</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(A(s_t, a_t) &gt; 0\)</span>: the action <span class="math notranslate nohighlight">\(a_t\)</span> is considered better than the average action in state <span class="math notranslate nohighlight">\(s_t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(A(s_t, a_t) &lt; 0\)</span>: the action <span class="math notranslate nohighlight">\(a_t\)</span> is worse than the average action in state <span class="math notranslate nohighlight">\(s_t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(A(s_t, a_t) = 0\)</span>: the action is neither better nor worse than the expected value.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Advantage function <span class="math notranslate nohighlight">\(A(s_t, a_t)\)</span> is often written as <span class="math notranslate nohighlight">\(A_t\)</span> for simplicity</p>
+</div>
+</section>
+<section id="justification-of-existence">
+<h3>11.1.2 Justification of Existence<a class="headerlink" href="#justification-of-existence" title="Link to this heading">#</a></h3>
+<p>The gradient estimate in Policy Gradient methods is often noisy, as we have seen in <a class="reference internal" href="10_policy_gradient_methods.html"><span class="std std-doc">Chapter 10</span></a> from REINFORCE algorithm, because the estimate is based on the observed returns, which can be stochastic and vary greatly.</p>
+<p>Advantage reduces the variance of the gradient estimates and leads to more stable updates by simply replacing the return term in gradient estimate as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{t+1} \doteq \theta_t + \alpha \ A_t \frac{\nabla \pi(A_t|S_t, \theta)}{\pi(A_t|S_t, \theta)}
+\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>For REINFORCE with baseline method, when an approximate state value function <span class="math notranslate nohighlight">\(\hat{v}(S_t, \boldsymbol{w})\)</span> is used as the baseline, the quantity <span class="math notranslate nohighlight">\(G_t - b(S_t)\)</span> can be seen as an estimate of the advantage <span class="math notranslate nohighlight">\(A_t\)</span>, because <span class="math notranslate nohighlight">\(G_t\)</span> is an estimate of <span class="math notranslate nohighlight">\(q(s_t, a_t)\)</span> by definition.</p></li>
+<li><p>In practice, one may encounter many cases where REINFORCE with baseline is regarded as actor-critic method. This tutorial abides by the rule in Sutton’s book and treat only those, whose estimated critic model is used for boostrapping, as AC methods.</p></li>
+</ul>
+</div>
+</section>
+<section id="estimation-of-advantage">
+<h3>11.1.3 Estimation of Advantage<a class="headerlink" href="#estimation-of-advantage" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>By definitioin</strong>: <span class="math notranslate nohighlight">\(A(s_t, a_t)\)</span> can be estimated by simply subtracting state value from action value as by definition:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \hat{A}(s_t, a_t) \ &amp;\dot= \ q(s_t, a_t) - v(s_t) \\
+    &amp;= G_t - v(s_t) 
+    \end{align*}
+    \end{split}\]</div>
+<p>Note that the first estimation is less often seen in practice since it requires learning of two critic models, and therefore ofter replaced by the second representation.</p>
+</li>
+<li><p><strong>By TD error</strong>: TD error can be a pratical approximate estimation for advantage. Recall that in Chapter 3 <a class="reference internal" href="3_markov_decision_process.html#policies-and-value-functions"><span class="std std-ref">section 3.3</span></a>, we have given that</p>
+<div class="math notranslate nohighlight">
+\[q(s,a) \dot= \sum_{s', r}p(s', r|s, a) [r + \gamma v_{\pi}(s')]\]</div>
+<p>This means that <span class="math notranslate nohighlight">\(r + \gamma v_{\pi}(s')\)</span> is a single realization when starting from (s,a) and the state <span class="math notranslate nohighlight">\(s'\)</span> is actually reached.</p>
+<p>Therefore, we can replace <span class="math notranslate nohighlight">\(q(s_t,a_t)\)</span> by <span class="math notranslate nohighlight">\(r_{t+1} + \gamma v(s_{t+1})\)</span> and estimated the advantage as:</p>
+<div class="math notranslate nohighlight">
+\[\hat{A}(s_t, a_t) \ = \ r_{t+1} + \gamma v(s_{t+1}) - v(s_{t})\]</div>
+</li>
+<li><p><strong>Genralized Advantage Estimation (GAE)</strong>:</p>
+<p>We have mentioned above that advantage can be estimated by <span class="math notranslate nohighlight">\(G_t - v(s_t)\)</span> since the return at time step <span class="math notranslate nohighlight">\(t\)</span> is an estimate for the respective action-value. We now consider a different perspective for estimating the return. In <span class="math notranslate nohighlight">\(n\)</span>-step TD method (which is not included in this tutorial), return is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    G_{t:t+n} \ &amp;\dot= \ R_{t+1} + \gamma R_{t+2} + \cdots + \gamma^{n-1} R_{t+n} + \gamma^n V(S_{t+n}) \\
+    &amp;=  \sum_{k=0}^{n-1} \gamma^k R_{t+k+1} + \gamma^n v(s_{t+n})
+    \end{align*}
+    \end{split}\]</div>
+<p>This <span class="math notranslate nohighlight">\(n\)</span>-step return <span class="math notranslate nohighlight">\(G_{t:t+n}\)</span> provides a lower-variance estimator than the Monte Carlo return at the cost of introducing some bias. To bring this idea further, one can calculate an exponentially-weighted average of <span class="math notranslate nohighlight">\(n\)</span>-step returns with a decay parameter <span class="math notranslate nohighlight">\(\lambda\)</span> and introduce the <span class="math notranslate nohighlight">\(\lambda\)</span>-return:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    G^{\lambda}_t \ &amp;\dot= \ (1 - \lambda) \sum_{n=1}^{\infty} \lambda^{n-1} G_{t:t+n} \\
+    &amp;= (1 - \lambda) \sum_{n=1}^{T-t-1} \lambda^{n-1} G_{t:t+n} + \lambda^{T-t-1} G_t
+    \end{align*}
+    \end{split}\]</div>
+<p>The second equation above is derived when we assume all rewards after time step <span class="math notranslate nohighlight">\(T\)</span> are 0, such as <span class="math notranslate nohighlight">\(G_{t:t+n} = G_{t:T}\)</span> for all <span class="math notranslate nohighlight">\(n \geq T-t\)</span>. Compared to <span class="math notranslate nohighlight">\(n\)</span>-step return, where the balance between bias and variance is achieved in a discrete setting (by choosing <span class="math notranslate nohighlight">\(n\)</span>) <span class="math notranslate nohighlight">\(\lambda\)</span>-return operates with a continuous spectrum and offers a more smooth trade-off. Empirically, the <span class="math notranslate nohighlight">\(\lambda\)</span>-return has been shown to produce better performance than simply using an <span class="math notranslate nohighlight">\(n\)</span>-step return.</p>
+<p>Now, GAE is computed by replacing the MC return with <span class="math notranslate nohighlight">\(\lambda\)</span>-return as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \hat{A}^{GAE}(s_t, a_t) \ &amp;\dot= \ G^{\lambda}_t - v(s_t)   \tag{1} \\
+    &amp;= \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}   \tag{2} \\
+    &amp;= \delta_{t} + (\gamma \lambda)\delta_{t+1} + (\gamma \lambda)^2\delta_{t+2} + \ ...   \tag{3}  \\ 
+    &amp;= \delta_{t} + (\gamma \lambda)\hat{A}^{GAE}(s_{t+1}, a_{t+1}) \tag{4} 
+    \end{align*}
+    \end{split}\]</div>
+<p>To find the exact process of how GAE is represented by <span class="math notranslate nohighlight">\((2)\)</span>, we refer interested readers to the <a class="reference external" href="https://arxiv.org/pdf/1506.02438">original paper</a>. Equation <span class="math notranslate nohighlight">\((3)\)</span> implements GAE in truncated form that gives a weighted sum of TD errors, where the future TD errors are discounted and smoothed by the <span class="math notranslate nohighlight">\(\lambda\)</span>-parameter. In practice, GAE at each time step is often computed using equation <span class="math notranslate nohighlight">\((4)\)</span> in a backward manner.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Intuition on <span class="math notranslate nohighlight">\(n\)</span>-step return <span class="math notranslate nohighlight">\(G_{t:t+n}\)</span>: when <span class="math notranslate nohighlight">\(n=1\)</span>, it results in the 1-step return <span class="math notranslate nohighlight">\(R_{t+1} + \gamma v(s_{t+1})\)</span>, which is exactly the update target in TD methods (high bias, low variance). As <span class="math notranslate nohighlight">\(n\)</span> goes to infinity, it recovers the original Monte Carlo return (unbiased, high variance). Therefore, <span class="math notranslate nohighlight">\(n\)</span> acts as as trade-off between bias and variance for the value estimator.</p></li>
+<li><p>Intuition on <span class="math notranslate nohighlight">\(\lambda\)</span> return: simliar to the <span class="math notranslate nohighlight">\(n\)</span>-step return, <span class="math notranslate nohighlight">\(\lambda=0\)</span> reduces to the single-step return (1-step TD target), and <span class="math notranslate nohighlight">\(\lambda=1\)</span> recovers the Monte Carlo return.</p></li>
+<li><p>Intuition on GAE: still, when <span class="math notranslate nohighlight">\(\lambda=0\)</span>, GAE reduces to 1-step TD, and <span class="math notranslate nohighlight">\(\lambda=1\)</span> recovers the Monte Carlo estimation.</p></li>
+</ul>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="asynchronous-advantage-actor-critic-a3c">
+<h2>11.2 Asynchronous Advantage Actor-Critic (A3C)<a class="headerlink" href="#asynchronous-advantage-actor-critic-a3c" title="Link to this heading">#</a></h2>
+<section id="background">
+<h3>11.2.1 Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h3>
+<p>A3C is an actor-critic algorithm that uses multiple workers (parallel actors) to explore the environment (use multiple CPU threads on a single machine) and update the shared model asynchronously. Authors of A3C have applied the asynchronous approach to 4 existing RL algorithms: one-step Q-learning, one-step Sarsa, n-step Q-learning and actor-critic. Among these 4 algorithms, asynchronous advantage actor-critic achieved the state-of-the-art performance on Atari games during the time.</p>
+</section>
+<section id="advantage-and-gradient-estimator">
+<h3>11.2.2 Advantage and Gradient Estimator<a class="headerlink" href="#advantage-and-gradient-estimator" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Estimation of Advantage</strong>: advantage in A3C is estimated by definition, except that instead of using Monte Carlo return, it uses <span class="math notranslate nohighlight">\(n\)</span>-step return and computes <span class="math notranslate nohighlight">\(A(s_t, a_t; \theta, \theta_v)\)</span> as follows (different notations from section <a class="reference internal" href="#the-concept-of-advantage">11.1</a>):</p>
+<div class="math notranslate nohighlight">
+\[
+    A(s_t, a_t; \theta, \theta_v) = \sum_{i=0}^{k-1} \gamma^i r_{t+i} + \gamma^k V(s_{t+k}; \theta_v) - V(s_t; \theta_v)
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta, \theta_v\)</span> denote the parameter for the actor and critic model, respectively. The step <span class="math notranslate nohighlight">\(k\)</span> can vary from state to state and is upper-bounded by <span class="math notranslate nohighlight">\(t_{max}\)</span>.</p>
+</li>
+<li><p><strong>Optimization Objective</strong>: with advantage being estimated, the gradient for the policy model in A3C is estimated as usual:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \hat{g} &amp;= \nabla_{\theta'} \log \pi(a_t | s_t; \theta')A(s_t, a_t; \theta, \theta_v) \\
+    &amp;=\nabla_{\theta'} \log \pi(a_t | s_t; \theta') (R_t - V(s_t; \theta_v))
+    \end{align*}
+    \end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(R_t\)</span> is the <span class="math notranslate nohighlight">\(n\)</span>-step return.</p>
+</li>
+</ul>
+</section>
+<section id="a3c-algorithm">
+<h3>11.2.3 A3C Algorithm<a class="headerlink" href="#a3c-algorithm" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Pseudocode for A3C</strong>:</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter11/algo_a3c.png" alt="Algorithm: A3C" style="width: 100%;;">
+  </div>
+</li>
+<li><p><strong>Parameter Sharing between Actor and Critic</strong></p>
+<p>In the above pseudocode, while the parameters <span class="math notranslate nohighlight">\(\theta\)</span> of the policy and <span class="math notranslate nohighlight">\(\theta_v\)</span> of the value function are shown as being separate for generality, we always share some of the parameters in practice.</p>
+<p>In A3C paper, the author states that they typically use a convolutional neural network that has one softmax output for the policy <span class="math notranslate nohighlight">\(\pi(a_t|s_t; \theta)\)</span> and one linear output for the value function <span class="math notranslate nohighlight">\(V(s_t; \theta_v)\)</span>, with all non-output layers shared.</p>
+</li>
+<li><p><strong>Entropy Bonus</strong></p>
+<p>Adding the entropy of the policy <span class="math notranslate nohighlight">\(\pi\)</span> to the objective function has be shown to be able to improve exploration by discouraging premature convergence to suboptimal deterministic policies.</p>
+<p>With the entropy bonus / regularization added, the gradient of the full objective function with respect to the policy parameters takes the form:</p>
+<div class="math notranslate nohighlight">
+\[
+    \nabla_{\theta'} \log \pi(a_t | s_t; \theta') (R_t - V(s_t; \theta_v)) + \beta \nabla_{\theta'} H(\pi(s_t; \theta'))
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(H\)</span> is the entropy. The hyperparameter <span class="math notranslate nohighlight">\(\beta\)</span> controls the strength of the entropy regularization term.</p>
+</li>
+</ul>
+</section>
+<section id="properties-of-a3c">
+<h3>11.2.4 Properties of A3C<a class="headerlink" href="#properties-of-a3c" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Advantages</strong></p>
+<ul>
+<li><p>Multi-thread computation: For the firs time of all RL algorithm, A3C moves computation to a single machine with multiple CPU threads, instead of using separate machines and multiple GPUs, and also achieves better performance than its precursors.</p></li>
+<li><p>Training speed: The reduction in training time is roughly linear in the number of parallel actor-learners</p></li>
+<li><p>Stablized training: One can explicitly use different exploration policies in each actor-learner to maximize the diversity. The overall changes being made to the parameters by multiple actor-learners applying online updates in parallel are likely to be less correlated in time than a single agent applying online updates. The training process can thereby be stabilized.</p></li>
+</ul>
+</li>
+<li><p><strong>Disadvantages</strong>:</p>
+<ul>
+<li><p>Local Optima Convergence: In A3C each agent talks to the global parameters independently, so it is possible sometimes the thread-specific agents would be playing with policies of different versions and therefore the aggregated update would not be optimal.</p></li>
+<li><p>Complexity in Debugging: The asynchronous nature of A3C can make debugging and analyzing the algorithm more challenging. Since multiple workers update the global network independently, it can be difficult to trace the source of errors or inconsistencies during training.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="advantage-actor-critic-a2c">
+<h2>11.3 Advantage Actor-Critic (A2C)<a class="headerlink" href="#advantage-actor-critic-a2c" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>11.3.1 Background<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>A2C is a simplified variant of A3C, and there is no official publication that formally introduces the method. Here, we provide a brief overview of the core concepts underlying A2C and direct interested readers to the relevant sections of this tutorial for more detailed technical descriptions.</p>
+<p>In A3C, each worker operates with its own copy of the environment and updates the shared global parameters independently, which introduces asynchronicity. However, reaseachers from OpenAI found that there is no evidence showing that this asynchrony provides any performance benefit. In the opposite, waiting for each actor to finish its segment of experience before performing an update, and averaging over all of the actors can simplify debugging and make the use of GPUs more effective.</p>
+<p>With the asynchronous setting eliminated, the reulted method is naturally called Advantage Actor-Critic (A2C). Let’s now dive deeper into its core ideas.</p>
+</section>
+<section id="core-ideas-of-a2c">
+<h3>11.3.2 Core ideas of A2C<a class="headerlink" href="#core-ideas-of-a2c" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Gradient Update</strong></p>
+<p>Except for the asynchrony, gradient update takes the exactly same form as A3C. To resolve the potential inconsistency of gradient update in A3C, a coordinator in A2C waits for all the parallel actors to finish their work before updating the global parameters. Then in the next iteration parallel actors starts from the same policy. The synchronized gradient update keeps the training more cohesive and potentially to make convergence faster.</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter11/comp_a2c_a3c.png" alt="Comparison between A2C and A3C" style="width: 80%;;">
+  </div>
+</li>
+<li><p><strong>Algorithm</strong></p>
+<p>In fact, when parallel actors are used, the one-step actor–critic algorithm introduced in chapter 10, <a class="reference internal" href="10_policy_gradient_methods.html#ac-methods-for-episodic-tasks"><span class="std std-ref">section 10.4.1</span></a> is a perfect example of A2C, where the advantage is estimated using one-step TD error.</p>
+<p>To introduce the A2C algorithm from a more practical perspective similar to section <a class="reference internal" href="#justification-of-existence">11.2</a>, we use the pseudocode presented in <a class="reference external" href="https://www.nature.com/articles/s41593-018-0147-8">this paper published on Nature</a> as follows:</p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter11/algo_a2c.png" alt="Algorithm: A2C" style="width: 90%;;">
+  </div>
+<p>Note that those <span class="math notranslate nohighlight">\(E\)</span> episodes presented above would be run in parallel by multiple actors in practival implementation.</p>
+</li>
+</ul>
+</section>
+<section id="properties-of-a2c">
+<h3>11.3.3 Properties of A2C<a class="headerlink" href="#properties-of-a2c" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Advantages</strong></p>
+<ul>
+<li><p>This A2C implementation is more cost-effective than A3C when using single-GPU machines, and is faster than a CPU-only A3C implementation when using larger policies.</p></li>
+<li><p>One advantage of this method is that it can more effectively use of GPUs, which perform best with large batch sizes.</p></li>
+</ul>
+</li>
+<li><p><strong>Disadvantages</strong></p>
+<ul>
+<li><p>A2C can face instability and convergence issues due to its reliance on gradient descent, which can cause rapid and unpredictable parameter updates. This can lead to oscillations, divergence, or poor performance. Gradient clipping, trust region techniques can ensure a more smoother, reliable learning paths.</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some Researchers argue that <a class="reference external" href="https://arxiv.org/pdf/2205.09123">A2C is a special case of Proximal Policy Optimization (PPO)</a>, which we will introduce in next section.</p>
+</div>
+</section>
+</section>
+<section id="proximal-policy-optimization-ppo">
+<h2>11.4 Proximal Policy Optimization (PPO)<a class="headerlink" href="#proximal-policy-optimization-ppo" title="Link to this heading">#</a></h2>
+<section id="id2">
+<h3>11.4.1 Background<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>Among all modern RL algorithms, PPO stands out as one of the most influential framework. It is adapted on the basis of Trust Region Policy Optimization (TRPO), while being significantly simpler to implement, and empirically, it seems to perform at least as well as TRPO. We cover PPO’s background only by giving a brief description of TRPO.</p>
+<p>With definition of advantage, the gradient estimator (also the maximization objective) of all policy gradient methods can be written as:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{g} = \hat{\mathbb{E}}_t \left[ \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) \hat{A}_t \right]
+\]</div>
+<p>TRPO methods takes the following maximization objective:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+&amp;\text{maximize}_{\theta} \ \hat{\mathbb{E}}_t \left[ \frac{\pi_{\theta}(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \hat{A}_t \right] \\
+&amp;\text{subject to} \quad \hat{\mathbb{E}}_t \left[ \text{KL}\left[\pi_{\theta{\text{old}}}(\cdot \mid s_t), \pi_{\theta}(\cdot \mid s_t)\right] \right] \leq \delta,
+\end{align*}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_{old}\)</span> denotes the parameter of the policy before the update.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The theory justifying TRPO actually suggests using a penalty instead of a constraint, i.e., solving the unconstrained optimization problem maximize over <span class="math notranslate nohighlight">\(\theta\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{maximize}_{\theta} \; \hat{\mathbb{E}}_t \left[ \frac{\pi_{\theta}(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \hat{A}_t - \beta \, \text{KL}\left[\pi_{\theta_{\text{old}}}(\cdot \mid s_t), \pi_{\theta}(\cdot \mid s_t)\right] \right]
+\]</div>
+<p>TRPO uses a hard constraint rather than a penalty because it is hard to choose a single value of the coefficient <span class="math notranslate nohighlight">\(\beta\)</span> that performs well across different problems—or even within a single problem.</p>
+</div>
+</section>
+<section id="objective-of-proximal-policy-optimization">
+<h3>11.4.2 Objective of Proximal Policy Optimization<a class="headerlink" href="#objective-of-proximal-policy-optimization" title="Link to this heading">#</a></h3>
+<p>We have seen that TRPO maximizes a “surrogate” objective as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+L^{CPI}(\theta) = \hat{\mathbb{E}}_t \left[ r_t(\theta) \hat{A}_t \right],
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(r_t(\theta)\)</span> denotes the probability ratio <span class="math notranslate nohighlight">\(\frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_{\text{old}}}(a_t | s_t)}\)</span> (<span class="math notranslate nohighlight">\(r(\theta_{\text{old}}) = 1\)</span>). And <span class="math notranslate nohighlight">\(CPI\)</span> refers to conservative policy iteration. Instead of using KL-divergence, PPO modifies this objective and constrain the policy changes that move <span class="math notranslate nohighlight">\(r_t(\theta)\)</span> too much away from 1, by introducing the <span class="math notranslate nohighlight">\(\textit{Clipped Surrogate Objective}\)</span>. To be precise, there are three different components in PPO’s optimization objective:</p>
+<ul>
+<li><p><strong>Clipped Surrogate Objective</strong>: penalizes changes to the policy that move <span class="math notranslate nohighlight">\(r_t(θ)\)</span> away from 1 by clipping <span class="math notranslate nohighlight">\(r_t(θ)\)</span> into a given rage:</p>
+<div class="math notranslate nohighlight">
+\[
+    L^{CLIP}(\theta) \ \dot= \ \hat{\mathbb{E}}_t \left[ \min \left( r_t(\theta) \hat{A}_t, \, \text{clip}(r_t(\theta), 1 - \epsilon, 1 + \epsilon) \hat{A}_t \right) \right],
+    \]</div>
+<p>where epsilon is a hyperparameter for controling the clipping range.</p>
+</li>
+<li><p><strong>Value Function Loss</strong>: deonted by <span class="math notranslate nohighlight">\(L_t^{VF}(\theta)\)</span>, the value function loss is a squared-error loss represented as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+    L_t^{VF}(\theta) \dot= (V_\theta(s_t) - V_t^{targ})^2
+    \]</div>
+</li>
+<li><p><strong>Entropy Bonus</strong>: PPO also adds an entropy bonus <span class="math notranslate nohighlight">\(S[\pi_\theta](s_t)\)</span> to the objective, given as:</p>
+<div class="math notranslate nohighlight">
+\[
+    S[\pi_\theta](s_t) =− \sum_a \pi(a_t \vert s_t)log\pi(a_t \vert s_t)
+    \]</div>
+<p>Since PPO uses gradient ascent, adding this entropy term encourages the agent to maintain a level of uncertainty (higher entropy suggests higher uncertainty) about the best action, leading it to explore a broader range of actions during training.</p>
+<p>If the policy becomes too deterministic (i.e., it consistently selects the same actions), the entropy will decrease, and the agent will be incentivized to explore more diverse actions, which is of great importance in early stage of training.</p>
+</li>
+<li><p><strong>Final PPO Objective</strong>: Assume we are using a neural network architecture that shares parameters between the policy and value function, we must use a loss function that combines the policy surrogate and a value function error term. With augmentation of entropy bonus to ensure sufficient exploration, the final PPO objective is defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+    L_t^{CLIP+VF+S}(\theta) = \hat{\mathbb{E}}_t \left[ L_t^{CLIP}(\theta) - c_1 L_t^{VF}(\theta) + c_2 S[\pi_\theta](s_t) \right],
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(c_1\)</span>, <span class="math notranslate nohighlight">\(c_2\)</span> are <strong>positive</strong> coefficients. Note that <span class="math notranslate nohighlight">\(L_t^{VF}(\theta)\)</span> is a negative term, such that the sqaured-error loss is minimized when the overall objective is maximized.</p>
+</li>
+</ul>
+</section>
+<section id="ppo-algorithm">
+<h3>11.4.3 PPO algorithm<a class="headerlink" href="#ppo-algorithm" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Pseudocode</strong></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter11/algo_ppo.png" alt="Algorithm: PPO in AC style" style="width: 100%;;">
+  </div>
+<p>In each iteration, each of <span class="math notranslate nohighlight">\(N\)</span> (parallel) actors collect <span class="math notranslate nohighlight">\(T\)</span> timesteps of data. Then we construct the surrogate loss on these <span class="math notranslate nohighlight">\(N \times T\)</span> timesteps of data, and optimize it with minibatch SGD for <span class="math notranslate nohighlight">\(K\)</span> epochs.</p>
+</li>
+<li><p><strong>Algorithm Details</strong></p>
+<ul>
+<li><p><strong>Estimation of Advantage</strong>: As you may already notice in the pseudocode, PPO uses a truncated version of generalized advantage estimation.</p>
+<p>One style of policy gradient implementation, popularized in <a class="reference external" href="https://arxiv.org/pdf/1602.01783">A3C paper</a> runs the policy for <span class="math notranslate nohighlight">\(T\)</span> timesteps (where <span class="math notranslate nohighlight">\(T\)</span> is much less than the episode length). It requires an advantage estimator that does not look beyond timestep <span class="math notranslate nohighlight">\(T\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+        \hat{A}_t = -V(s_t) + r_t + \gamma r_{t+1} + \cdots + \gamma^{T - t + 1} r_{T - 1} + \gamma^{T - t} V(s_T).
+        \]</div>
+<p>Generalizing this choice, PPO uses a truncated version of generalized advantage estimation, which reduces to above when <span class="math notranslate nohighlight">\(\lambda = 1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \begin{align*}
+        \hat{A}_t &amp;= \delta_t + (\gamma \lambda) \delta_{t+1} + \cdots + (\gamma \lambda)^{T - t + 1} \delta_{T - 1} \\
+        &amp;= \delta_t + \gamma\lambda\hat{A}_{t+1},
+        \end{align*}
+        \end{split}\]</div>
+</li>
+<li><p><strong>Gradient Ascent in Practice</strong></p>
+<p>In practice, updates for actor and critic model are separate. The gradient (ascent) estimator for policy model is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+        \hat{g}_{actor} = \frac{1}{NT}\sum_{n=0}^{N} \sum_{t=0}^{T} [\min ( r_t(\theta) \hat{A}_t, \ \text{clip}(r_t(\theta), 1 - \epsilon, 1 + \epsilon) \hat{A}_t) + S[\pi_\theta](s_0)]
+        \]</div>
+<p>While #gGradient (descent) estimator for value function is:</p>
+<div class="math notranslate nohighlight">
+\[
+        \hat{g}_{critic} = \frac{1}{NT}\sum_{n=0}^{N} \sum_{t=0}^{T}L_t^{VF}(\theta),
+        \]</div>
+<p>for whichever form of loss used for the value function.</p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="properties-of-ppo">
+<h3>11.4.4 Properties of PPO<a class="headerlink" href="#properties-of-ppo" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Advantages</strong>:</p>
+<ul>
+<li><p>Stable Learning: PPO uses a clipped objective to limit how much the policy can change at each update, preventing large, unstable updates that might destabilize training.</p></li>
+<li><p>Implementation Simplicity: Compared to more complex methods like TRPO, PPO is relatively simple to implement while still achieving competitive performance across a range of tasks.</p></li>
+</ul>
+</li>
+<li><p><strong>Disdvantages</strong>:</p>
+<ul>
+<li><p>Hyperparameter Sensitivity: PPO requires careful tuning of its hyperparameters (like the clipping parameter and learning rate) to achieve optimal performance. Which requires experiments and understanding of the specific problem setting.</p></li>
+<li><p>Computational Overhead: PPO can be computationally expensive, particularly when running in a distributed setting or with large-scale environments, as it relies on collecting batches of data before each update and updating of both actor and critic models.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="group-relative-policy-optimization-grpo">
+<h2>11.5 Group Relative Policy Optimization (GRPO)<a class="headerlink" href="#group-relative-policy-optimization-grpo" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>11.5.1 Background<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>Different from all other algorithms introduced in former sections, GRPO was proposed targeting a specific kind of RL task - the post-training of Large Language Models (LLMs). At this point, its effectiveness applied on other types of tasks is less studied, we introduce GRPO mainly in the context of LLM training.</p>
+<p>Before GRPO, the de-facto algorithm for LLM training is PPO with one particular adaptation - adding a KL penalty from a reference model in the reward to prevent the policy deviating too much from the reference during update. The reward is then computed as</p>
+<div class="math notranslate nohighlight">
+\[
+r_t = r_\phi(s_t, a_t) - \beta log \frac{\pi_\theta(a_t\vert s_t)}{\pi_{ref}(a_t\vert s_t)}
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(r_\phi\)</span> being the reward model and the reference model <span class="math notranslate nohighlight">\(\pi_{ref}\)</span> being a frozen copy (untrainable) of the policy.</p>
+<p>In context of LLM training, critic model is usually a model that has comparable size with the policy model (with some parameter shared). To lower computational burden, GRPO obviates the need for additional value function approximation, and instead <strong>uses the average reward of multiple sampled outputs as the baseline</strong> (explained in advantage estimation). The process is shown in the figure below.</p>
+<div style="display: flex; justify-content: center;">
+<img src="../_static/img/chapter11/comp_ppo_grpo.png" alt="Comparison between PPO and GRPO" style="width: 100%;;">
+</div>
+<p>In short, GRPO does not require the critic model and takes a group average reward as the baseline, advantage is also estimated using this grouping method (introduced later).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Notations in context of LLM training:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(q\)</span>: the input question given to an LLM.</p></li>
+<li><p><span class="math notranslate nohighlight">\(o_i\)</span>: the observation (state) <span class="math notranslate nohighlight">\(i\)</span> at a certain time step <span class="math notranslate nohighlight">\(t\)</span>, usually is the concatenation of <span class="math notranslate nohighlight">\(q\)</span> with all generated content till <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(r_i\)</span>: reward given by a reward model <span class="math notranslate nohighlight">\(\phi\)</span> based on <span class="math notranslate nohighlight">\(o_i\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(A_i\)</span>: advantage computed at time step <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+</div>
+</section>
+<section id="optimization-objective">
+<h3>11.5.2 Optimization Objective<a class="headerlink" href="#optimization-objective" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Overall Objective</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{align*}
+    \mathcal{J}_{GRPO}(\theta) &amp;= \mathbb{E}_{q \sim P(Q), \{o_i\}_{i=1}^G \sim \pi_{\theta_{old}}(O|q)} \left[\frac{1}{G} \sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \min \left( \frac{\pi_{\theta}(o_{i,t}|q, o_i,&lt;t)}{\pi_{\theta_{old}}(o_{i,t}|q, o_i,&lt;t)} \hat{A}_{i,t} \, \text{clip} \left( \frac{\pi_{\theta}(o_{i,t}|q, o_i,&lt;t)}{\pi_{\theta_{old}}(o_{i,t}|q, o_i,&lt;t)} \right) (1 - \epsilon, 1 + \epsilon) \hat{A}_{i,t} \right) - \beta D_{KL}[\pi_{\theta_{old}} || \pi_{ref}] \right] \\
+    &amp;\text{with} \ \mathbb{D}_{KL} (\pi_{\theta} || \pi_{\text{ref}}) = \frac{\pi_{\text{ref}}(o_i|q)}{\pi_{\theta}(o_i|q)} - \log \frac{\pi_{\text{ref}}(o_i|q)}{\pi_{\theta}(o_i|q)} - 1
+    \end{align*}
+    \end{split}\]</div>
+<p>Same as PPO, GRPO also uses a clipped objective, yet differently, no entropy bonus is added in the objective.</p>
+<p>Also note that, instead of adding KL penalty in the reward, GRPO regularizes by directly adding the KL divergence between the trained policy and the reference policy to the maximization objective, avoiding complicating the calculation of <span class="math notranslate nohighlight">\(A_{i,t}\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that GRPO estimate the KL divergence with an unbiased estimator different from the KL estimation described at the beginning of this section.</p>
+</div>
+</li>
+<li><p><strong>Estimation of Advantage</strong></p>
+<p>Since GRPO requires no value function, it estimates advantage <span class="math notranslate nohighlight">\(A_{i,t}\)</span> by calculating based on relative rewards of the outputs inside each group only as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+    A_{i,t} = \frac{r_i - \text{mean}(\{r_1, r_2, \dots, r_G\})}{\text{std}(\{r_1, r_2, \dots, r_G\})}
+    \]</div>
+</li>
+</ul>
+</section>
+<section id="grpo-algorithm">
+<h3>11.5.2 GRPO Algorithm<a class="headerlink" href="#grpo-algorithm" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Pseudocode</strong></p>
+  <div style="display: flex; justify-content: center;">
+  <img src="../_static/img/chapter11/algo_grpo.png" alt="Algorithm: GRPO" style="width: 100%;;">
+  </div>
+<p>The above algorithm [reference to GRPO] uses an iterative approach, except for the usual computations of all components required, there are two main things to be noted:</p>
+</li>
+<li><p><strong>Reward Model Retraining</strong>: In iterative GRPO, the authors generate new training sets for the reward model based on the sampling results from the policy model and continually train the old reward model using a <strong>replay mechanism</strong> that incorporates 10% of historical data. Then, they set the reference model as the policy model, and continually train the policy model with the new reward model.</p></li>
+<li><p><strong>Token Generation as Time Step</strong>: In context of LLM training, this algorithm is performed on the token level.</p></li>
+</ul>
+</section>
+<section id="properties-of-grpo">
+<h3>11.5.3 Properties of GRPO<a class="headerlink" href="#properties-of-grpo" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Advantages</strong></p>
+<ul>
+<li><p>Reduced computational burden: GRPO eliminates the need for a critic model, reducing memory usage and computational costs through group-based sampling.</p></li>
+<li><p>Efficient advantage estimation: By comparing multiple outputs for the same input, GRPO provides stable and efficient advantage estimation.</p></li>
+<li><p>Conservative policy updates: A KL penalty in GRPO’s objective function ensures more stable and conservative policy updates.</p></li>
+</ul>
+</li>
+<li><p><strong>Disadvantages</strong></p>
+<ul>
+<li><p>Complex reward design: GRPO requires careful reward function design to reflect output quality, which can be challenging.</p></li>
+<li><p>Dependency on group size: The group size affects advantage estimation accuracy; too small a group may lack sufficient information, while a very large group increases computational overhead.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h2>11.6 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>In this chapter, we introduced several reinforcement learning algorithms, focusing on their core concepts, advantages, and disadvantages. The concept of <strong>Advantage</strong> was first discussed, which measures how much better or worse an action is compared to the average behavior in a given state. This helps reduce variance in gradient estimates, leading to more stable updates in policy gradient methods. Advantage can be estimated using TD error, Monte Carlo return, or Generalized Advantage Estimation (GAE), with GAE offering a smooth bias-variance trade-off.</p>
+<p>We then delved into Asynchronous <strong>Advantage Actor-Critic (A3C)</strong>, which uses multiple workers to explore the environment and update the shared model asynchronously. A3C estimates advantage using n-step returns and includes an entropy bonus to improve exploration. While A3C benefits from multi-thread computation and faster training, it may converge to local optima and presents challenges in debugging due to its asynchronous nature.</p>
+<p>Next, we explored <strong>Advantage Actor-Critic (A2C)</strong>, a synchronous variant of A3C where updates are coordinated among parallel actors. This method is more cost-effective on single-GPU machines and offers better GPU utilization but can face instability and convergence issues due to reliance on gradient descent.</p>
+<p><strong>Proximal Policy Optimization (PPO)</strong> simplifies TRPO while maintaining performance, using a clipped objective to limit policy changes. PPO combines clipped surrogate objective, value function loss, and entropy bonus. It provides stable learning and simpler implementation but requires careful hyperparameter tuning and can be computationally intensive.</p>
+<p>Finally, <strong>Group Relative Policy Optimization (GRPO)</strong> targets post-training of Large Language Models (LLMs), eliminating the need for a critic model by using group-based sampling. GRPO uses the average reward as a baseline and incorporates KL penalty for conservative updates. While GRPO reduces computational burden and offers efficient advantage estimation, it relies heavily on complex reward design and group size considerations.</p>
+</section>
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Link to this heading">#</a></h2>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h3>
+<p><strong>[1] GAE paper</strong>: <a class="reference external" href="https://arxiv.org/pdf/1506.02438">High-Dimensional Continuous Control Using Generalized Advantage Estimation</a></p>
+<p><strong>[2] A3C paper</strong>: <a class="reference external" href="https://arxiv.org/pdf/1602.01783">Asynchronous Methods for Deep Reinforcement Learning</a></p>
+<p><strong>[3] Paper that proposed the Entropy Bonus</strong>: <a class="reference external" href="https://www.researchgate.net/publication/2703232_Function_Optimization_Using_Connectionist_Reinforcement_Learning_Algorithms">Function optimization using connectionist reinforcement learning algorithms</a></p>
+<p><strong>[4] A2C blog from OpenAI</strong>: <a class="reference external" href="https://openai.com/index/openai-baselines-acktr-a2c/">https://openai.com/index/openai-baselines-acktr-a2c/</a></p>
+<p><strong>[5] PPO paper</strong>: <a class="reference external" href="https://arxiv.org/pdf/1707.06347">Proximal Policy Optimization Algorithms</a></p>
+<p><strong>[6] GRPO paper</strong>: <a class="reference external" href="https://arxiv.org/pdf/2402.03300">DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models</a></p>
+<p><strong>[7] Lil’Llog</strong> which gives the graphical comparison between A3C and A2C: <a class="reference external" href="https://lilianweng.github.io/posts/2018-04-08-policy-gradient/#a2c">https://lilianweng.github.io/posts/2018-04-08-policy-gradient/#a2c</a></p>
+<p><strong>[8] Shulman’s blog</strong> that proposed the unbiased KL divergence estimator used in GRPO: <a class="reference external" href="http://joschu.net/blog/kl-approx.html">http://joschu.net/blog/kl-approx.html</a></p>
+</section>
+<section id="extra-resoures">
+<h3>Extra Resoures<a class="headerlink" href="#extra-resoures" title="Link to this heading">#</a></h3>
+<p>If you are interestd in RL algorithms developed specifically for LLM post-training, here are some suggested readings:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://neurips.cc/virtual/2023/poster/72308">RRHF: Rank Responses to Align Language Models with Human Feedback</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/2304.06767">RAFT: Reward rAnked FineTuning for Generative Foundation Model Alignment</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/2402.14740">Back to Basics: Revisiting REINFORCE Style Optimization for Learning from Human Feedback in LLMs</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/2310.10505">ReMax: A Simple, Effective, and Efficient Reinforcement Learning Method for Aligning Large Language Models</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/2501.03262">REINFORCE++: A Simple and Efficient Approach for Aligning Large Language Models</a></p></li>
+</ol>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "Dong237/DistilRLIntroduction",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./Contents"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+<div class="section ablog__blog_comments">
+   
+</div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="10_policy_gradient_methods.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 10. Policy Gradient Methods</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-concept-of-advantage">11.1 The Concept of Advantage</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">11.1.1 Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#justification-of-existence">11.1.2 Justification of Existence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-of-advantage">11.1.3 Estimation of Advantage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asynchronous-advantage-actor-critic-a3c">11.2 Asynchronous Advantage Actor-Critic (A3C)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#background">11.2.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-and-gradient-estimator">11.2.2 Advantage and Gradient Estimator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a3c-algorithm">11.2.3 A3C Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-a3c">11.2.4 Properties of A3C</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-actor-critic-a2c">11.3 Advantage Actor-Critic (A2C)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">11.3.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-ideas-of-a2c">11.3.2 Core ideas of A2C</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-a2c">11.3.3 Properties of A2C</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximal-policy-optimization-ppo">11.4 Proximal Policy Optimization (PPO)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">11.4.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#objective-of-proximal-policy-optimization">11.4.2 Objective of Proximal Policy Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo-algorithm">11.4.3 PPO algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-ppo">11.4.4 Properties of PPO</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#group-relative-policy-optimization-grpo">11.5 Group Relative Policy Optimization (GRPO)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">11.5.1 Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-objective">11.5.2 Optimization Objective</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grpo-algorithm">11.5.2 GRPO Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-grpo">11.5.3 Properties of GRPO</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">11.6 Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-resoures">Extra Resoures</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Youxiang Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Youxiang Dong.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
