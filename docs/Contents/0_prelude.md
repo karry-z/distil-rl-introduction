@@ -6,7 +6,7 @@ As someone who's been learning reinforcement learning (RL) myself, I've been on 
 
 *Reinforcement Learning: An Introduction* by Richard Sutton (I'll just refer it as the RL Intro book from now on) is regarded the bible of reinforcement learning. It's an incredible resource, no doubt about it, but reading it cover-to-cover takes a ton of effort. And honestly, most learners - whether they're researchers or practitioners - don't need every single detail in the book to grasp the core ideas, understand classical algorithms, and start applying or even developing new ones.  
 
-That's exactly why I created this tutorial. After spending some time organizing my personal notes while working through the RL Intro book, I started thinking that maybe there is **a faster, more efficient way to absorb the key knowledge** from this book without having to read every word. That is how this project was born - a streamlined "knowledge vault" of reinforcement learning based on the RL Intro book.  
+That's exactly why I created this tutorial. After spending some time organizing my learning notes while working through the RL Intro book, I started thinking that maybe there is **a faster, more efficient way to absorb the key knowledge** from this book without having to read every word. That is how this project was born - a streamlined "knowledge vault" of reinforcement learning based on the RL Intro book.  
 
 Out of all the chapters in the book, I have **handpicked the most essential ones to help you build a solid understanding**. I used the structure of [this Coursera specialization](https://www.coursera.org/specializations/reinforcement-learning), taught by members of Sutton’s research group, as a guide. This knowledge vault blends the best parts of the RL Intro book and the online course, switching between the two formats to give you the easiest path to learning based on my own experience.  
 
@@ -14,7 +14,7 @@ Out of all the chapters in the book, I have **handpicked the most essential ones
 
 ## How to Read  
 
-- Structure of This Tutorial  
+- **Structure of This Tutorial**
 
     The chapters in this tutorial are carefully selected and reorganized based on the structure of the paired Coursera course. One notable difference is that Chapter 7, "n-step Bootstrapping," from the RL Intro book has been excluded.  
 
@@ -22,7 +22,7 @@ Out of all the chapters in the book, I have **handpicked the most essential ones
 
     The next chapter gives a quick introduction to reinforcement learning (RL). Chapters 2 through 7 focus on RL in what's called the *tabular setting*. Starting from Chapter 8, we shift gears to focus exclusively on function approximation methods. The final chapter isn't part of the RL Intro book - it’s an additional section I’ve added to provide insights into more modern developments in RL.  
 
-- Style  
+- **Style** 
 
     - **Structure of Each Chapter**: Most of the content in each chapter is presented in a bullet-point format. To help you quickly grasp the purpose of each section, key chunks of text are introduced with a bolded word or phrase (like the one you’re reading now). Think of it as a mini headline for the paragraph.  
 
@@ -38,7 +38,7 @@ Out of all the chapters in the book, I have **handpicked the most essential ones
 
         - Lowercase letters (with or without subscripts) represent specific instances of the respective random variables. For example, $s$ is a specific state from the set $S$, and $s_t$ refers to the state at time step $t$ (similarly for $s_0$, $s_1$, etc.).  
 
-- Learning Advice  
+- **Learning Advice**  
 
     - **How I Blend the Book and Online Course (Videos)**: My goal was to combine the best parts of the RL Intro book and the Coursera lecture videos to make learning easier. Here’s how I did it:  
 

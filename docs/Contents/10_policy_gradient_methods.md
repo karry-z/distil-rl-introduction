@@ -83,7 +83,7 @@ Among $\textit{policy gradient methods}$, methods that learn approximations to b
     \end{align*}
     $$ 
 
-    However, Unlike value function approximation (where \mu(s) was fixed), here \mu(s) depends on the policy, which in return changes the distribution $\mu(s)$ when it gets updated. We need a update rule for parameterizing the policy model without depending on $\mu(s)$, and that is when the policy gradient theorem comes to the rescue.
+    However, Unlike value function approximation (where $\mu(s)$ was fixed), here $\mu(s)$ depends on the policy, which in return changes the distribution $\mu(s)$ when it gets updated. We need a update rule for parameterizing the policy model without depending on $\mu(s)$, and that is when the policy gradient theorem comes to the rescue.
 
 - **Policy Gradient Theorem**: 
     

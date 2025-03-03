@@ -30,7 +30,7 @@ Basics of MC methods:
 
     - Intuition: the realizations of return $G_t$ for each state is calculated backwards from $S_{T-1}$ to $S_0$, by the law of large number, the average of $G_t$ for each state will be the value of that state: $v(S_t) = E_{\pi}[G_t|S_t]$
 
-    - Visualization of return calculation ($T=5$):
+    - Visualization of return calculation ($T=5$, intergers on arrows are the rewards):
         <div style="display: flex; justify-content: center;">
         <img src="../_static/img/chapter5/computing_gt.png" alt="Backward calculation of returns" style="width: 350px;">
         </div>

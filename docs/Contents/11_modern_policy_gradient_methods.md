@@ -262,7 +262,7 @@ $$
 TRPO uses a hard constraint rather than a penalty because it is hard to choose a single value of the coefficient $\beta$ that performs well across different problems—or even within a single problem.
 ```
 
-### 11.4.2 Objective of Proximal Policy Optimization**
+### 11.4.2 Objective of Proximal Policy Optimization
 
 We have seen that TRPO maximizes a "surrogate" objective as follows:
 
