@@ -30,6 +30,7 @@ extensions = [
     "sphinx_togglebutton",
     "sphinxcontrib.pseudocode",
     "sphinx.ext.todo",  
+    "sphinx.ext.githubpages",
 ]
 
 todo_include_todos = True
