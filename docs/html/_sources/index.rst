@@ -1,5 +1,5 @@
-DistilRL Introduction
-=====================
+DistilRL: A Condensed Introduction
+==================================
 
 I. Introduction
 ~~~~~~~~~~~~~~~
