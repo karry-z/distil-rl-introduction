@@ -35,6 +35,7 @@ jobs:
           pip install sphinx-tabs
           pip install sphinx-thebe
           pip install sphinx-togglebutton
+          pip install sphinx-examples
           pip install sphinxcontrib-pseudocode
 
       # Step 4: Build the Sphinx documentation
