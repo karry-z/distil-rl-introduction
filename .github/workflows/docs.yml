@@ -37,6 +37,7 @@ jobs:
           pip install sphinx-togglebutton
           pip install sphinx-examples
           pip install sphinxcontrib-pseudocode
+          pip install linkify-it-py
 
       # Step 4: Build the Sphinx documentation
       - name: Build Docs
