@@ -1,0 +1,61 @@
+name: Build and Deploy Documentation
+
+# Trigger this workflow on pushes to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy-docs:
+    name: Build and Deploy Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.15'  # Adjust to match your Python version if needed
+
+      # Step 3: Install dependencies
+      - name: Install Python Dependencies
+        run: |
+          pip install -U pip
+          pip install sphinx
+          pip install myst-parser
+          pip install sphinx-book-theme
+          pip install ablog
+          pip install sphinx-copybutton
+          pip install sphinx-design
+          pip install sphinx-tabs
+          pip install sphinx-thebe
+          pip install sphinx-togglebutton
+          pip install sphinxcontrib-pseudocode
+          pip install sphinx.ext.todo
+          pip install sphinx.ext.githubpages
+
+      # Step 4: Build the Sphinx documentation
+      - name: Build Docs
+        run: |
+          cd docs
+          make clean html
+
+      # Step 5: Add .nojekyll file (to disable Jekyll processing)
+      - name: Add .nojekyll File
+        run: |
+          cd docs/_build/html/
+          touch .nojekyll
+
+      # Step 6: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: gh-pages  # Branch where the static site will be hosted
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html  # Directory containing the generated HTML files
