@@ -36,7 +36,6 @@ jobs:
           pip install sphinx-thebe
           pip install sphinx-togglebutton
           pip install sphinxcontrib-pseudocode
-          pip install sphinx.ext.githubpages
 
       # Step 4: Build the Sphinx documentation
       - name: Build Docs
