@@ -9,17 +9,34 @@
 
 <img src="docs/\_static/img/logo.png" align="right" width="40%"/>
 
-As someone who's been learning reinforcement learning (RL), I've been searching for resources that strike the right balance.  
-💡 *Reinforcement Learning: An Introduction* is the bible of RL, but reading it cover-to-cover takes a ton of effort.  
+As someone who's been learning reinforcement learning (RL), I've been searching for resources that strike the right balance. 
 
-🚀 That's why I created this tutorial: a streamlined "knowledge vault" to help you absorb the core ideas faster and easier!
+*Reinforcement Learning: An Introduction* is the bible of RL, but reading it cover-to-cover takes a ton of effort.  
+
+That's why I created this tutorial: a streamlined "knowledge vault" to help you absorb the core ideas faster and easier!
 
 ---
 
-## 🎯 Why This Project Exists
+## 🎯 Why This Project and how to use (for now)
 
 > **💡 Key Idea:** This tutorial focuses on handpicked chapters from the RL Intro book and blends them with content from a [RL Coursera specialization](https://www.coursera.org/specializations/reinforcement-learning) for a smoother learning experience.
 
+
+> **🛠️ How to Use:** 
+
+I will host this project as a website asap
+
+```python
+git clone https://github.com/Dong237/DistilRLIntroduction.git && cd docs
+
+make html
+
+# then open another terminal and use
+
+python -m http.server 8888 # can be any port number
+```
+
+You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
 ---
 
 ## 📋 Catalog
@@ -47,12 +64,6 @@ As someone who's been learning reinforcement learning (RL), I've been searching 
 #### Policy Approximation
 - [Chapter 10: Policy Gradient Methods](docs/Contents/10_policy_gradient_methods.md)
 - [Chapter 11: Modern Policy Gradient Methods](docs/Contents/11_modern_policy_gradient_methods.md)
-
----
-
-## 🛠️ How to Use This Tutorial
-
-You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
 
 ---
 
