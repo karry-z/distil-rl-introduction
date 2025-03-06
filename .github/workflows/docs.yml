@@ -44,6 +44,10 @@ jobs:
         run: |
           cd docs
           make clean html
+      
+      # Step 4.1 Debug build process
+      - name: Debug Build Output
+        run: ls -R docs/_build/html
 
       # Step 5: Add .nojekyll file (to disable Jekyll processing)
       - name: Add .nojekyll File
