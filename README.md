@@ -1,6 +1,7 @@
 # 📚 DistilRL: A Condensed Introduction
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Website](https://img.shields.io/badge/Website-Visit%20Site-blue?logo=github)](https://dong237.github.io/DistilRLIntroduction/)
 [![GitHub Stars](https://img.shields.io/github/stars/Dong237/DistilRLIntroduction?style=social)](https://github.com/Dong237/DistilRLIntroduction)
 
 ---
@@ -22,21 +23,7 @@ That's why I created this tutorial: a streamlined "knowledge vault" to help you 
 > **💡 Key Idea:** This tutorial focuses on handpicked chapters from the RL Intro book and blends them with content from a [RL Coursera specialization](https://www.coursera.org/specializations/reinforcement-learning) for a smoother learning experience.
 
 
-> **🛠️ How to Use:** 
-
-I will host this project as a website asap
-
-```python
-git clone https://github.com/Dong237/DistilRLIntroduction.git && cd docs
-
-make html
-
-# then open another terminal and use
-
-python -m http.server 8888 # can be any port number
-```
-
-You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
+> **🛠️ How to Use:** Reade the whole tutorial on [this site](https://dong237.github.io/DistilRLIntroduction/). You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
 ---
 
 ## 📋 Catalog
