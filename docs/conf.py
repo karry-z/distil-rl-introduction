@@ -88,10 +88,6 @@ html_theme_options = {
     "use_issues_button": True,
     "use_download_button": True,
     "use_sidenotes": True,
-    "announcement": (
-        "⚠️This is an ongoing project and is currectly "
-        "still under development (Chinese version on its way). ⚠️"
-    ),
 }
 
 html_sidebars = {
