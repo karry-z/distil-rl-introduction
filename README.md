@@ -23,7 +23,7 @@ That's why I created this tutorial: a streamlined "knowledge vault" to help you 
 > **💡 Key Idea:** This tutorial focuses on handpicked chapters from the RL Intro book and blends them with content from a [RL Coursera specialization](https://www.coursera.org/specializations/reinforcement-learning) for a smoother learning experience.
 
 
-> **🛠️ How to Use:** Reade the whole tutorial on [this site](https://dong237.github.io/DistilRLIntroduction/). You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
+> **🛠️ How to Use:** Read the whole tutorial on [this site](https://dong237.github.io/DistilRLIntroduction/). You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
 ---
 
 ## 📋 Catalog
@@ -61,7 +61,7 @@ I welcome contributions to improve this tutorial! Here's how you can help:
 - **Report Issues**: Found a typo or unclear explanation? Open an issue!
 - **Suggest Improvements**: Have ideas for better explanations or new content? Submit a pull request!
 - **Spread the Word**: Share this tutorial with others who might find it useful!
-- **Translation needed**: I am also trying to create a Chinese version of this book in following weekends, help me out if you are interested.
+- **Translation needed**: I am also trying to create a Chinese version of this book somewhen in the future, help me out if you are interested.
 
 ---
 
