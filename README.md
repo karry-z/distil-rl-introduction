@@ -6,6 +6,8 @@
 
 ---
 
+<span>[ English | <a href="README_zh.md">中文</a> ]</span>
+
 ## 📚 What This Is
 
 <img src="docs/\_static/img/logo.png" align="right" width="40%"/>
