@@ -6,6 +6,8 @@
 
 ---
 
+<span>[ <a href="README.md">English</a> | 中文 ]</span>
+
 ## 📚 项目简介
 
 <img src="docs/\_static/img/logo.png" align="right" width="40%"/>
