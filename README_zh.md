@@ -1,4 +1,4 @@
-# 📚 强化学习精粹：简明入门
+# 📚 蒸馏版强化学习：简明导论
 
 [![许可证](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![网站](https://img.shields.io/badge/网站-访问站点-blue?logo=github)](https://dong237.github.io/DistilRLIntroduction/)
