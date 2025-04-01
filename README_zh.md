@@ -1,8 +1,9 @@
 # 📚 蒸馏版强化学习：简明导论
 
 [![许可证](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![网站](https://img.shields.io/badge/网站-访问站点-blue?logo=github)](https://dong237.github.io/DistilRLIntroduction/)
-[![GitHub Stars](https://img.shields.io/github/stars/Dong237/DistilRLIntroduction?style=social)](https://github.com/Dong237/DistilRLIntroduction)
+[![网站](https://img.shields.io/badge/网站-访问站点-blue?logo=github)](https://datawhalechina.github.io/distil-rl-introduction/)
+[![关于作者](https://img.shields.io/badge/About%20the%20Author-GitHub-blue?logo=github)](https://github.com/Dong237)
+[![GitHub星标](https://img.shields.io/github/stars/Dong237/DistilRLIntroduction?style=social)](https://github.com/datawhalechina/distil-rl-introduction)
 
 ---
 
@@ -22,7 +23,7 @@
 
 > **💡 核心理念：** 本教程精选了《强化学习导论》中的重要章节，并将其与[Coursera强化学习专项课程](https://www.coursera.org/specializations/reinforcement-learning)的内容融合，以提供更高效的学习体验。
 
-> **🛠️ 使用方法：** 在[本网站](https://dong237.github.io/DistilRLIntroduction/)阅读完整教程。在第0章（序言）中，你将找到更多关于这个项目的来龙去脉以及最佳使用方法的详细信息。
+> **🛠️ 使用方法：** 在[本网站](https://datawhalechina.github.io/distil-rl-introduction/)阅读完整教程。在第0章（序言）中，你将找到更多关于这个项目的来龙去脉以及最佳使用方法的详细信息。
 
 ---
 

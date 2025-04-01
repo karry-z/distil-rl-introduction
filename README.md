@@ -1,8 +1,9 @@
 # 📚 DistilRL: A Condensed Introduction
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Website](https://img.shields.io/badge/Website-Visit%20Site-blue?logo=github)](https://dong237.github.io/DistilRLIntroduction/)
-[![GitHub Stars](https://img.shields.io/github/stars/Dong237/DistilRLIntroduction?style=social)](https://github.com/Dong237/DistilRLIntroduction)
+[![Website](https://img.shields.io/badge/Website-Visit%20Site-blue?logo=github)](https://datawhalechina.github.io/distil-rl-introduction/)
+[![About the Author](https://img.shields.io/badge/About%20the%20Author-GitHub-blue?logo=github)](https://github.com/Dong237)
+[![GitHub Stars](https://img.shields.io/github/stars/Dong237/DistilRLIntroduction?style=social)](https://github.com/datawhalechina/distil-rl-introduction)
 
 ---
 
@@ -25,7 +26,7 @@ That's why I created this tutorial: a streamlined "knowledge vault" to help you 
 > **💡 Key Idea:** This tutorial focuses on handpicked chapters from the RL Intro book and blends them with content from a [RL Coursera specialization](https://www.coursera.org/specializations/reinforcement-learning) for a smoother learning experience.
 
 
-> **🛠️ How to Use:** Read the whole tutorial on [this site](https://dong237.github.io/DistilRLIntroduction/). You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
+> **🛠️ How to Use:** Read the whole tutorial on [this site](https://github.com/datawhalechina/distil-rl-introduction). You will find more details about how this project came to exist and how to best use it in Chapter 0. The Prelude!
 ---
 
 ## 📋 Catalog
