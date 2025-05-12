@@ -21,7 +21,7 @@ That's why I created this tutorial: a streamlined "knowledge vault" to help you 
 
 ---
 
-## 🎯 Why This Project and how to use (for now)
+## 🎯 Why This Project and how to use
 
 > **💡 Key Idea:** This tutorial focuses on handpicked chapters from the RL Intro book and blends them with content from a [RL Coursera specialization](https://www.coursera.org/specializations/reinforcement-learning) for a smoother learning experience.
 
