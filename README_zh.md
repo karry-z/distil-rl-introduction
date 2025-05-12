@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 项目目的与使用方法（目前）
+## 🎯 项目目的与使用方法
 
 > **💡 核心理念：** 本教程精选了《强化学习导论》中的重要章节，并将其与[Coursera强化学习专项课程](https://www.coursera.org/specializations/reinforcement-learning)的内容融合，以提供更高效的学习体验。
 
